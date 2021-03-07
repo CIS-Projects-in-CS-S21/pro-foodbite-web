@@ -1,9 +1,20 @@
 import './App.css';
+import React, { useState, useEffect } from 'react';
+import Routes from "./Routes"
 
 function App() {
+
+  // state
+  const [auth, set_auth] = useState(false); 
+
+
+  // firebase init 
+
+  // useEffects
+
   return (
-    <div className="App" style={{fontSize: "8.0em", marginTop:"10%"}}>
-      Hello, world
+    <div className="App">
+      <Routes ></Routes>
     </div>
   );
 }
