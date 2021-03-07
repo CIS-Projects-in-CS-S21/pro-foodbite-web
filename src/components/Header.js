@@ -46,7 +46,7 @@ const Container = styled.header`
 `; 
 
 const Logo = styled.img`
-  border: 4px solid #da4e2e;
+  border: 4px solid #dc4c28;
   border-radius: 25px;
 `;
 
@@ -54,5 +54,4 @@ const Buttons = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
 `;
