@@ -1,20 +1,22 @@
+import { useFormik } from "formik"
 import React from "react"
 import styled from "styled-components"
 
-export default function SignInPage() {
+export default function SignIn() {
+
+  const formik = useFormik({
+
+  }); 
 
 
   return (
     <Container>
-      stuff ... 
+      welcome to sign in page ... 
     </Container>
   )
 }
 
 const Container = styled.div`
-  border: 1px solid black;
+
   
-
-
-
-`; 
+`;
