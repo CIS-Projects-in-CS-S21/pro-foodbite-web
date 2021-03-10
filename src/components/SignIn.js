@@ -1,10 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-import { useFormik } from "formik"
+import { useFormik, Formik } from "formik"
 import * as Yup from "yup"
 
 export default function SignIn() {
 
+  
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -12,35 +13,58 @@ export default function SignIn() {
     },
   
     validationSchema: Yup.object({
-      email: Yup.string().email("Enter a valid email").required("Enter an email"),
-      password: Yup.string().required("Enter a password")
+      email: Yup.string()
+        .email("Enter a valid email")
+        .required("Required"),
+      password: Yup.string()
+        .min(8, "Too short")
+        .required("Required")
     }),
   
-    onSubmit: ( { email, password} ) => {
+    onSubmit: ( { email, password } ) => {
       console.log("call function ... todo"); 
       console.log(email); 
       console.log(password); 
-    }
+    },
   }); 
 
 
   return (
     <Container>
-      <form>
+      <form onSubmit={formik.handleSubmit}>
+
         <Group>
-          <Label>Email</Label>
-          <Input></Input>
+        <label style={{textAlign: "left"}}>Email</label>
+        <Input
+            id="email"
+            type="email"
+            onChange={formik.handleChange}
+            value={formik.values.email}
+          />
+          <Error>
+            {formik.errors.email ? formik.errors.email : null}
+          </Error>
         </Group>
 
         <Group>
-          <Label>Password</Label>
-          <Input></Input>
+          <label style={{textAlign: "left"}}>Password</label>
+          <Input
+            id="password"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+          />
+          <Error>
+            {formik.errors.password ? formik.errors.password : null}
+          </Error>
         </Group>
         
-        <LongButton>Sign In</LongButton>
+        <LongButton type="submit">Sign In</LongButton>
       </form>
 
-      todo log in other container here
+      <ProviderContainer>
+        todo log in other container here
+      </ProviderContainer>
     </Container>
   )
 }
@@ -55,14 +79,11 @@ const Container = styled.div`
   margin: 0 auto; 
 `;
 
+// Export these or put in separate folder for re-use with signup, settings, ?!?!?
 const Group = styled.div`
   display: flex;
   flex-direction: column; 
   margin-bottom: 5%; 
-`;
-
-const Label = styled.label`
-  text-align: left; 
 `;
 
 const Input = styled.input`
@@ -87,7 +108,20 @@ const LongButton = styled.button`
   padding: 0.4em 1.2em;
   background-color: #da4e2e; 
   color: #fff; 
-
   width: 100%; 
+
+  &:hover {
+    border-color: #f9b767; 
+  }
 `;
 
+const Error = styled.div`
+  font-size: .6em;  
+  height: 15px; 
+
+`;
+
+const ProviderContainer = styled.div`
+  border: 1px solid black;
+  margin: 2% 0;
+`;
