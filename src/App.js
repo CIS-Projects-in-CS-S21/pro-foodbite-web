@@ -1,15 +1,16 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import GlobalStyle from "./styles/GlobalStyle"; 
+import GlobalStyle from "./styles/GlobalStyle";
 import Routes from "./Routes"
 import { UserContext } from "./context/UserContext.js";
+import firebase from 'firebase';
 
 function App() {
 
   // init session state
 
   // state
-  const [auth, set_auth] = useState(false); 
+  const [auth, set_auth] = useState(false);
   const [restaurant, set_restaurant] = useState({
     id: "",
     ownerId: "",
@@ -19,18 +20,18 @@ function App() {
     menu: [],
     available: false,
     profile: {}
-  }); 
+  });
 
 
-  // firebase init 
+  // firebase init
 
   // useEffects
 
 
   return (
     <div className="App">
-      <GlobalStyle/>
-      <UserContext.Provider value={{auth, }}>
+      {/* <GlobalStyle/> */}
+      <UserContext.Provider value={{ auth, }}>
         <Routes ></Routes>
       </UserContext.Provider>
     </div>
