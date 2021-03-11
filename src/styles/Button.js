@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 // FIX COLOR SCHEME! 
-const FBButton = styled.button`
+const Button = styled.button`
 
   font-size: 1.5rem; 
   font-family: "Amatic SC", cursive;
@@ -28,4 +28,4 @@ const FBButton = styled.button`
   }
 `;
 
-export default FBButton; 
+export default Button;
