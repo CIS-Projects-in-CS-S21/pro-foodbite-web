@@ -1,11 +1,13 @@
 import React from "react"
 import styled from "styled-components"
-import { useFormik, Formik } from "formik"
+import { useFormik } from "formik"
 import * as Yup from "yup"
+import { ReactComponent as GoogleLogo } from "../assets/google_logo.svg"
+import { ReactComponent as FacebookLogo } from "../assets/facebook.svg"
 
 export default function SignIn() {
 
-  
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -28,6 +30,13 @@ export default function SignIn() {
     },
   }); 
 
+  const handle_google = () => {
+    console.log("test google"); 
+  };
+
+  const handle_facebook = () => {
+    console.log("test facebook"); 
+  };
 
   return (
     <Container>
@@ -41,9 +50,9 @@ export default function SignIn() {
             onChange={formik.handleChange}
             value={formik.values.email}
           />
-          <Error>
+          <Message>
             {formik.errors.email ? formik.errors.email : null}
-          </Error>
+          </Message>
         </Group>
 
         <Group>
@@ -54,16 +63,24 @@ export default function SignIn() {
             onChange={formik.handleChange}
             value={formik.values.password}
           />
-          <Error>
+          <Message>
             {formik.errors.password ? formik.errors.password : null}
-          </Error>
+          </Message>
         </Group>
         
         <LongButton type="submit">Sign In</LongButton>
       </form>
 
       <ProviderContainer>
-        todo log in other container here
+        Or Sign In with:
+        <Provider onClick={handle_google}>
+          <GoogleLogo style={{width: "25px"}}></GoogleLogo>
+          Google
+        </Provider>
+        <Provider onClick={handle_facebook}>
+          <FacebookLogo style={{width: "26px"}}></FacebookLogo>
+          Facebook
+        </Provider>
       </ProviderContainer>
     </Container>
   )
@@ -83,7 +100,7 @@ const Container = styled.div`
 const Group = styled.div`
   display: flex;
   flex-direction: column; 
-  margin-bottom: 5%; 
+  margin-bottom: 3%; 
 `;
 
 const Input = styled.input`
@@ -115,13 +132,23 @@ const LongButton = styled.button`
   }
 `;
 
-const Error = styled.div`
+const Message = styled.div`
   font-size: .6em;  
   height: 15px; 
-
 `;
 
 const ProviderContainer = styled.div`
-  border: 1px solid black;
-  margin: 2% 0;
+  font-size: .7em; 
+  margin: 2% 0 5% 0;
+  display: flex;
+  flex-direction: row; 
+
+`;
+
+const Provider = styled.div`
+  margin-left: 50px; 
+  
+  &:hover{
+    cursor: pointer;
+  }
 `;
