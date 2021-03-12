@@ -2,11 +2,12 @@ import React from "react"
 import styled from "styled-components"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import { signInWithEmailPassword } from "../firebase"
 import { ReactComponent as GoogleLogo } from "../assets/google_logo.svg"
 import { ReactComponent as FacebookLogo } from "../assets/facebook.svg"
+import { Group, Input, LongButton } from "../styles/FormElements"
 
 export default function SignIn() {
-
 
   const formik = useFormik({
     initialValues: {
@@ -24,9 +25,7 @@ export default function SignIn() {
     }),
   
     onSubmit: ( { email, password } ) => {
-      console.log("call function ... todo"); 
-      console.log(email); 
-      console.log(password); 
+      signInWithEmailPassword(email, password); 
     },
   }); 
 
@@ -96,41 +95,6 @@ const Container = styled.div`
   margin: 0 auto; 
 `;
 
-// Export these or put in separate folder for re-use with signup, settings, ?!?!?
-const Group = styled.div`
-  display: flex;
-  flex-direction: column; 
-  margin-bottom: 3%; 
-`;
-
-const Input = styled.input`
-  border-radius: 15px;
-  border: 2px solid #dc4c28; 
-  padding: 15px 20px;
-  width: 500px; 
-
-  &:focus {
-    border-color: #f9b767; 
-  }
-`;
-
-const LongButton = styled.button`
-  font-size: 1.2rem; 
-  font-family: "Amatic SC", cursive;
-  font-weight: 600; 
-  border: 0.18em solid rgba(255,255,255,0);
-  border-radius: 2em;
-  box-sizing: border-box;
-  color: #da4e2e; 
-  padding: 0.4em 1.2em;
-  background-color: #da4e2e; 
-  color: #fff; 
-  width: 100%; 
-
-  &:hover {
-    border-color: #f9b767; 
-  }
-`;
 
 const Message = styled.div`
   font-size: .6em;  
@@ -142,7 +106,6 @@ const ProviderContainer = styled.div`
   margin: 2% 0 5% 0;
   display: flex;
   flex-direction: row; 
-
 `;
 
 const Provider = styled.div`

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import GlobalStyle from "./styles/GlobalStyle"; 
 import Routes from "./Routes"
 import { UserContext } from "./context/UserContext.js";
+import firebase from "./firebase"
 
 function App() {
 
@@ -21,11 +22,13 @@ function App() {
     profile: {}
   }); 
 
-
-  // firebase init 
-
   // useEffects
 
+
+  // firebase.auth().signOut()
+  //   .then(() => {
+  //     console.log("logged-out"); 
+  //   })
 
   return (
     <div className="App">
