@@ -6,17 +6,11 @@ import Navigation from './Navigation';
 
 /**
  * 
- * Component for creating the navigation bar and links
- * @component
- * 
- * @param {*} user - The user object that is returned from Firebase
- *  
+ * @summary Creates the top navigation bar and navigation links
+ *          for the multiple routes that are used
  */
 
-const Header = (auth) => {
-  // Just a testing flag to view different navigation states
-  // Will remove once the app is connected to firebase auth
-  const loggedIn = false;
+const Header = () => {
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" >
@@ -32,9 +26,7 @@ const Header = (auth) => {
 
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-
-        <Navigation loggedIn={loggedIn} />
-
+        <Navigation />
       </Navbar.Collapse>
     </Navbar>
   )

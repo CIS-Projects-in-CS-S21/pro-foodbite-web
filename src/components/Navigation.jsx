@@ -1,11 +1,15 @@
-import { React, Fragment } from "react";
+import { React, Fragment, useContext } from "react";
 import { Nav } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
-const Navigation = (loggedIn) => {
+
+const Navigation = () => {
+  const { auth } = useContext(UserContext);
+
   return (
     <Nav >
-      {loggedIn ? (
+      {auth ? (
         <Fragment>
           <Link className="nav-link" to="/orders">Orders</Link>
           <Link className="nav-link" to="/account">Account</Link>
