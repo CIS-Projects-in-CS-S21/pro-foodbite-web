@@ -2,12 +2,28 @@ import React from "react"
 import styled from "styled-components"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import { signInWithEmailPassword } from "../firebase"
 import { ReactComponent as GoogleLogo } from "../assets/google_logo.svg"
 import { ReactComponent as FacebookLogo } from "../assets/facebook.svg"
 import { Group, Input, LongButton } from "../styles/FormElements"
+import { useHistory } from "react-router-dom"
+import { useUserContext } from "../context/UserContext"
 
 export default function SignIn() {
+
+  const history = useHistory();
+  const { sign_in_with_email_password } = useUserContext(); 
+
+
+  const handle_submit = async ( values ) => {
+    try{
+      // sign-in, auth context updated, navigate home. 
+      await sign_in_with_email_password(values.email, values.password);
+      history.push("/"); 
+    }
+    catch{
+      alert("sign-in failed"); 
+    }
+  }; 
 
   const formik = useFormik({
     initialValues: {
@@ -24,10 +40,9 @@ export default function SignIn() {
         .required("Required")
     }),
   
-    onSubmit: ( { email, password } ) => {
-      signInWithEmailPassword(email, password); 
-    },
+    onSubmit: handle_submit,
   }); 
+
 
   const handle_google = () => {
     console.log("test google"); 
