@@ -9,17 +9,15 @@ export default function SignInPage() {
   const { sign_out, restaurant } = useUserContext();  
 
   const test = () => {
-    // todo
-
-    if(restaurant) return <span>true</span>
-    else return <span>FALSE</span>
+    // test auth context 
+    if(restaurant) return <span style={{fontWeight: 700, fontSize: "1.2em"}}>true</span>
+    else return <span style={{fontWeight: 700}}>FALSE</span>
   }
 
   // temporary 
   const handle_click = async () => {
     try{
       await sign_out();
-
     }
     catch{
       alert("sign-out failed"); 
@@ -31,7 +29,7 @@ export default function SignInPage() {
   return (
     <Container>
       
-      status: {test()}
+      <div>status: {test()}</div>
 
       <button onClick={handle_click}>temp sign-out</button>
     </Container>
@@ -40,8 +38,6 @@ export default function SignInPage() {
 
 const Container = styled.div`
   border: 1px solid black;
-  
-
-
-
+  display: flex;
+  flex-direction: column; 
 `; 

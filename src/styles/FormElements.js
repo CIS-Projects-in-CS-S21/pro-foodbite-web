@@ -56,8 +56,11 @@ export const Input = styled.input`
   border: 2px solid #dc4c28; 
   padding: 15px 20px;
   width: 500px; 
+  font-size: .5em; 
 
   &:focus {
     border-color: #f9b767; 
   }
+
+
 `;

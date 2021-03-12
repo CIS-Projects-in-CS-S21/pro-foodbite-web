@@ -105,7 +105,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center; 
   align-items: center; 
-  //border: 1px solid blue; 
   width: 70%; 
   margin: 0 auto; 
 `;
