@@ -3,11 +3,12 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
 
   html {
-    font-size: 18px;
     box-sizing: border-box;
   }
 
   body {
+    // would be best to apply this font only to elements that are using
+    // it instead of all elements
     // font-family: "Amatic SC", cursive;
     // font-size: 3.0rem; 
   }
