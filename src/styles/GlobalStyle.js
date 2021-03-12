@@ -8,8 +8,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: "Amatic SC", cursive;
-    font-size: 3.0rem; 
+    // font-family: "Amatic SC", cursive;
+    // font-size: 3.0rem; 
   }
 
   button {
@@ -22,4 +22,4 @@ const GlobalStyle = createGlobalStyle`
 
 `;
 
-export default GlobalStyle; 
+export default GlobalStyle;
