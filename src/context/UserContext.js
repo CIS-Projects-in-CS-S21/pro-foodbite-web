@@ -24,7 +24,21 @@ export const UserContextProvider = ( { children } ) => {
     return unsubscribe; 
   }, []); 
 
-  
+  const sign_up_with_email_password = ((email, password) =>{
+    //create new account
+    return auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Signed in 
+      var user = userCredential.user;
+      // ...
+    })
+    .catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ..
+    });
+  });
+
   const sign_in_with_email_password = ( (email, password) => {
      // sign-in exisiting user 
     return auth.signInWithEmailAndPassword(email, password); 
@@ -38,6 +52,7 @@ export const UserContextProvider = ( { children } ) => {
 
   const values = {
     user,
+    sign_up_with_email_password,
     sign_in_with_email_password,
     sign_out
   }

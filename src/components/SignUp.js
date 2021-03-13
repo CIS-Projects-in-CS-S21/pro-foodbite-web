@@ -4,6 +4,7 @@ import styled from "styled-components"
 import {useHistory} from "react-router-dom"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import { useUserContext } from "../context/UserContext"
 
 
 const Container = styled.div`
@@ -25,11 +26,17 @@ export default function SignUp() {
     history.push("/");
   }
 
-  function handle_submit(e){
+  const {sign_up_with_email_password} = useUserContext();
 
-    //Add account to database
-    alert("SignUp Success");
+  const handle_submit = async(values) =>{
+    try{
+      await sign_up_with_email_password(values.email, values.password);
+      alert("sign up success");
+    }catch{
+      alert("sign up failed");
+    }
   }
+
 
   const formik = useFormik({
     initialValues:{
@@ -86,7 +93,7 @@ export default function SignUp() {
 
         </Group>
         <LongButton onClick={cancelClick}>Cancel</LongButton>
-
+        <br/><br/>
         <LongButton type="submit">Submit</LongButton>
       </form>
     </Container>
