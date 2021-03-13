@@ -1,9 +1,94 @@
-import React from "react"
+import React from "react";
+import {Group, LongButton,Input } from "../styles/FormElements"
+import styled from "styled-components"
+import {useHistory} from "react-router-dom"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+
+
+const Container = styled.div`
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items:center;
+`
+
+const Message = styled.div`
+  font-size: .6em;
+  height: 15px;
+`
+
 
 export default function SignUp() {
+  const history = useHistory();
+  const cancelClick = () =>{
+    history.push("/");
+  }
+
+  function handle_submit(e){
+
+    //Add account to database
+    alert("SignUp Success");
+  }
+
+  const formik = useFormik({
+    initialValues:{
+      email:"",
+      password:"",
+      confirmPassword:""
+    },
+  
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Enter a valid email")
+        .required("Required"),
+
+      password: Yup.string()
+        .min(8, "Too short")
+        .required("Required"),
+
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .required("Required"),
+    }),
+
+    onSubmit:handle_submit,
+  });
+
   return (
-    <div>
-      
-    </div>
+    <Container>
+      <form onSubmit={formik.handleSubmit}>
+        <Group>
+          <label style={{textAlign:"left"}}>Email</label>
+          <Input type="email" 
+            id="email" 
+            onChange={formik.handleChange} 
+            value={formik.values.email}/>
+          <Message>
+            {formik.errors.email? formik.errors.email: null}
+          </Message>
+          <label style={{textAlign:"left"}}>Password</label>
+          <Input type="password" 
+            id="password" 
+            onChange={formik.handleChange} 
+            value={formik.values.password}/>
+          <Message>
+            {formik.errors.password ? formik.errors.password: null}
+          </Message>
+          <label style={{textAlign:"left"}}>confirm password</label>
+          <Input type="password" 
+            id="confirmPassword"
+            onChange={formik.handleChange}
+            value={formik.values.confirmPassword} />
+          <Message>
+            {formik.errors.confirmPassword ? formik.errors.confirmPassword: null}
+          </Message>
+
+        </Group>
+        <LongButton onClick={cancelClick}>Cancel</LongButton>
+
+        <LongButton type="submit">Submit</LongButton>
+      </form>
+    </Container>
   )
 }
