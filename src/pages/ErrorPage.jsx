@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Redirect, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 const ErrorPage = () => {
     const history = useHistory();
