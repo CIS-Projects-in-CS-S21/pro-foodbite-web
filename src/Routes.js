@@ -7,11 +7,13 @@ import SignUpPage from "./pages/SignUpPage"
 import Account from "./pages/AccountPage"
 import OrdersPage from "./pages/OrdersPage"
 import { useUserContext } from "./context/UserContext"
+import AnalyticsPage from "./pages/AnalyticsPage";
+import ErrorPage from "./pages/ErrorPage";
 
 
 export default function Routes() {
 
-  const { restaurant } = useUserContext(); 
+  const { restaurant } = useUserContext();
 
   return (
     <Router>
@@ -22,16 +24,24 @@ export default function Routes() {
         <Route path="/sign-up" component={SignUpPage}></Route>
         <Route
           path="/account"
-          render = {() => {
-            return restaurant ? <Account></Account> : <Redirect to="sign-in"/> 
+          render={() => {
+            return restaurant ? <Account></Account> : <Redirect to="sign-in" />
           }}>
         </Route>
         <Route
           path="/orders"
-          render = {() => {
-            return restaurant ? <OrdersPage></OrdersPage> : <Redirect to="sign-in"/> 
+          render={() => {
+            return restaurant ? <OrdersPage></OrdersPage> : <Redirect to="sign-in" />
           }}>
         </Route>
+        <Route
+          path="/analytics"
+          render={() => {
+            return restaurant ? <AnalyticsPage /> : <Redirect to="sign-in" />
+          }}>
+        </Route>
+
+        <Route component={ErrorPage} />
       </Switch>
     </Router>
   )
