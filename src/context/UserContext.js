@@ -1,7 +1,7 @@
 import { useContext, createContext, useState, useEffect } from "react"; 
 import { auth } from "../firebase.js" 
 
-// auth, restaurant info  
+// auth (user), restaurant info  
 export const UserContext = createContext(null);
 
 export const useUserContext = () => {
@@ -10,21 +10,21 @@ export const useUserContext = () => {
 
 export const UserContextProvider = ( { children } ) => {
 
-  const [restaurant, set_restaurant] = useState(); 
+  const [user, set_user] = useState(); 
   const [loading, set_loading] = useState(true); 
 
   useEffect(() => {
     // set state observer w/ current user or null 
 
-    const unsubscribe = auth.onAuthStateChanged( (user) => {
-      set_restaurant(user); 
+    const unsubscribe = auth.onAuthStateChanged( (current_user) => {
+      set_user(current_user); 
       set_loading(false); 
     })
 
     return unsubscribe; 
   }, []); 
 
-
+  
   const sign_in_with_email_password = ( (email, password) => {
      // sign-in exisiting user 
     return auth.signInWithEmailAndPassword(email, password); 
@@ -37,7 +37,7 @@ export const UserContextProvider = ( { children } ) => {
   const sign_out = () => auth.signOut(); 
 
   const values = {
-    restaurant,
+    user,
     sign_in_with_email_password,
     sign_out
   }

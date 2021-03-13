@@ -8,7 +8,7 @@ import { Redirect } from 'react-router-dom';
 const Navigation = () => {
   const [redirect, setRedirect] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState("/");
-  const { restaurant, sign_out } = useContext(UserContext);
+  const { user, sign_out } = useContext(UserContext);
 
   const handleSignOut = () => {
     sign_out()
@@ -30,7 +30,7 @@ const Navigation = () => {
         <Fragment />
       )}
 
-      {restaurant ? (
+      {user ? (
         <Fragment>
           <Link className="nav-link" to="/orders">Orders</Link>
 

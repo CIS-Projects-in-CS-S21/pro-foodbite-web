@@ -11,7 +11,7 @@ import { useUserContext } from "./context/UserContext"
 
 export default function Routes() {
 
-  const { restaurant } = useUserContext(); 
+  const { user } = useUserContext(); 
 
   return (
     <Router>
@@ -23,13 +23,13 @@ export default function Routes() {
         <Route
           path="/account"
           render = {() => {
-            return restaurant ? <Account></Account> : <Redirect to="sign-in"/> 
+            return user ? <Account></Account> : <Redirect to="sign-in"/> 
           }}>
         </Route>
         <Route
           path="/orders"
           render = {() => {
-            return restaurant ? <OrdersPage></OrdersPage> : <Redirect to="sign-in"/> 
+            return user ? <OrdersPage></OrdersPage> : <Redirect to="sign-in"/> 
           }}>
         </Route>
       </Switch>
