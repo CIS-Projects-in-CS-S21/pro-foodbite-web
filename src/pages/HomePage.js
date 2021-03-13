@@ -1,12 +1,10 @@
-import React, { useContext } from "react"
+import React from "react"
 import styled from "styled-components"
-import { UserContext } from "../context/UserContext"
 import { useUserContext } from "../context/UserContext"
 
 export default function SignInPage() {
 
-  const user = useContext(UserContext);
-  const { sign_out, restaurant } = useUserContext();
+  const { restaurant } = useUserContext();
 
   const test = () => {
     // test auth context 
