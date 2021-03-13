@@ -7,11 +7,13 @@ import { Redirect } from 'react-router-dom';
 
 const Navigation = () => {
   const [redirect, setRedirect] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("/");
   const { restaurant, sign_out } = useContext(UserContext);
 
   const handleSignOut = () => {
     sign_out()
       .then(() => {
+        setRedirectUrl("/");
         setRedirect(true);
       })
       .catch(err => {
@@ -23,7 +25,7 @@ const Navigation = () => {
   return (
     <Nav className="ml-auto">
       {redirect ? (
-        <Redirect to="/" />
+        <Redirect to={redirectUrl} />
       ) : (
         <Fragment />
       )}
@@ -33,8 +35,8 @@ const Navigation = () => {
           <Link className="nav-link" to="/orders">Orders</Link>
 
           <NavDropdown alignRight title="Account" id="basic-nav-dropdown">
-            <Link className="dropdown-item" onClick={handleSignOut} to="/">Settings</Link>
-            <Link className="dropdown-item" onClick={handleSignOut} to="/">Restaruant Management</Link>
+            <Link className="dropdown-item" to="/">Settings</Link>
+            <Link className="dropdown-item" to="/">Restaruant Management</Link>
 
             <NavDropdown.Divider />
             <Link className="dropdown-item" onClick={handleSignOut} to="/">Sign Out</Link>
