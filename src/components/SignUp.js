@@ -31,7 +31,7 @@ export default function SignUp() {
   const handle_submit = async(values) =>{
     try{
       await sign_up_with_email_password(values.email, values.password);
-      alert("sign up success");
+      history.push("/"); 
     }catch{
       alert("sign up failed");
     }
@@ -82,7 +82,7 @@ export default function SignUp() {
           <Message>
             {formik.errors.password ? formik.errors.password: null}
           </Message>
-          <label style={{textAlign:"left"}}>confirm password</label>
+          <label style={{textAlign:"left"}}>Confirm Password</label>
           <Input type="password" 
             id="confirmPassword"
             onChange={formik.handleChange}

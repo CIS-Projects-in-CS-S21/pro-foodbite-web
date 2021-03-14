@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from "react"; 
-import { auth } from "../firebase.js" 
+import firebase, { auth, } from "../firebase.js" 
 
 // auth (user), restaurant info  
 export const UserContext = createContext(null);
@@ -25,18 +25,8 @@ export const UserContextProvider = ( { children } ) => {
   }, []); 
 
   const sign_up_with_email_password = ((email, password) =>{
-    //create new account
+    // create new account
     return auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      // Signed in 
-      var user = userCredential.user;
-      // ...
-    })
-    .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ..
-    });
   });
 
   const sign_in_with_email_password = ( (email, password) => {
@@ -44,16 +34,30 @@ export const UserContextProvider = ( { children } ) => {
     return auth.signInWithEmailAndPassword(email, password); 
   }); 
 
-  // google toddo
-  // facebook todo
-  // change password todo
+  const sign_in_with_google = ( () => {
+    // sign-in with google
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return auth.signInWithPopup(provider); 
+  });
+
+  const sign_in_with_facebook = ( () => {
+    // sign-in with facebook
+    const provider = new firebase.auth.FacebookAuthProvider();
+    return auth.signInWithPopup(provider); 
+  });
+
 
   const sign_out = () => auth.signOut(); 
+
+    // change password todo
+    // change ... todo 
 
   const values = {
     user,
     sign_up_with_email_password,
     sign_in_with_email_password,
+    sign_in_with_google,
+    sign_in_with_facebook,
     sign_out
   }
 

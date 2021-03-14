@@ -11,7 +11,7 @@ import { useUserContext } from "../context/UserContext"
 export default function SignIn() {
 
   const history = useHistory();
-  const { sign_in_with_email_password } = useUserContext(); 
+  const { sign_in_with_email_password, sign_in_with_google, sign_in_with_facebook } = useUserContext(); 
 
 
   const handle_submit = async ( values ) => {
@@ -44,12 +44,24 @@ export default function SignIn() {
   }); 
 
 
-  const handle_google = () => {
-    console.log("test google"); 
+  const handle_google = async () => {
+     try{
+      await sign_in_with_google();
+      history.push("/"); 
+     }
+     catch{
+      alert("sign-in failed"); 
+     }
   };
 
-  const handle_facebook = () => {
-    console.log("test facebook"); 
+  const handle_facebook = async () => {
+    try{
+      await sign_in_with_facebook();
+      history.push("/"); 
+     }
+     catch{
+      alert("sign-in failed"); 
+     } 
   };
 
   return (
