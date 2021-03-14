@@ -17,7 +17,7 @@ export default function SignInPage() {
   return (
     <Container>
 
-      <div>status: {test()}</div>
+      <div>current user: {test()}</div>
     </Container>
   )
 }
@@ -26,4 +26,5 @@ const Container = styled.div`
   border: 1px solid black;
   display: flex;
   flex-direction: column; 
+  font-size: 1.4em; 
 `;

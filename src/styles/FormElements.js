@@ -36,10 +36,10 @@ export const LongButton = styled.button`
   box-sizing: border-box;
   color: #da4e2e; 
   padding: 0.4em 1.2em;
-  background-color: #da4e2e; 
+  background-color: ${props => props.primary ? "#5bc0de" : "#da4e2e"};
   color: #fff; 
   width: 100%; 
-
+  
   &:hover {
     border-color: #f9b767; 
   }

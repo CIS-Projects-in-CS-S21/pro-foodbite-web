@@ -12,12 +12,13 @@ const Container = styled.div`
   flex-direction:column;
   justify-content: center;
   align-items:center;
-`
+  font-size: 1.2em; 
+`;
 
 const Message = styled.div`
   font-size: .6em;
   height: 15px;
-`
+`;
 
 
 export default function SignUp() {
@@ -74,6 +75,8 @@ export default function SignUp() {
           <Message>
             {formik.errors.email? formik.errors.email: null}
           </Message>
+        </Group>
+        <Group>
           <label style={{textAlign:"left"}}>Password</label>
           <Input type="password" 
             id="password" 
@@ -82,6 +85,8 @@ export default function SignUp() {
           <Message>
             {formik.errors.password ? formik.errors.password: null}
           </Message>
+        </Group>
+        <Group>
           <label style={{textAlign:"left"}}>Confirm Password</label>
           <Input type="password" 
             id="confirmPassword"
@@ -90,9 +95,8 @@ export default function SignUp() {
           <Message>
             {formik.errors.confirmPassword ? formik.errors.confirmPassword: null}
           </Message>
-
         </Group>
-        <LongButton onClick={cancelClick}>Cancel</LongButton>
+        <LongButton onClick={cancelClick} primary>Cancel</LongButton>
         <br/><br/>
         <LongButton type="submit">Submit</LongButton>
       </form>

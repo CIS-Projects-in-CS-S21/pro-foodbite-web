@@ -66,8 +66,8 @@ export default function SignIn() {
 
   return (
     <Container>
-      <form onSubmit={formik.handleSubmit}>
 
+      <form onSubmit={formik.handleSubmit}>
         <Group>
         <label style={{textAlign: "left"}}>Email</label>
         <Input
@@ -98,7 +98,7 @@ export default function SignIn() {
       </form>
 
       <ProviderContainer>
-        Or Sign In with:
+        Sign In with:
         <Provider onClick={handle_google}>
           <GoogleLogo style={{width: "25px"}}></GoogleLogo>
           Google
@@ -119,25 +119,30 @@ const Container = styled.div`
   align-items: center; 
   width: 70%; 
   margin: 0 auto; 
+  font-size: 1.2em; 
 `;
 
 
 const Message = styled.div`
-  font-size: .6em;  
+  font-size: .9em;  
   height: 15px; 
 `;
 
 const ProviderContainer = styled.div`
-  font-size: .7em; 
-  margin: 2% 0 5% 0;
+  font-size: .8em; 
+  margin: 2.5% 0 5% 0;
   display: flex;
   flex-direction: row; 
+  align-items: center; 
 `;
 
 const Provider = styled.div`
   margin-left: 50px; 
+  border: 1px solid transparent; 
+  padding: 5px; 
   
   &:hover{
     cursor: pointer;
+    border: 1px solid #f9b767; 
   }
 `;
