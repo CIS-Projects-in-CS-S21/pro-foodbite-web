@@ -15,14 +15,10 @@ export default function SignIn() {
 
 
   const handle_submit = async ( values ) => {
-    try{
-      // sign-in, auth context updated, navigate home. 
-      await sign_in_with_email_password(values.email, values.password);
-      history.push("/"); 
-    }
-    catch{
-      alert("sign-in failed"); 
-    }
+    // sign-in, auth context updated, navigate home. 
+    await sign_in_with_email_password(values.email, values.password)
+      .then( () => history.push("/"))
+      .catch(error => alert(error.message)); 
   }; 
 
   const formik = useFormik({

@@ -30,12 +30,11 @@ export default function SignUp() {
   const {sign_up_with_email_password} = useUserContext();
 
   const handle_submit = async(values) =>{
-    try{
-      await sign_up_with_email_password(values.email, values.password);
-      history.push("/"); 
-    }catch{
-      alert("sign up failed");
-    }
+
+    // sign-up, auth context updated, navigate home. 
+    await sign_up_with_email_password(values.email, values.password)
+      .then( () => history.push("/"))
+      .catch(error => alert(error.message));
   }
 
 
