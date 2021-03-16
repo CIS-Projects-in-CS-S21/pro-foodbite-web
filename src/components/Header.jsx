@@ -15,9 +15,9 @@ const Header = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" >
       <Navbar.Brand>
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/analytics">
           <img
-            src="/assets/foodbite-logo-2.svg"
+            src="/assets/FoodbiteLogo.png"
             width="180"
             alt="Foodbite logo"
           />
@@ -25,7 +25,7 @@ const Header = () => {
       </Navbar.Brand>
 
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+      <Navbar.Collapse id="basic-navbar-nav" >
         <Navigation />
       </Navbar.Collapse>
     </Navbar>

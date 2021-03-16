@@ -1,14 +1,19 @@
 import React from "react"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
 import Header from "./components/Header"
 import HomePage from "./pages/HomePage"
 import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
 import Account from "./pages/AccountPage"
 import OrdersPage from "./pages/OrdersPage"
+import { useUserContext } from "./context/UserContext"
+import AnalyticsPage from "./pages/AnalyticsPage";
+import ErrorPage from "./pages/ErrorPage";
 
 
-export default function Routes({ auth }) {
+export default function Routes() {
+
+  const { user } = useUserContext();
 
   return (
     <Router>
@@ -17,9 +22,26 @@ export default function Routes({ auth }) {
         <Route exact path="/" component={HomePage}></Route>
         <Route path="/sign-in" component={SignInPage}></Route>
         <Route path="/sign-up" component={SignUpPage}></Route>
-        <Route path="/account" component={Account}></Route>
-        <Route path="/orders" component={OrdersPage}></Route>
+        <Route
+          path="/account"
+          render={() => {
+            return user ? <Account></Account> : <Redirect to="sign-in" />
+          }}>
+        </Route>
+        <Route
+          path="/orders"
+          render={() => {
+            return user ? <OrdersPage></OrdersPage> : <Redirect to="sign-in" />
+          }}>
+        </Route>
+        <Route
+          path="/analytics"
+          render={() => {
+            return user ? <AnalyticsPage /> : <Redirect to="sign-in" />
+          }}>
+        </Route>
 
+        <Route component={ErrorPage} />
       </Switch>
     </Router>
   )
