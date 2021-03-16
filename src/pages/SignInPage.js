@@ -17,6 +17,7 @@ export default function SignInPage() {
   )
 }
 
-const Greeting = styled.div`
+export const Greeting = styled.div`
   margin: 1% 0 2.1% 0; 
+  font-size: 1.2em; 
 `; 

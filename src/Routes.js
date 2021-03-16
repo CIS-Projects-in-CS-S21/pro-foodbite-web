@@ -13,7 +13,7 @@ import ErrorPage from "./pages/ErrorPage";
 
 export default function Routes() {
 
-  const { restaurant } = useUserContext();
+  const { user } = useUserContext(); 
 
   return (
     <Router>
@@ -24,14 +24,14 @@ export default function Routes() {
         <Route path="/sign-up" component={SignUpPage}></Route>
         <Route
           path="/account"
-          render={() => {
-            return restaurant ? <Account></Account> : <Redirect to="sign-in" />
+          render = {() => {
+            return user ? <Account></Account> : <Redirect to="sign-in"/>
           }}>
         </Route>
         <Route
           path="/orders"
-          render={() => {
-            return restaurant ? <OrdersPage></OrdersPage> : <Redirect to="sign-in" />
+          render = {() => {
+            return user ? <OrdersPage></OrdersPage> : <Redirect to="sign-in"/>
           }}>
         </Route>
         <Route

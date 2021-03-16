@@ -1,7 +1,7 @@
 import { useContext, createContext, useState, useEffect } from "react"; 
-import { auth } from "../firebase.js" 
+import firebase, { auth, } from "../firebase.js" 
 
-// auth, restaurant info  
+// auth (user), restaurant info  
 export const UserContext = createContext(null);
 
 export const useUserContext = () => {
@@ -10,35 +10,54 @@ export const useUserContext = () => {
 
 export const UserContextProvider = ( { children } ) => {
 
-  const [restaurant, set_restaurant] = useState(); 
+  const [user, set_user] = useState(); 
   const [loading, set_loading] = useState(true); 
 
   useEffect(() => {
     // set state observer w/ current user or null 
 
-    const unsubscribe = auth.onAuthStateChanged( (user) => {
-      set_restaurant(user); 
+    const unsubscribe = auth.onAuthStateChanged( (current_user) => {
+      set_user(current_user); 
       set_loading(false); 
     })
 
     return unsubscribe; 
   }, []); 
 
+  const sign_up_with_email_password = ((email, password) =>{
+    // create new account
+    return auth.createUserWithEmailAndPassword(email, password)
+  });
 
   const sign_in_with_email_password = ( (email, password) => {
      // sign-in exisiting user 
     return auth.signInWithEmailAndPassword(email, password); 
   }); 
 
-  // google toddo
-  // facebook todo
-  // change password todo
+  const sign_in_with_google = ( () => {
+    // sign-in with google
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return auth.signInWithPopup(provider); 
+  });
+
+  const sign_in_with_facebook = ( () => {
+    // sign-in with facebook
+    const provider = new firebase.auth.FacebookAuthProvider();
+    return auth.signInWithPopup(provider); 
+  });
+
 
   const sign_out = () => auth.signOut(); 
 
+    // change password todo
+    // change ... todo 
+
   const values = {
-    restaurant,
+    user,
+    sign_up_with_email_password,
     sign_in_with_email_password,
+    sign_in_with_google,
+    sign_in_with_facebook,
     sign_out
   }
 
