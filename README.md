@@ -7,7 +7,7 @@ Foodbite is a full-stack application with a customer and business dedicated appl
 ### Project Link
 
 * react web app: https://foodbite-10690.web.app
-* mobile repo: https://github.com/CIS-Projects-in-CS-S21/pro-foodbite-web
+* mobile repo: https://github.com/CIS-Projects-in-CS-S21/pro-foodbite
 
 ### Installation, Run Locally
 
