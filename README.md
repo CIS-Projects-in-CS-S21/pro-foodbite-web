@@ -1,3 +1,22 @@
+# Foodbite (web)
+
+### Project Overview
+
+Foodbite is a full-stack application with a customer and business dedicated applications designed to give small restaurants the digital tools they need while remaining independent. This repository is for the business application. Features include business sign-in/sign-up, profile, menu management (add, remove, edit menu items), order management (receive pending order, manage pending orders) and business analytics (ratings, order history, various sorting methods). The application communicates to a REST API that leverages services on Firebase for seamless integration, real-time updates, and a great experience.
+
+### Project Link
+
+* react web app: https://foodbite-10690.web.app
+* mobile repo: https://github.com/CIS-Projects-in-CS-S21/pro-foodbite-web
+
+### Installation, Run Locally
+
+* Clone the repo: https://github.com/CIS-Projects-in-CS-S21/pro-foodbite-web.git
+* Install npm dependencies using: **npm install**
+* run: **npm run**
+* open in browser: http://localhost:3000/
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
