@@ -1,0 +1,47 @@
+.analytics-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 1.5em;
+    margin-top: 2em;
+}
+
+.analytics.status-card {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    align-items: center;
+
+    background-color: rgb(250, 182, 57);
+    border-radius: 4px;
+    box-shadow: 1px 1px 4px rgb(168, 168, 168);
+    min-height: 90px;
+    max-width: 250px;
+    padding: 0.5em;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.analytics.status-card:hover {
+    transform: scale(0.98);
+    box-shadow: 1px 1px 4px rgba(56, 56, 56, 0.65);
+}
+
+.status-card.status-card-info {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    /* padding-top: 12px; */
+}
+
+.status-card.status-card-title {
+    /* font-size: 40px; */
+    font-weight: 300;
+}
+
+.status-card.status-card-value {
+    font-weight: bold;
+}
+
+.status-card.status-card-icon {
+}

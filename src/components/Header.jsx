@@ -15,7 +15,7 @@ const Header = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" >
       <Navbar.Brand>
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/analytics">
           <img
             src="/assets/foodbite-logo-2.svg"
             width="180"
