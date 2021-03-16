@@ -33,6 +33,7 @@ const Navigation = () => {
       {restaurant ? (
         <Fragment>
           <Link className="nav-link" to="/orders">Orders</Link>
+          <Link className="nav-link" to="/analytics">Analytics</Link>
 
           <NavDropdown alignRight title="Account" id="basic-nav-dropdown">
             <Link className="dropdown-item" to="/">Settings</Link>
