@@ -20,18 +20,28 @@ export default function Routes() {
       <Header></Header>
       <Switch>
         <Route exact path="/" component={HomePage}></Route>
-        <Route path="/sign-in" component={SignInPage}></Route>
-        <Route path="/sign-up" component={SignUpPage}></Route>
+        <Route
+          path="/sign-in"
+          render={() => {
+            return user ? <Redirect to="/" /> : <SignInPage />
+          }}>
+        </Route>
+        <Route
+          path="/sign-up"
+          render={() => {
+            return user ? <Redirect to="/" /> : <SignUpPage />
+          }}>
+        </Route>
         <Route
           path="/account"
           render={() => {
-            return user ? <Account></Account> : <Redirect to="sign-in" />
+            return user ? <Account /> : <Redirect to="sign-in" />
           }}>
         </Route>
         <Route
           path="/orders"
           render={() => {
-            return user ? <OrdersPage></OrdersPage> : <Redirect to="sign-in" />
+            return user ? <OrdersPage /> : <Redirect to="sign-in" />
           }}>
         </Route>
         <Route
