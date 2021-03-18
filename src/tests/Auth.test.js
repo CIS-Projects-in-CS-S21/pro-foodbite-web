@@ -8,7 +8,6 @@ import SignIn from "../components/SignIn"
 import SignUp from "../components/SignUp"
 import SignInPage from "../pages/SignInPage"
 
-
 describe("<SignIn/>", () => {
   it("renders without error", async () => {
     await act( async () => {
@@ -106,5 +105,79 @@ describe("<SignIn /> sign-up", () => {
 
     userEvent.click(screen.getByText("Sign Up Here"));
     expect(history.push).toHaveBeenCalledWith("/sign-up"); 
+  });
+});
+
+
+// similar to SignIn test for onSubmit above 
+describe("<SignUp /> onSubmit", () => {
+  it("sign up with email and password method called on button click with correct args", async () => {
+  
+  const handle_submit = jest.fn( () => Promise.resolve(true)); 
+  window.alert.mockClear();  
+
+    await act( async () => {
+      render(
+        <UserContextProvider>
+          <SignUp onSubmit={handle_submit} />
+        </UserContextProvider>
+      )
+    }); 
+
+    // write text inside inputs to pass validation, click submit button 
+    userEvent.type(screen.getByLabelText(/email/i), "foodbite@grr.la");
+    userEvent.type(screen.getByTestId("password"), "foodbite21");
+    userEvent.type(screen.getByTestId("confirmPassword"), "foodbite21");
+    userEvent.click(screen.getByRole("button", { name: /submit/i }));
+
+    await waitFor( () => {
+      expect(handle_submit).toHaveBeenCalledWith({
+       email: "foodbite@grr.la",
+       password: "foodbite21",
+       confirmPassword: "foodbite21"
+     }); 
+    }); 
+
+  });
+});
+
+describe("<SignUp /> password validation", () => {
+  it("sign up validation should catch error required passwords fields don't match", async () => {
+  
+    await act( async () => {
+      render(
+        <UserContextProvider>
+          <SignUp />
+        </UserContextProvider>
+      )
+    }); 
+
+    // don't match password and confirm password input texts 
+    await act( async () =>  userEvent.type(screen.getByTestId("password"), "foodbite21")); 
+    await act( async () =>  userEvent.type(screen.getByTestId("confirmPassword"), "foodbite22"));
+    
+    expect(screen.getByTestId("confirmPasswordError").textContent).toBe("Passwords must match");
+
+  });
+});
+
+describe("<Signup /> cancel", () => {
+  it("cancel button click routes to route /", async () => {
+
+    const history = createMemoryHistory();
+    history.push = jest.fn(); // mock push function
+
+    await act( async () => {
+      render(
+        <Router history={history}>
+          <UserContextProvider>
+            <SignUp/>
+          </UserContextProvider>
+        </Router>
+      )
+    }); 
+
+    await act( async () =>  userEvent.click(screen.getByRole("button", { name: /cancel/i }))) 
+    expect(history.push).toHaveBeenCalledWith("/"); 
   });
 });
