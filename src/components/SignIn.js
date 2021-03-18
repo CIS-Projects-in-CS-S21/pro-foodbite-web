@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { useFormik } from "formik"
+import { Formik } from "formik"
 import * as Yup from "yup"
 import { ReactComponent as GoogleLogo } from "../assets/google_logo.svg"
 import { ReactComponent as FacebookLogo } from "../assets/facebook.svg"
@@ -8,38 +8,33 @@ import { Group, Input, LongButton } from "../styles/FormElements"
 import { useHistory } from "react-router-dom"
 import { useUserContext } from "../context/UserContext"
 
-export default function SignIn() {
+
+export default function SignIn( { onSubmit } ) {
 
   const history = useHistory();
   const { sign_in_with_email_password, sign_in_with_google, sign_in_with_facebook } = useUserContext(); 
 
+  const sign_in_schema = Yup.object().shape({
+    email: Yup.string()
+    .email("Enter a valid email")
+    .required("Required"),
+    password: Yup.string()
+    .min(8, "Too short")
+    .required("Required")
+  });  
 
   const handle_submit = async ( values ) => {
     // sign-in, auth context updated, navigate home. 
     await sign_in_with_email_password(values.email, values.password)
-      .then( () => history.push("/"))
-      .catch(error => alert(error.message)); 
+      .then( () => {
+        history.push("/");  
+        })
+      .catch(error => window.alert(error.message)); 
+
+    // for tests/Auth.test
+    if(typeof onSubmit === "function") onSubmit(values);
   }; 
-
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: ""
-    },
-  
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Enter a valid email")
-        .required("Required"),
-      password: Yup.string()
-        .min(8, "Too short")
-        .required("Required")
-    }),
-  
-    onSubmit: handle_submit,
-  }); 
-
-
+    
   const handle_google = async () => {
      try{
       await sign_in_with_google();
@@ -62,37 +57,51 @@ export default function SignIn() {
 
   return (
     <Container>
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        validationSchema={sign_in_schema}
+        onSubmit={handle_submit}
+      >
+        {({
+          values,
+          errors,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <Group>
+              <label style={{textAlign: "left"}} htmlFor="email">Email</label>
+              <Input
+                  id="email"
+                  type="email"
+                  onChange={handleChange}
+                  value={values.email}
+              />
+              <Message>
+                {errors.email ? errors.email : null}
+              </Message>
+            </Group>
 
-      <form onSubmit={formik.handleSubmit}>
-        <Group>
-        <label style={{textAlign: "left"}}>Email</label>
-        <Input
-            id="email"
-            type="email"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-          />
-          <Message>
-            {formik.errors.email ? formik.errors.email : null}
-          </Message>
-        </Group>
-
-        <Group>
-          <label style={{textAlign: "left"}}>Password</label>
-          <Input
-            id="password"
-            type="password"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
-          <Message>
-            {formik.errors.password ? formik.errors.password : null}
-          </Message>
-        </Group>
-        
-        <LongButton type="submit">Sign In</LongButton>
-      </form>
-
+            <Group>
+              <label style={{textAlign: "left"}} htmlFor="password">Password</label>
+              <Input
+                id="password"
+                type="password"
+                onChange={handleChange}
+                value={values.password}
+              />
+              <Message>
+                {errors.password ? errors.password : null}
+              </Message>
+          </Group>
+            <LongButton type="submit">Sign In</LongButton>
+          </form>
+        )}
+      </Formik>
       <ProviderContainer>
         Sign In with:
         <Provider onClick={handle_google}>
