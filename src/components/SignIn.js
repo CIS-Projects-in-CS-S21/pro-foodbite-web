@@ -16,11 +16,11 @@ export default function SignIn( { onSubmit } ) {
 
   const sign_in_schema = Yup.object().shape({
     email: Yup.string()
-    .email("Enter a valid email")
-    .required("Required"),
+      .email("Enter a valid email")
+      .required("Required"),
     password: Yup.string()
-    .min(8, "Too short")
-    .required("Required")
+      .min(8, "Too short")
+      .required("Required")
   });  
 
   const handle_submit = async ( values ) => {
@@ -81,7 +81,7 @@ export default function SignIn( { onSubmit } ) {
                   onChange={handleChange}
                   value={values.email}
               />
-              <Message>
+              <Message data-testid="emailError">
                 {errors.email ? errors.email : null}
               </Message>
             </Group>
@@ -94,7 +94,7 @@ export default function SignIn( { onSubmit } ) {
                 onChange={handleChange}
                 value={values.password}
               />
-              <Message>
+              <Message data-testid="passwordError">
                 {errors.password ? errors.password : null}
               </Message>
           </Group>
