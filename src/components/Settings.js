@@ -1,11 +1,9 @@
 import React, { createContext, useState, useEffect} from "react";
 import {Group, LongButton, Input} from "../styles/FormElements"
 import styled from "styled-components"
-import {useHistory} from "react-router-dom"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { auth} from "../firebase.js" 
-
 
 const Container = styled.div`
   display:flex;
@@ -15,6 +13,22 @@ const Container = styled.div`
   font-size: 1.2em;
 `;
 
+const UserPhotoButton = styled.button`
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    border: none;
+    background-size: 100px;
+
+    :hover{
+        border:1px solid;
+        border-color: rgba(0,0,0,0.5);
+        background-size: 50px;
+    }
+`
 
 const TopPage = styled.div`
     z-index:1;
@@ -28,8 +42,6 @@ const TopPage = styled.div`
     visibility:hidden;
 `
 
-
-
 function PasswordEditForm(){
 
     const topPage = document.getElementById("thePage");
@@ -41,13 +53,14 @@ function PasswordEditForm(){
     }
     
     const handle_change_password = () =>{
-        auth.currentUser.updatePassword(handlePasswordFormik.values.password).then(function(){
-            alert("Reset password success");
-            handlePasswordFormik.values.password = "";
-            handlePasswordFormik.values.confirmPassword = "";
-            topPage.style.visibility = "hidden";
-        }).catch(function(error){
-            console.log(error);
+        auth.currentUser.updatePassword(handlePasswordFormik.values.password)
+            .then(function(){
+                alert("Reset password success");
+                handlePasswordFormik.values.password = "";
+                handlePasswordFormik.values.confirmPassword = "";
+                topPage.style.visibility = "hidden";
+            }).catch(function(error){
+                console.log(error);
         });
     }
 
@@ -67,6 +80,7 @@ function PasswordEditForm(){
         }),
         onSubmit:handle_change_password,
     });
+
 
     return(
         <form id="changePasswordForm" onSubmit={handlePasswordFormik.handleSubmit}>
@@ -107,7 +121,7 @@ export default function Setting() {
     const currentUser = auth.currentUser;
   
     const [taskList, setTaskList] = useState([]);
-
+    
 
     function passwordToList(){
         var newTask = <PasswordEditForm id="passwordForm"/>
@@ -115,26 +129,40 @@ export default function Setting() {
         topPage.style.visibility = "visible";
     }
 
+    const photoClick = () =>{   
+        var el = document.getElementById("uploadImage");
+        el.click();
+    }
+
     const loadFile = (event) =>{
         var imgData = event.target.files[0];
         var imgUrl = URL.createObjectURL(imgData);
         var output = document.getElementById("userPhoto");
-        output.src = imgUrl;
+        if(window.confirm("Change profile image?")){
+            output.src = imgUrl;
+            currentUser.updateProfile({
+                photoURL:imgUrl
+            }).then(function(){
+                var photoURL = currentUser.photoURL;
+            }, function(error){
+            console.log("error");
+            });
+        }
     }
     
     return( 
         <Container id="container">
-            
+            <UserPhotoButton id="photoButton" onClick={photoClick} >
                 <img id = "userPhoto" height="98px" width="98px" style={{borderRadius:"50px"}}  
                     src={currentUser.photoURL?currentUser.photoURL: "/assets/profile.png"}/>
-            
+            </UserPhotoButton>
             <input id="uploadImage" type="file" accept=".jpg, .jpeg, .png" 
                 onChange={loadFile} style={{display:"none"}} />
             <Group>
                 <text>Email: {currentUser.email}</text>
+                
                 <LongButton onClick={passwordToList}>Reset Password</LongButton>
             </Group>
-
             <TopPage id="thePage">
                 {taskList}
             </TopPage>
