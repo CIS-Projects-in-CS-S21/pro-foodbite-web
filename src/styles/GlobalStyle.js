@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
     // it instead of all elements
     // font-family: "Amatic SC", cursive;
     // font-size: 3.0rem;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
   button {
