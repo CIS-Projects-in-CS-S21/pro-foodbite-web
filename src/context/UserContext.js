@@ -19,29 +19,29 @@ export const UserContextProvider = ({ children }) => {
     const unsubscribe = auth.onAuthStateChanged((current_user) => {
       set_user(current_user);
       set_loading(false);
+
+      // get the user document inside the db
+      // and add it to the user object
+      if (user) {
+        firebase.firestore()
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then(doc => {
+            if (doc.exists) {
+              set_user({ ...user, ...doc.data() })
+              console.log("user data", user);
+            }
+          })
+          .catch(err => {
+            console.log("unable to get user table data", err);
+          });
+      }
     })
 
     return unsubscribe;
   }, []);
 
-  // get the user document inside the db
-  // and add it to the user object
-  useEffect(() => {
-
-    firebase.firestore()
-      .collection("users")
-      .doc(user.uid)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          set_user({ ...user, ...doc.data() })
-          console.log("user data", user);
-        }
-      })
-      .catch(err => {
-        console.log("unable to get user table data", err);
-      });
-  }, []);
 
   const sign_up_with_email_password = ((email, password) => {
     // create new account
@@ -68,13 +68,13 @@ export const UserContextProvider = ({ children }) => {
 
   const sign_out = () => auth.signOut();
 
-  const assignRestaurantToUser = (ownedRestaurantId) => {
+  const assignRestaurantToUser = (restaurantId) => {
     if (user) {
       // get the user object in the db
       return firebase.firestore()
         .collection("users")
         .doc(user.uid)
-        .update({ ownedRestaurantId });
+        .update({ ownedRestaurants: firebase.firestore.FieldValue.arrayUnion(restaurantId) });
     }
     return null;
   };
