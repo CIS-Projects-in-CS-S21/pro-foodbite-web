@@ -26,22 +26,22 @@ export const UserContextProvider = ({ children }) => {
 
   // get the user document inside the db
   // and add it to the user object
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   firebase.firestore()
-  //     .collection("users")
-  //     .doc(user.uid)
-  //     .get()
-  //     .then(doc => {
-  //       if (doc.exists) {
-  //         set_user({ ...user, ...doc.data() })
-  //         console.log("user data", user);
-  //       }
-  //     })
-  //     .catch(err => {
-  //       console.log("unable to get user table data", err);
-  //     });
-  // }, []);
+    firebase.firestore()
+      .collection("users")
+      .doc(user.uid)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          set_user({ ...user, ...doc.data() })
+          console.log("user data", user);
+        }
+      })
+      .catch(err => {
+        console.log("unable to get user table data", err);
+      });
+  }, []);
 
   const sign_up_with_email_password = ((email, password) => {
     // create new account
