@@ -6,6 +6,7 @@ export const restaurantFormStyles = {
         margin: "0 auto",
         marginTop: "2em",
         color: "rgb(54, 54, 54)"
+
     },
     button: {
         fontSize: "20px",
@@ -35,5 +36,11 @@ export const restaurantFormStyles = {
     errorMsg: {
         color: "rgb(238, 49, 49)",
         fontWeight: 400
+    },
+    animate: {
+        transition: "all 600ms ease-in",
+        position: "absolute",
+        left: 0,
+        right: 0
     }
 }

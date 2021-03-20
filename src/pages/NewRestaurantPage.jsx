@@ -17,6 +17,7 @@ import FormRestaurantHours from '../components/newRestaurant/FormRestaurantHours
 import FormRestaurantMenu from '../components/newRestaurant/FormRestaurantMenu';
 import FormRestaurantPreview from '../components/newRestaurant/FormRestaurantPreview';
 import FormRestaurantSubmit from '../components/newRestaurant/FormRestaurantSubmit';
+import { restaurantFormStyles } from "../components/newRestaurant/RestaurantFormStyles"
 
 const NewRestaurantPage = () => {
     /*
@@ -88,99 +89,154 @@ const NewRestaurantPage = () => {
         if (e)
             e.preventDefault();
 
-        if (form.screen + 1 <= maxScreenAmount)
-            setForm({ ...form, screen: form.screen + 1 });
-        else
-            console.log('nope')
+        if (form.screen + 1 > maxScreenAmount) {
+            console.log('nope');
+            return;
+        }
+
+        const ele = document.getElementById('test');
+        fade(ele, 700, () => setForm({ ...form, screen: form.screen + 1 }));
     };
 
     const prevScreen = () => {
-        if (form.screen - 1 >= 1)
-            setForm({ ...form, screen: form.screen - 1 });
-        else {
+        if (form.screen - 1 < 1) {
             console.log('no go', form.screen);
+            return;
         }
+
+        const ele = document.getElementById('test');
+        fade(ele, 700, () => setForm({ ...form, screen: form.screen - 1 }));
     };
 
     const resetForm = () => {
         setForm(restaurantDefaultState);
     };
 
+    function slideLeft(ele, time, callback) {
+        // a simple sliding animation
+        ele.style.opacity = 0;
+        ele.style.left = "-200vw";
+        ele.style.visibility = "hidden";
+        setTimeout(() => {
+            ele.style.opacity = 1;
+            ele.style.left = "0";
+            ele.style.visibility = "visible";
 
-    switch (form.screen) {
-        case screens.WELCOME:
-            return (
-                <FormWelcome nextScreen={nextScreen} />
-            );
-        case screens.INSERT_NAME:
-            return (
-                <FormRestaurantName
-                    nextScreen={nextScreen}
-                    prevScreen={prevScreen}
-                    form={form}
-                    setForm={setForm}
-                />
-            );
-        case screens.UPLOAD_IMAGE:
-            return (
-                <FormUploadImage
-                    nextScreen={nextScreen}
-                    prevScreen={prevScreen}
-                    form={form}
-                    setForm={setForm}
-                />
-            );
-        case screens.INSERT_DESC:
-            return (
-                <FormRestaurantDescription
-                    nextScreen={nextScreen}
-                    prevScreen={prevScreen}
-                    form={form}
-                    setForm={setForm}
-                />
-            );
-        case screens.INSERT_HOURS:
-            return (
-                <FormRestaurantHours
-                    nextScreen={nextScreen}
-                    prevScreen={prevScreen}
-                    form={form}
-                    setForm={setForm}
-                />
-            );
-        case screens.CREATE_MENU:
-            return (
-                <FormRestaurantMenu
-                    nextScreen={nextScreen}
-                    prevScreen={prevScreen}
-                    form={form}
-                    setForm={setForm}
-                />
-            );
-        case screens.PREVIEW:
-            return (
-                <FormRestaurantPreview
-                    nextScreen={nextScreen}
-                    prevScreen={prevScreen}
-                    form={form}
-                    setForm={setForm}
-                />
-            );
-        case screens.SUBMIT:
-            return (
-                <FormRestaurantSubmit
-                    nextScreen={nextScreen}
-                    prevScreen={prevScreen}
-                    form={form}
-                    setForm={setForm}
-                    resetForm={resetForm}
-                />
-            );
-        default:
-            return (
-                <h1 onClick={prevScreen}>Unknown screen</h1>
-            );
+            callback();
+        }, time)
     }
+
+    function slideRight(ele, time, callback) {
+        // a simple sliding animation
+        ele.style.opacity = 0;
+        ele.style.right = "-200vw";
+
+        ele.style.visibility = "hidden";
+        setTimeout(() => {
+            ele.style.right = "0";
+            ele.style.opacity = 1;
+            ele.style.visibility = "visible";
+
+            callback();
+        }, time)
+    }
+
+    function fade(ele, time, callback) {
+        // a simple sliding animation
+        ele.style.opacity = 0;
+        // ele.style.left = "-200vw";
+        ele.style.visibility = "hidden";
+        setTimeout(() => {
+            ele.style.opacity = 1;
+            ele.style.visibility = "visible";
+
+            callback();
+        }, time)
+    }
+
+
+    function renderCurrentScreen() {
+        switch (form.screen) {
+            case screens.WELCOME:
+                return (
+                    <FormWelcome nextScreen={nextScreen} />
+                );
+            case screens.INSERT_NAME:
+                return (
+                    <FormRestaurantName
+                        nextScreen={nextScreen}
+                        prevScreen={prevScreen}
+                        form={form}
+                        setForm={setForm}
+                    />
+                );
+            case screens.UPLOAD_IMAGE:
+                return (
+                    <FormUploadImage
+                        nextScreen={nextScreen}
+                        prevScreen={prevScreen}
+                        form={form}
+                        setForm={setForm}
+                    />
+                );
+            case screens.INSERT_DESC:
+                return (
+                    <FormRestaurantDescription
+                        nextScreen={nextScreen}
+                        prevScreen={prevScreen}
+                        form={form}
+                        setForm={setForm}
+                    />
+                );
+            case screens.INSERT_HOURS:
+                return (
+                    <FormRestaurantHours
+                        nextScreen={nextScreen}
+                        prevScreen={prevScreen}
+                        form={form}
+                        setForm={setForm}
+                    />
+                );
+            case screens.CREATE_MENU:
+                return (
+                    <FormRestaurantMenu
+                        nextScreen={nextScreen}
+                        prevScreen={prevScreen}
+                        form={form}
+                        setForm={setForm}
+                    />
+                );
+            case screens.PREVIEW:
+                return (
+                    <FormRestaurantPreview
+                        nextScreen={nextScreen}
+                        prevScreen={prevScreen}
+                        form={form}
+                        setForm={setForm}
+                    />
+                );
+            case screens.SUBMIT:
+                return (
+                    <FormRestaurantSubmit
+                        nextScreen={nextScreen}
+                        prevScreen={prevScreen}
+                        form={form}
+                        setForm={setForm}
+                        resetForm={resetForm}
+                    />
+                );
+            default:
+                return (
+                    <h1 onClick={prevScreen}>Unknown screen</h1>
+                );
+        }
+    }
+
+    return (
+        <div id="test" style={restaurantFormStyles.animate}>
+            {renderCurrentScreen()}
+        </div>
+    )
 };
 
 export default NewRestaurantPage;
