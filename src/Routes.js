@@ -9,6 +9,7 @@ import OrdersPage from "./pages/OrdersPage"
 import { useUserContext } from "./context/UserContext"
 import AnalyticsPage from "./pages/AnalyticsPage";
 import ErrorPage from "./pages/ErrorPage";
+import NewRestaurantPage from "./pages/NewRestaurantPage";
 
 
 export default function Routes() {
@@ -22,6 +23,7 @@ export default function Routes() {
         <Route exact path="/" component={HomePage}></Route>
         <Route path="/sign-in" component={SignInPage}></Route>
         <Route path="/sign-up" component={SignUpPage}></Route>
+        <Route path="/new" component={NewRestaurantPage}></Route>
         <Route
           path="/account"
           render={() => {
