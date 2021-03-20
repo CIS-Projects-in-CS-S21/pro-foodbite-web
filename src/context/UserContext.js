@@ -74,7 +74,7 @@ export const UserContextProvider = ({ children }) => {
       return firebase.firestore()
         .collection("users")
         .doc(user.uid)
-        .update({ ownedRestaurans: firebase.firestore.FieldValue.arrayUnion(restaurantId) });
+        .update({ ownedRestaurants: firebase.firestore.FieldValue.arrayUnion(restaurantId) });
     }
     return null;
   };
