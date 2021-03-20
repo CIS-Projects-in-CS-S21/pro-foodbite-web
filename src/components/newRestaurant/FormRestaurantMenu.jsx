@@ -115,7 +115,7 @@ const FormRestaurantMenu = ({ nextScreen, prevScreen, form, setForm }) => {
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    placeholder="the special sacue for your dish"
+                                    placeholder="the special sauce for your dish"
 
                                     defaultValue={menuItem.description}
                                     onChange={(e) => setMenuItem({ ...menuItem, description: e.target.value })}
