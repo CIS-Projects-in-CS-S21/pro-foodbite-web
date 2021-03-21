@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import {Group, LongButton, Container, Input} from "../styles/FormElements"
 import styled from "styled-components"
-import firebase, { auth} from "../firebase.js" 
+import { auth} from "../firebase.js" 
 import PasswordEditForm from "./settingElement/editPassword"
 import MenuEditForm from "./settingElement/editMenu"
 import { useHistory } from "react-router";
-
+import firebase from "firebase"
 
 const UserPhotoButton = styled.button`
     display:flex;
@@ -31,7 +31,7 @@ const TopPage = styled.div`
     position:absolute;
     border-radius:5px;
     width:100%;
-    height:100% - 100px;
+    height:100%;
     margin-top:100px;
     top:0px;
     
@@ -40,22 +40,30 @@ const TopPage = styled.div`
 const ChangeName = ({show, closeShow, currentUser}) => {
     
     function chanegProfileName(){
-        var el = document.getElementById("newName");
-        var newName = el.value !== "" ? el.value : null;
+        var first = document.getElementById("firstName");
+        var last = document.getElementById("lastName");
+        var firstName = first.value
+        var lastName = last.value
+        
+        if(lastName.replaceAll(" ", "") + firstName.replaceAll(" ", "") === ""){
+            var fullName = null;
+        }else{
+            var fullName = firstName + " " + lastName;
+        }
         var userName = document.getElementById("userName");
-        if(newName == null){
-            if(!window.confirm("Are you sure this is the new name you want?")){
+        if(fullName == null){
+            if(!window.confirm("Are you sure to become nameless?")){
                 return;
             }
         }
         currentUser.updateProfile({
-            displayName:newName,
+            displayName:fullName,
         }).then(function(){
             var displayName = currentUser.displayName;
         },function(error){
             console.log("name change failed", error);
         })
-        userName.textContent = "Name: " + (newName !=null ? newName:"nameless");
+        userName.textContent = "Name: " + (fullName !=null ? fullName:"nameless");
         closeShow();
     }
 
@@ -65,8 +73,12 @@ const ChangeName = ({show, closeShow, currentUser}) => {
     return(
             <Container>
                 <Group>
-                    <Input id = "newName" type="string" placeholder="enter the new name"
-                     style={{marginTop:20}}/>
+                    <div style={{display:"flex"}}>
+                        <Input id = "firstName" type="string" placeholder="first name"
+                        style={{marginTop:20, width:"50%"}}/>
+                        <Input id = "lastName" type="string" placeholder="last name" 
+                        style={{marginTop:20, width:"50%"}}/>
+                    </div>
                     <br/>
                     <LongButton onClick={closeShow}>Cancel</LongButton>
                     <br/>
@@ -79,6 +91,20 @@ const ChangeName = ({show, closeShow, currentUser}) => {
 export default function Setting() {
     
 
+    useEffect(() =>{
+        var imageName = currentUser.photoURL.match(/profile-img\..*\?/)[0].replace("?", "");
+        var storageRef = firebase.storage().ref();
+        var imageRef = storageRef.child("users/profileImage/" + currentUser.uid + "/"
+        + imageName);
+        imageRef.getDownloadURL().then((URL) =>{
+            setImageUrl(URL);
+        }).catch((error) =>{
+            console.log("error happen during downloading " + error);
+        })
+    },[])
+
+
+    const [imageUrl, setImageUrl] = useState("");
     const history = useHistory();
     const [theMenu, setTheMenu] = useState([]);
     const [menuIsShow, setMenuIsShow] = useState(false);
@@ -97,9 +123,10 @@ export default function Setting() {
         var imgData = event.target.files[0];
         var output = document.getElementById("userPhoto");
         if(window.confirm("Change profile image?")){
+
             var storageRef = firebase.storage().ref();
-            var imageRef = storageRef.child(currentUser.uid + "/profileImage/" + "profile-img" + "." 
-            + imgData.name.split(".")[imgData.name.split(".").length - 1]);
+            var imageRef = storageRef.child("users/profileImage/" + currentUser.uid + "/profile-img" + "." 
+                + imgData.name.split(".")[imgData.name.split(".").length - 1]);
             imageRef.put(imgData).then((snapshot) =>{
                 console.log("uploaded a file")
             });
@@ -158,18 +185,19 @@ export default function Setting() {
     }
 
 
-    return( 
+    return(
         <Container id="container">
             <UserPhotoButton id="photoButton" onClick={photoClick} >
                 <img id = "userPhoto" height="98px" width="98px" style={{borderRadius:"50px"}}  
-                    src={currentUser.photoURL?currentUser.photoURL: "/assets/profile.png"}/>
+                    src={imageUrl? imageUrl: "/assets/profile.png"}/>
             </UserPhotoButton>
             <input id="uploadImage" type="file" accept=".jpg, .jpeg, .png" 
                 onChange={loadFile} style={{display:"none"}} />
             <Group>
                 <text id="userName">Name: {currentUser.displayName?currentUser.displayName : "nameless"}</text>
-                <LongButton onClick={() => setNameIsShow(true)}>Change Name</LongButton>
                 <text>Email: {currentUser.email}</text>
+                <LongButton onClick={() => setNameIsShow(true)}>Change Name</LongButton>
+                <br/>
                 <LongButton onClick={() => setMenuIsShow(true)}>Menu item</LongButton>
                 <br/>
                 <LongButton onClick={() => setPasswordIsShow(true)}>Reset Password</LongButton>

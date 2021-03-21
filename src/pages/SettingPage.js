@@ -5,7 +5,7 @@ import { Greeting } from "./SignInPage"
 export default function SettingsPage() {
     return (
       <div>
-        <Greeting>This page shows your profile and settings</Greeting>
+        <Greeting>Profile and Setting</Greeting>
         <Setting></Setting>
       </div>
     )
