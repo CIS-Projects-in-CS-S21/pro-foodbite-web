@@ -73,15 +73,11 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
             })
             .then(() => {
                 console.log("user document updated successfully");
-                setForm({ ...form, success: true });
+                setForm({ ...form, submitting: false });
+                setRedirect(true);
             })
             .catch(err => {
                 console.log(err);
-            })
-            .finally(() => {
-                setForm({ ...form, submitting: false });
-                if (form.success)
-                    setRedirect(true);
             });
     }
 
