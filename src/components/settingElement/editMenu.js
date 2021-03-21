@@ -3,6 +3,8 @@ import {Group, LongButton, Input, Container} from "../../styles/FormElements"
 import styled from "styled-components"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import { waitForElementToBeRemoved } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 
 
 const MenuList = styled.ul`
@@ -19,8 +21,9 @@ const MenuItem = styled.li`
     border:1px solid;
     border-radius:10px;
     margin-right:5px;
+    background-color:rgba(245,245,220,0.5);
     &:hover{
-        background-color:rgba(125,125,125,125);
+        background-color:rgba(125,125,125,1);
     }
 `
 
@@ -37,15 +40,36 @@ const TopPage = styled.div`
 `
 
 export default function MenuEditForm( {show, closeShow, sendData, menuData}){
+    const [menuObjectList, setMenuObjectList] = useState(menuData);
+    const [menuList, setMenuList] = useState([]);
 
-    const [menuList, setMenuList] = useState(menuData);
-    
+    useEffect( () => {
+        for (let i = 0; i < menuObjectList.length; i++) {
+            const element = menuObjectList[i];
+            var theNewItem = <MenuItem id={"Menu"+i} >
+                {element.name}<br/>
+                {element.description}<br/>
+                $
+                {parseFloat(element.price).toFixed(2)}    
+            </MenuItem>
+            setMenuList(menuList => [...menuList, theNewItem]);
+        }
+    },[menuData])
+
     function addItemToList(){
         var itemName = document.getElementById("itemName");
         var itemPrice = document.getElementById("itemPrice");
         var itemDescription = document.getElementById("itemDescription");  
+        
+        const temp = {
+            name:itemName.value,
+            price:itemPrice.value,
+            description:itemDescription.value
+        }
 
-        var theNewItem = <MenuItem id={menuList.length} >
+        setMenuObjectList([...menuObjectList, temp]);
+
+        var theNewItem = <MenuItem id={"Menu"+menuList.length} >
             {itemName.value}<br/>
             {itemDescription.value}<br/>
             $
@@ -58,6 +82,7 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
         itemPrice.value = "";
         itemName.value = "";
         itemDescription.value ="";
+        console.log("end display", menuObjectList);
     }
 
     const menuFormik = useFormik({
@@ -79,7 +104,7 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
     });
 
     function readyForClose(){
-        sendData(menuList);
+        sendData(menuObjectList);
         closeShow();
     }
 
@@ -94,17 +119,22 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
             <Group style={{justifyItems:"center", alignItems:"center"}}>
                 <form onSubmit={menuFormik.handleSubmit}>
                     <Input type="string" id="itemName" placeholder="Item Name"
-                        onChange={menuFormik.handleChange} value ={menuFormik.values.itemName}/>
+                        onChange={menuFormik.handleChange} value ={menuFormik.values.itemName}
+                        style={{marginBottom:10}}/>
                     <div>{menuFormik.errors.itemName ? menuFormik.errors.itemName : null}</div>
-                    <br/>
+
                     <Input type="number" id="itemPrice" step="0.01" min="0,01" placeholder="Item Price"
-                        onChange={menuFormik.handleChange} value = {menuFormik.values.itemPrice}/>
+                        onChange={menuFormik.handleChange} value = {menuFormik.values.itemPrice}
+                        style={{marginBottom:10}}/>
                     <div>{menuFormik.errors.itemPrice ? menuFormik.errors.itemPrice: null}</div>
-                    <br/>
-                    <Input type="string" id="itemDescription" placeholder="Description of the item - optional"/>
-                    <LongButton type="submit">Add item</LongButton>
+
+                    <Input type="string" id="itemDescription" placeholder="Description of the item - optional"
+                    style={{marginBottom:10}}/>
+
+                    <LongButton type="submit" style={{marginBottom:10}}>Add item</LongButton>
                 </form>
                 <Group>
+
                     <LongButton id="done" onClick={readyForClose}>Done</LongButton>
                 </Group>
             </Group>

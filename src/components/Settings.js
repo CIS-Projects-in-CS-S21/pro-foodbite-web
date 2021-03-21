@@ -1,8 +1,6 @@
-import React, { createContext, useState, useEffect} from "react";
-import {Group, LongButton, Container} from "../styles/FormElements"
+import React, { useState } from "react";
+import {Group, LongButton, Container, Input} from "../styles/FormElements"
 import styled from "styled-components"
-import { useFormik } from "formik"
-import * as Yup from "yup"
 import firebase, { auth} from "../firebase.js" 
 import PasswordEditForm from "./settingElement/editPassword"
 import MenuEditForm from "./settingElement/editMenu"
@@ -33,18 +31,59 @@ const TopPage = styled.div`
     position:absolute;
     border-radius:5px;
     width:100%;
-    height:100%;
+    height:100% - 100px;
+    margin-top:100px;
     top:0px;
     
 `;
 
+const ChangeName = ({show, closeShow, currentUser}) => {
+    
+    function chanegProfileName(){
+        var el = document.getElementById("newName");
+        var newName = el.value !== "" ? el.value : null;
+        var userName = document.getElementById("userName");
+        if(newName == null){
+            if(!window.confirm("Are you sure this is the new name you want?")){
+                return;
+            }
+        }
+        currentUser.updateProfile({
+            displayName:newName,
+        }).then(function(){
+            var displayName = currentUser.displayName;
+        },function(error){
+            console.log("name change failed", error);
+        })
+        userName.textContent = "Name: " + (newName !=null ? newName:"nameless");
+        closeShow();
+    }
+
+    if(!show){
+        return null;
+    }
+    return(
+            <Container>
+                <Group>
+                    <Input id = "newName" type="string" placeholder="enter the new name"
+                     style={{marginTop:20}}/>
+                    <br/>
+                    <LongButton onClick={closeShow}>Cancel</LongButton>
+                    <br/>
+                    <LongButton onClick={chanegProfileName}>Submit</LongButton>
+                </Group>
+            </Container>
+    )
+}
 
 export default function Setting() {
+    
 
     const history = useHistory();
     const [theMenu, setTheMenu] = useState([]);
     const [menuIsShow, setMenuIsShow] = useState(false);
     const [passwordIsShow, setPasswordIsShow] = useState(false);
+    const [nameIsShow, setNameIsShow] = useState(false);
     const currentUser = auth.currentUser;
 
     const photoClick = () =>{   
@@ -57,25 +96,26 @@ export default function Setting() {
     const loadFile = (event) =>{
         var imgData = event.target.files[0];
         var output = document.getElementById("userPhoto");
-        // if(window.confirm("Change profile image?")){
-        //     var storageRef = firebase.storage().ref();
-        //     var imageRef = storageRef.child(currentUser.uid + "/profileImage/" + imgData.name);
-        //     imageRef.put(imgData).then((snapshot) =>{
-        //         console.log("uploaded a file")
-        //     });
-        //     imageRef.getDownloadURL().then((url) =>{
-        //         output.src = url;
-        //         currentUser.updateProfile({
-        //             photoURL:url,
-        //         }).then(function(){
-        //             var photoURL = currentUser.photoURL;
-        //         }, function(error){
-        //             console.log("update error " + error);
-        //         });
-        //     }).catch((error) =>{
-        //         console.log("download error " + error);
-        //     })
-        // }
+        if(window.confirm("Change profile image?")){
+            var storageRef = firebase.storage().ref();
+            var imageRef = storageRef.child(currentUser.uid + "/profileImage/" + "profile-img" + "." 
+            + imgData.name.split(".")[imgData.name.split(".").length - 1]);
+            imageRef.put(imgData).then((snapshot) =>{
+                console.log("uploaded a file")
+            });
+            imageRef.getDownloadURL().then((url) =>{
+                output.src = url;
+                currentUser.updateProfile({
+                    photoURL:url,
+                }).then(function(){
+                    var photoURL = currentUser.photoURL;
+                }, function(error){
+                    console.log("update error " + error);
+                });
+            }).catch((error) =>{
+                console.log("download error " + error);
+            })
+        }
     }
     
     const registerRestaurant= () =>{
@@ -84,10 +124,14 @@ export default function Setting() {
 
     const getDataFromChild = (theData) =>{
         setTheMenu(theData);
+        
+        //save the new menu information to db
     }
 
+    
+
     function PageShow(){
-        if(menuIsShow || passwordIsShow){
+        if(menuIsShow || passwordIsShow || nameIsShow){
             return(
                 <TopPage id="thePage">
                     <div style={{backgroundColor:"rgba(125,125,125,0.5)",
@@ -101,6 +145,10 @@ export default function Setting() {
                             closeShow = {() => setPasswordIsShow(false)}
                             style={{marginTop:10}}>              
                             </PasswordEditForm>
+                        <ChangeName show={nameIsShow}
+                            closeShow={()=> setNameIsShow(false)}
+                            currentUser ={currentUser}>
+                        </ChangeName>
                     </div>
                 </TopPage>
             )
@@ -108,6 +156,7 @@ export default function Setting() {
             return null;
         }
     }
+
 
     return( 
         <Container id="container">
@@ -118,7 +167,8 @@ export default function Setting() {
             <input id="uploadImage" type="file" accept=".jpg, .jpeg, .png" 
                 onChange={loadFile} style={{display:"none"}} />
             <Group>
-                <text>Name: {currentUser.displayName?currentUser.displayName : currentUser.uid}</text>
+                <text id="userName">Name: {currentUser.displayName?currentUser.displayName : "nameless"}</text>
+                <LongButton onClick={() => setNameIsShow(true)}>Change Name</LongButton>
                 <text>Email: {currentUser.email}</text>
                 <LongButton onClick={() => setMenuIsShow(true)}>Menu item</LongButton>
                 <br/>
