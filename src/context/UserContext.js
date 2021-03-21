@@ -11,6 +11,7 @@ export const useUserContext = () => {
 export const UserContextProvider = ({ children }) => {
 
   const [user, set_user] = useState();
+  const [userDb, setUserDb] = useState();
   const [loading, set_loading] = useState(true);
 
   useEffect(() => {
@@ -20,27 +21,31 @@ export const UserContextProvider = ({ children }) => {
       set_user(current_user);
       set_loading(false);
 
-      // get the user document inside the db
-      // and add it to the user object
-      if (user) {
-        firebase.firestore()
-          .collection("users")
-          .doc(user.uid)
-          .get()
-          .then(doc => {
-            if (doc.exists) {
-              set_user({ ...user, ...doc.data() })
-              console.log("user data", user);
-            }
-          })
-          .catch(err => {
-            console.log("unable to get user table data", err);
-          });
-      }
+      if (current_user)
+        getUserData();
     })
 
     return unsubscribe;
   }, []);
+
+  const getUserData = () => {
+    // get the user document inside the db
+    // and add it to the user object
+    if (user && userDb === undefined) {
+      firebase.firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            setUserDb(doc.data());
+          }
+        })
+        .catch(err => {
+          console.log("unable to get user table data", err);
+        });
+    }
+  }
 
 
   const sign_up_with_email_password = ((email, password) => {
@@ -89,7 +94,8 @@ export const UserContextProvider = ({ children }) => {
     sign_in_with_google,
     sign_in_with_facebook,
     sign_out,
-    assignRestaurantToUser
+    assignRestaurantToUser,
+    userDb,
   }
 
   return (
