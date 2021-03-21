@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect} from "react";
+import React from "react";
 import {Group, LongButton, Input, Container} from "../../styles/FormElements"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -63,7 +63,7 @@ export default function PasswordEditForm({show, closeShow}){
                 <Group>
                     <LongButton id="close" onClick={closeShow}>Cancel</LongButton>
                     <br/>
-                    <LongButton type="submit" onCLick={closeShow}>Submit</LongButton>
+                    <LongButton type="submit">Submit</LongButton>
                 </Group>
             </Container>
         </form>

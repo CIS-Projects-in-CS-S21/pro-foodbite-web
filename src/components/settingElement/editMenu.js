@@ -1,10 +1,8 @@
-import React, { createContext, useState, useEffect} from "react";
+import React, {  useState, useEffect} from "react";
 import {Group, LongButton, Input, Container} from "../../styles/FormElements"
 import styled from "styled-components"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import { waitForElementToBeRemoved } from "@testing-library/dom";
-import userEvent from "@testing-library/user-event";
 
 
 const MenuList = styled.ul`
@@ -27,18 +25,6 @@ const MenuItem = styled.li`
     }
 `
 
-const TopPage = styled.div`
-    z-index:2;
-    align-items:center;
-    justify-content:center;
-    position:absolute;
-    background-color:green;
-    border-radius:5px;
-    width:100%;
-    margin-top:100px;
-    visibility:visible;
-`
-
 export default function MenuEditForm( {show, closeShow, sendData, menuData}){
     const [menuObjectList, setMenuObjectList] = useState(menuData);
     const [menuList, setMenuList] = useState([]);
@@ -46,7 +32,7 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
     useEffect( () => {
         for (let i = 0; i < menuObjectList.length; i++) {
             const element = menuObjectList[i];
-            var theNewItem = <MenuItem id={"Menu"+i} >
+            const theNewItem = <MenuItem id={"Menu"+i} >
                 {element.name}<br/>
                 {element.description}<br/>
                 $
