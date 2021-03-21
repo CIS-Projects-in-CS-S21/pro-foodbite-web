@@ -6,6 +6,7 @@ import * as Yup from "yup"
 import firebase, { auth} from "../firebase.js" 
 import PasswordEditForm from "./settingElement/editPassword"
 import MenuEditForm from "./settingElement/editMenu"
+import { useHistory } from "react-router";
 
 
 const UserPhotoButton = styled.button`
@@ -30,24 +31,28 @@ const TopPage = styled.div`
     align-items:center;
     justify-content:center;
     position:absolute;
-    background-color:white;
     border-radius:5px;
     width:100%;
+    height:100%;
     top:0px;
+    
 `;
 
 
 export default function Setting() {
-    
+
+    const history = useHistory();
+    const [theMenu, setTheMenu] = useState([]);
     const [menuIsShow, setMenuIsShow] = useState(false);
     const [passwordIsShow, setPasswordIsShow] = useState(false);
     const currentUser = auth.currentUser;
-  
 
     const photoClick = () =>{   
         var el = document.getElementById("uploadImage");
         el.click();
     }
+
+    
 
     const loadFile = (event) =>{
         var imgData = event.target.files[0];
@@ -73,7 +78,37 @@ export default function Setting() {
         // }
     }
     
-    
+    const registerRestaurant= () =>{
+        history.push("/new");
+    }
+
+    const getDataFromChild = (theData) =>{
+        setTheMenu(theData);
+    }
+
+    function PageShow(){
+        if(menuIsShow || passwordIsShow){
+            return(
+                <TopPage id="thePage">
+                    <div style={{backgroundColor:"rgba(125,125,125,0.5)",
+                    borderRadius:"5px", top:"50%"}}>
+                        <MenuEditForm show={menuIsShow} sendData={getDataFromChild}
+                            closeShow={()=>setMenuIsShow(false)}
+                            menuData={theMenu}
+                            style={{marginTop:"10px"}}>
+                            </MenuEditForm>
+                        <PasswordEditForm show={passwordIsShow} 
+                            closeShow = {() => setPasswordIsShow(false)}
+                            style={{marginTop:10}}>              
+                            </PasswordEditForm>
+                    </div>
+                </TopPage>
+            )
+        }else{
+            return null;
+        }
+    }
+
     return( 
         <Container id="container">
             <UserPhotoButton id="photoButton" onClick={photoClick} >
@@ -88,20 +123,10 @@ export default function Setting() {
                 <LongButton onClick={() => setMenuIsShow(true)}>Menu item</LongButton>
                 <br/>
                 <LongButton onClick={() => setPasswordIsShow(true)}>Reset Password</LongButton>
+                <br/>
+                <LongButton onClick={registerRestaurant}>Register Restaurant</LongButton>
             </Group>
-
-            <TopPage id="thePage">
-                <MenuEditForm show={menuIsShow} 
-                    closeShow={()=>setMenuIsShow(false)}
-                    style={{marginTop:"10px"}}>
-
-                    </MenuEditForm>
-                <PasswordEditForm show={passwordIsShow} 
-                    closeShow = {() => setPasswordIsShow(false)}
-                    style={{marginTop:10}}>
-                    
-                    </PasswordEditForm>
-            </TopPage>
+            <PageShow></PageShow>
         </Container>
     )
 }

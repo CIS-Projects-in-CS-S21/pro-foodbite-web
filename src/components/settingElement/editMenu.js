@@ -36,10 +36,10 @@ const TopPage = styled.div`
     visibility:visible;
 `
 
-export default function MenuEditForm( {show, closeShow}){
+export default function MenuEditForm( {show, closeShow, sendData, menuData}){
 
-    const [menuList, setMenuList] = useState([]);
-
+    const [menuList, setMenuList] = useState(menuData);
+    
     function addItemToList(){
         var itemName = document.getElementById("itemName");
         var itemPrice = document.getElementById("itemPrice");
@@ -49,10 +49,8 @@ export default function MenuEditForm( {show, closeShow}){
             {itemName.value}<br/>
             {itemDescription.value}<br/>
             $
-            {parseFloat(itemPrice.value).toFixed(2)}
-             
+            {parseFloat(itemPrice.value).toFixed(2)}    
         </MenuItem>
-
         setMenuList(menuList => [...menuList, theNewItem]);
         menuFormik.values.itemName="";
         menuFormik.values.itemPrice="";
@@ -80,32 +78,41 @@ export default function MenuEditForm( {show, closeShow}){
         onSubmit: addItemToList,
     });
 
+    function readyForClose(){
+        sendData(menuList);
+        closeShow();
+    }
+
     if(!show){
         return null;
     }
-
     return(
-    <Container>
-            <MenuList >
-                {menuList}
-            </MenuList>
-        <Group style={{justifyItems:"center", alignItems:"center"}}>
-            <form onSubmit={menuFormik.handleSubmit}>
-                <Input type="string" id="itemName" placeholder="Item Name"
-                    onChange={menuFormik.handleChange} value ={menuFormik.values.itemName}/>
-                <div>{menuFormik.errors.itemName ? menuFormik.errors.itemName : null}</div>
-                <br/>
-                <Input type="number" id="itemPrice" step="0.01" min="0,01" placeholder="Item Price"
-                    onChange={menuFormik.handleChange} value = {menuFormik.values.itemPrice}/>
-                <div>{menuFormik.errors.itemPrice ? menuFormik.errors.itemPrice: null}</div>
-                <br/>
-                <Input type="string" id="itemDescription" placeholder="Description of the item - optional"/>
-                <LongButton type="submit">Add item</LongButton>
-            </form>
-            <Group>
-                <LongButton onClick={closeShow}>Done</LongButton>
+        <Container>
+                <MenuList >
+                    {menuList}
+                </MenuList>
+            <Group style={{justifyItems:"center", alignItems:"center"}}>
+                <form onSubmit={menuFormik.handleSubmit}>
+                    <Input type="string" id="itemName" placeholder="Item Name"
+                        onChange={menuFormik.handleChange} value ={menuFormik.values.itemName}/>
+                    <div>{menuFormik.errors.itemName ? menuFormik.errors.itemName : null}</div>
+                    <br/>
+                    <Input type="number" id="itemPrice" step="0.01" min="0,01" placeholder="Item Price"
+                        onChange={menuFormik.handleChange} value = {menuFormik.values.itemPrice}/>
+                    <div>{menuFormik.errors.itemPrice ? menuFormik.errors.itemPrice: null}</div>
+                    <br/>
+                    <Input type="string" id="itemDescription" placeholder="Description of the item - optional"/>
+                    <LongButton type="submit">Add item</LongButton>
+                </form>
+                <Group>
+                    <LongButton id="done" onClick={readyForClose}>Done</LongButton>
+                </Group>
             </Group>
-        </Group>
-    </Container>
+        </Container>
     )
+    
+
+    
+
+    
 }
