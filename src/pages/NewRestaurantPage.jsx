@@ -88,6 +88,10 @@ const NewRestaurantPage = () => {
 
     // const [form, setForm] = useState(restaurantDefaultState);
     const [form, setForm] = useState(initFormState);
+    console.log(form);
+
+    //console.log(JSON.parse(sessionStorage.getItem("image")))
+    //console.log(sessionStorage.getItem("image")); 
 
     const maxScreenAmount = 8;
 
@@ -221,6 +225,7 @@ const NewRestaurantPage = () => {
                         prevScreen={prevScreen}
                         form={form}
                         setForm={setForm}
+                        notNew={false}
                     />
                 );
             case screens.SUBMIT:

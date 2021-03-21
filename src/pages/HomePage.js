@@ -12,7 +12,8 @@ export default function SignInPage() {
     else return <span style={{ fontWeight: 700 }}>FALSE</span>
   }
 
-  console.log(user);
+  //console.log(user);
+  sessionStorage.clear();
 
   return (
     <Container>

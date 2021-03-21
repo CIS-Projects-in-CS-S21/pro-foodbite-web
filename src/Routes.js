@@ -10,6 +10,7 @@ import { useUserContext } from "./context/UserContext"
 import AnalyticsPage from "./pages/AnalyticsPage";
 import ErrorPage from "./pages/ErrorPage";
 import NewRestaurantPage from "./pages/NewRestaurantPage";
+import RestaurantPage from "./pages/RestaurantPage"
 
 
 export default function Routes() {
@@ -42,6 +43,13 @@ export default function Routes() {
             return user ? <AnalyticsPage /> : <Redirect to="sign-in" />
           }}>
         </Route>
+        <Route
+          path="/restaurant"
+          render={() => {
+            return user ? <RestaurantPage /> : <Redirect to="sign-in" />
+          }}>
+        </Route>
+
 
         <Route component={ErrorPage} />
       </Switch>

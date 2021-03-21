@@ -1,22 +1,34 @@
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Button, Row, Col, Table } from 'react-bootstrap'
 import { convertTime24to12 } from '../../utils/Utils'
 import { restaurantFormStyles } from './RestaurantFormStyles'
 
-const FormRestaurantPreview = ({ nextScreen, prevScreen, form }) => {
+const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
 
     useEffect(() => {
-        if (form.image) {
-            const reader = new FileReader();
 
-            reader.onload = e => {
+        if(!notNew){
+            // newRestaurant
+            if (Object.keys(form.image).length !== 0) {
+                if(typeof form.image !== "string"){
+                const reader = new FileReader();
+
+                reader.onload = e => {
+                    const imageEle = document.getElementById("image-preview");
+                    imageEle.src = e.target.result;
+                };
+
+                reader.readAsDataURL(form.image);
+            }
+            }
+            else if(sessionStorage.getItem("image")) {
+
+                // rare instance, refresh page after upload image screen, the image is stored in session state. 
                 const imageEle = document.getElementById("image-preview");
-                imageEle.src = e.target.result;
-            };
-
-            reader.readAsDataURL(form.image);
+                imageEle.src = sessionStorage.getItem("image");
+            }
         }
-    }, [form.image]);
+    }, [form.image, notNew]);
 
     const hoursElement = Object.getOwnPropertyNames(form.hours).map((day, index) => {
         return makeHoursElement(day, index);
@@ -49,10 +61,34 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form }) => {
             );
     }
 
+    function getHeader(){
+        if(notNew) return "Your current information.";
+        else return "Let's review the information you provided."
+    }
+
+    function getImage(){
+        if(notNew || typeof form.image == "string") return <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} src={form.image}/>
+        else return <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} />
+    }
+
+    function getButtons(){
+        if(notNew) return<Button style={restaurantFormStyles.button} onClick={nextScreen} variant="primary">Edit my information</Button>
+        else{
+            return(
+                <Fragment>
+                    <Button style={restaurantFormStyles.button} onClick={prevScreen} variant="secondary">Previous</Button>
+                    <Button style={restaurantFormStyles.button} variant="primary" onClick={nextScreen} >Continue</Button>
+                </Fragment>
+            )
+        }
+    }
+
+
+
 
     return (
         <div style={restaurantFormStyles.container}>
-            <h1 style={restaurantFormStyles.h1}>Let's review the information you provided.</h1>
+            <h1 style={restaurantFormStyles.h1}>{getHeader()}</h1>
             <br />
             <br />
 
@@ -82,7 +118,7 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form }) => {
                     </Col>
                 </Row>
 
-                <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} />
+                {getImage()}
 
                 <br />
 
@@ -126,9 +162,7 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form }) => {
                     </Col>
                 </Row>
             </div>
-
-            <Button style={restaurantFormStyles.button} onClick={prevScreen} variant="secondary">Previous</Button>
-            <Button style={restaurantFormStyles.button} variant="primary" onClick={nextScreen} >Continue</Button>
+                {getButtons()}
         </div>
     )
 };
