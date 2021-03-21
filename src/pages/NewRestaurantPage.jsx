@@ -83,8 +83,8 @@ const NewRestaurantPage = () => {
     };
 
     //sessionStorage.clear(); 
-    let persistedForm = JSON.parse(sessionStorage.getItem("restaurantPersistState")); 
-    let initFormState = persistedForm == null ? restaurantDefaultState : persistedForm; 
+    let persistedForm = JSON.parse(sessionStorage.getItem("restaurantPersistState"));
+    let initFormState = persistedForm == null ? restaurantDefaultState : persistedForm;
 
     // const [form, setForm] = useState(restaurantDefaultState);
     const [form, setForm] = useState(initFormState);
@@ -101,8 +101,8 @@ const NewRestaurantPage = () => {
         }
 
         const ele = document.getElementById('test');
-        fade(ele, 700, () => setForm({ ...form, screen: form.screen + 1 }));
-        sessionStorage.setItem("restaurantPersistState", JSON.stringify(form)); 
+        fade(ele, 400, () => setForm({ ...form, screen: form.screen + 1 }));
+        sessionStorage.setItem("restaurantPersistState", JSON.stringify(form));
     };
 
     const prevScreen = () => {
@@ -112,8 +112,8 @@ const NewRestaurantPage = () => {
         }
 
         const ele = document.getElementById('test');
-        fade(ele, 700, () => setForm({ ...form, screen: form.screen - 1 }));
-        sessionStorage.setItem("restaurantPersistState", JSON.stringify(form)); 
+        fade(ele, 400, () => setForm({ ...form, screen: form.screen - 1 }));
+        sessionStorage.setItem("restaurantPersistState", JSON.stringify(form));
     };
 
     const resetForm = () => {

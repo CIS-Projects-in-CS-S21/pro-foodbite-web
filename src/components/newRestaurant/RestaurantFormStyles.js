@@ -38,7 +38,7 @@ export const restaurantFormStyles = {
         fontWeight: 400
     },
     animate: {
-        transition: "all 600ms ease-in",
+        transition: "all 100ms ease-in",
         position: "absolute",
         left: 0,
         right: 0
