@@ -1,17 +1,12 @@
 import React, { createContext, useState, useEffect} from "react";
-import {Group, LongButton, Input} from "../styles/FormElements"
+import {Group, LongButton, Container} from "../styles/FormElements"
 import styled from "styled-components"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import { auth} from "../firebase.js" 
+import firebase, { auth} from "../firebase.js" 
+import PasswordEditForm from "./settingElement/editPassword"
+import MenuEditForm from "./settingElement/editMenu"
 
-const Container = styled.div`
-  display:flex;
-  flex-direction:column;
-  justify-content: center;
-  align-items:center;
-  font-size: 1.2em;
-`;
 
 const UserPhotoButton = styled.button`
     display:flex;
@@ -38,96 +33,16 @@ const TopPage = styled.div`
     background-color:white;
     border-radius:5px;
     width:100%;
-    margin-top:100px;
-    visibility:hidden;
-`
-
-function PasswordEditForm(){
-
-    const topPage = document.getElementById("thePage");
-
-    const cancelClick = () =>{
-        handlePasswordFormik.values.password = "";
-        handlePasswordFormik.values.confirmPassword = "";
-        topPage.style.visibility = "hidden";
-    }
-    
-    const handle_change_password = () =>{
-        auth.currentUser.updatePassword(handlePasswordFormik.values.password)
-            .then(function(){
-                alert("Reset password success");
-                handlePasswordFormik.values.password = "";
-                handlePasswordFormik.values.confirmPassword = "";
-                topPage.style.visibility = "hidden";
-            }).catch(function(error){
-                console.log(error);
-        });
-    }
-
-    const handlePasswordFormik = useFormik({
-        initialValues:{
-            password:"",
-            confirmPassword:"",
-        },
-        validationSchema: Yup.object({
-            password: Yup.string()
-                .min(8, "password is too short")
-                .required("Required"),
-
-            confirmPassword: Yup.string()
-                .oneOf([Yup.ref("password"), null], "password must match")
-                .required("Required")
-        }),
-        onSubmit:handle_change_password,
-    });
-
-
-    return(
-        <form id="changePasswordForm" onSubmit={handlePasswordFormik.handleSubmit}>
-            <h1>Reset Password</h1>
-            <label>New Password</label>
-            <br/>
-            <Input type="password" 
-                id="password"
-                onChange={handlePasswordFormik.handleChange}
-                value={handlePasswordFormik.values.password}
-            />
-            <div>{handlePasswordFormik.errors.password? handlePasswordFormik.errors.password: null}</div>
-            <br/>
-            <label>Confirm Password</label>
-            <br/>
-            <Input type="password" 
-                id="confirmPassword"
-                onChange={handlePasswordFormik.handleChange}
-                value={handlePasswordFormik.values.confirmPassword}
-            />
-            <div>{handlePasswordFormik.errors.confirmPassword? handlePasswordFormik.errors.confirmPassword: null}</div>    
-            <br/>
-            <Container>
-                <Group>
-                    <LongButton type="cancel" onClick={cancelClick} primary>Cancel</LongButton>
-                    <br/>
-                    <LongButton type="submit">Submit</LongButton>
-                </Group>
-            </Container>
-        </form>
-    )
-}
-
+    top:0px;
+`;
 
 
 export default function Setting() {
-    const topPage = document.getElementById("thePage");
+    
+    const [menuIsShow, setMenuIsShow] = useState(false);
+    const [passwordIsShow, setPasswordIsShow] = useState(false);
     const currentUser = auth.currentUser;
   
-    const [taskList, setTaskList] = useState([]);
-    
-
-    function passwordToList(){
-        var newTask = <PasswordEditForm id="passwordForm"/>
-        setTaskList([newTask]);
-        topPage.style.visibility = "visible";
-    }
 
     const photoClick = () =>{   
         var el = document.getElementById("uploadImage");
@@ -136,19 +51,28 @@ export default function Setting() {
 
     const loadFile = (event) =>{
         var imgData = event.target.files[0];
-        var imgUrl = URL.createObjectURL(imgData);
         var output = document.getElementById("userPhoto");
-        if(window.confirm("Change profile image?")){
-            output.src = imgUrl;
-            currentUser.updateProfile({
-                photoURL:imgUrl
-            }).then(function(){
-                var photoURL = currentUser.photoURL;
-            }, function(error){
-            console.log("error");
-            });
-        }
+        // if(window.confirm("Change profile image?")){
+        //     var storageRef = firebase.storage().ref();
+        //     var imageRef = storageRef.child(currentUser.uid + "/profileImage/" + imgData.name);
+        //     imageRef.put(imgData).then((snapshot) =>{
+        //         console.log("uploaded a file")
+        //     });
+        //     imageRef.getDownloadURL().then((url) =>{
+        //         output.src = url;
+        //         currentUser.updateProfile({
+        //             photoURL:url,
+        //         }).then(function(){
+        //             var photoURL = currentUser.photoURL;
+        //         }, function(error){
+        //             console.log("update error " + error);
+        //         });
+        //     }).catch((error) =>{
+        //         console.log("download error " + error);
+        //     })
+        // }
     }
+    
     
     return( 
         <Container id="container">
@@ -159,12 +83,24 @@ export default function Setting() {
             <input id="uploadImage" type="file" accept=".jpg, .jpeg, .png" 
                 onChange={loadFile} style={{display:"none"}} />
             <Group>
+                <text>Name: {currentUser.displayName?currentUser.displayName : currentUser.uid}</text>
                 <text>Email: {currentUser.email}</text>
-                
-                <LongButton onClick={passwordToList}>Reset Password</LongButton>
+                <LongButton onClick={() => setMenuIsShow(true)}>Menu item</LongButton>
+                <br/>
+                <LongButton onClick={() => setPasswordIsShow(true)}>Reset Password</LongButton>
             </Group>
+
             <TopPage id="thePage">
-                {taskList}
+                <MenuEditForm show={menuIsShow} 
+                    closeShow={()=>setMenuIsShow(false)}
+                    style={{marginTop:"10px"}}>
+
+                    </MenuEditForm>
+                <PasswordEditForm show={passwordIsShow} 
+                    closeShow = {() => setPasswordIsShow(false)}
+                    style={{marginTop:10}}>
+                    
+                    </PasswordEditForm>
             </TopPage>
         </Container>
     )
