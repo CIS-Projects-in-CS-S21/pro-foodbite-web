@@ -43,3 +43,33 @@ export function getFileExtension(filename) {
 export function checkTimeRange(a, b) {
     return (!a && !b) ? true : a < b;
 }
+
+/**
+ * Checks to see if the current signed in account is
+ * already associated with an restaurant.
+ * 
+ * @param {object} user
+ * @return {boolean} Whether the account belongs to an
+ * restaurant 
+ */
+export function shouldForceRestaurantSignup(user) {
+    console.log('shouldForceRestaurantSignup', user);
+
+    console.log('shouldForceRestaurantSignup', (user !== null && user.ownedRestaurants.length > 0) ? false : true);
+    return (user !== null && user.ownedRestaurants.length > 0) ? false : true;
+}
+
+/**
+ * Limits file upload to the max size provided
+ * 
+ * @param {File} file A File object that repersents the object to be uploaded
+ * @param {int} maxSize The max size allowed (exclusive) in kb
+ * @returns Whether the file should be uploaded
+ */
+export function checkMaxFileSize(file, maxSize) {
+    // the max size is in kb
+    if (file === undefined || file === null || !file.size)
+        return false;
+
+    return (file.size / 1000) > maxSize ? false : true;
+}

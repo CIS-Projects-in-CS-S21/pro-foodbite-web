@@ -1,4 +1,4 @@
-import { checkPrice, convertTime24to12, getFileExtension, checkTimeRange } from '../utils/Utils'
+import { checkPrice, convertTime24to12, getFileExtension, checkTimeRange, shouldForceRestaurantSignup, checkMaxFileSize } from '../utils/Utils'
 
 describe("Test price regex", () => {
     it("has a valid price", () => {
@@ -51,5 +51,17 @@ describe("Test file extension", () => {
         expect(getFileExtension("some-image-path.")).toBe(null);
         expect(getFileExtension("")).toBe(null);
         expect(getFileExtension(".")).toBe(null);
+    });
+});
+
+describe("Test max upload file size", () => {
+    it("has a size less than max", () => {
+        expect(checkMaxFileSize({ size: 100000 }, 100)).toBe(true);
+        expect(checkMaxFileSize({ size: 90000 }, 100)).toBe(true);
+    });
+
+    it("has a size greater than or equal to max", () => {
+        expect(checkMaxFileSize({ size: 900000 }, 100)).toBe(false);
+        expect(checkMaxFileSize(null, 100)).toBe(false);
     });
 });
