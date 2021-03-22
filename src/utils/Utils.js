@@ -31,3 +31,16 @@ export function getFileExtension(filename) {
 
     return null;
 }
+
+/**
+     * Compares time values in the format HH:MM:SS to
+     * make sure the time values don't overlap.
+     * 
+     * @param {string} a The value to compare against
+     * @param {string} b The value to compare to
+     * @returns If the time value a comes before the time value b
+     */
+export function checkTimeRange(a, b) {
+    console.log('a: ' + a + ' b: ' + b + (a < b));
+    return a < b;
+}

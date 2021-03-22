@@ -1,4 +1,4 @@
-import { checkPrice, convertTime24to12, getFileExtension } from '../utils/Utils'
+import { checkPrice, convertTime24to12, getFileExtension, checkTimeRange } from '../utils/Utils'
 
 describe("Test price regex", () => {
     it("has a valid price", () => {
@@ -20,6 +20,18 @@ describe("Test time conversions", () => {
         expect(convertTime24to12("12:50")).toBe("12:50 PM")
         expect(convertTime24to12("22:21")).toBe("10:21 PM")
         expect(convertTime24to12("13:55")).toBe("01:55 PM")
+    });
+});
+
+describe("Test for valid time ranges", () => {
+    it("has a valid time ranges", () => {
+        expect(checkTimeRange("01:00", "21:00")).toBe(true)
+        expect(checkTimeRange("20:00", "21:00")).toBe(true)
+    });
+
+    it("has invalid time ranges", () => {
+        expect(checkTimeRange("11:00", "01:00")).toBe(false)
+        expect(checkTimeRange("21:00", "21:00")).toBe(false)
     });
 });
 
