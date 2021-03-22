@@ -6,7 +6,7 @@ import { auth} from "../../firebase.js"
 
 export default function PasswordEditForm({show, closeShow}){
 
-    const handle_change_password = () =>{
+    const handle_change_password =  () =>{
         auth.currentUser.updatePassword(handlePasswordFormik.values.password).then(function(){
             alert("Reset password success");
         }).catch(function(error){

@@ -196,11 +196,22 @@ export default function Setting() {
             <Group>
                 <text id="userName">Name: {currentUser.displayName?currentUser.displayName : "nameless"}</text>
                 <text>Email: {currentUser.email}</text>
+                <text>Restaurant Name: Place Holder</text>
+                <text>Address: 123 Place Holder street</text>
+                <text>Hour:{<br/>}
+                    Monday:{<br/>}
+                    Tuesday:{<br/>}
+                    Wednesday:{<br/>}
+                    Thrusday:{<br/>}
+                    Friday:{<br/>}
+                    Saturday:{<br/>}
+                    Sunday:{<br/>}
+                </text>
                 <LongButton onClick={() => setNameIsShow(true)}>Change Name</LongButton>
                 <br/>
-                <LongButton onClick={() => setMenuIsShow(true)}>Menu item</LongButton>
-                <br/>
                 <LongButton onClick={() => setPasswordIsShow(true)}>Reset Password</LongButton>
+                <br/>
+                <LongButton onClick={() => setMenuIsShow(true)}>Menu item</LongButton>
                 <br/>
                 <LongButton onClick={registerRestaurant}>Register Restaurant</LongButton>
             </Group>
