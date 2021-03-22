@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import FormRestaurantPreview from "../components/newRestaurant/FormRestaurantPreview"
 import FormRestaurantName from "../components/newRestaurant/FormRestaurantName"
 import FormUploadImage from "../components/newRestaurant/FormUploadImage"
@@ -8,7 +8,9 @@ import FormRestaurantMenu from "../components/newRestaurant/FormRestaurantMenu"
 import FormRestaurantUpdate from "../components/Restaurant/FormRestaurantUpdate"
 import { restaurantFormStyles } from "../components/newRestaurant/RestaurantFormStyles"
 import { useUserContext } from "../context/UserContext"
-import firebase from "../firebase"
+import { firestore } from "../firebase"
+import { defaultEmpty } from "../tempData"
+
 
 export default function RestaurantPage(){
   
@@ -23,79 +25,51 @@ export default function RestaurantPage(){
     SUBMIT: 8
   };
 
-  // TEMP! my big kahuna burger 
-  // let ref = firebase.firestore().collection("restaurants").doc("8JFQb5PyRUKUZduY72MK");  
-  // let init; 
-
-  // ref.get().then((doc) => {
-  //   if(doc.exists){
-  //     init = doc.data(); 
-  //   }
-  //   else{
-  //     console.log("no doc");
-  //   }
-  // }).catch(err => console.log(err)); 
-
-
-  // temp 
-  const doc = {
-    name: "Big Kahuna Burger",
-    image: "https://firebasestorage.googleapis.com/v0/b/foodbite-10690.appspot.com/o/images%2F196cf729-62f6-41da-a1d1-3573dd11da45%2Fimage.jpg?alt=media&token=37e8bc25-100f-4252-8776-00b2c5ee74d1",
-    description: "Mmm, this is a tasty burger!",
-    menuItems: [
-      {
-        description: "its a tasty burger",
-        name: "big kahuna burger",
-        price: "5.50"
-      },
-      {
-        description: "nothing special",
-        name: "fried",
-        price: "2.50"
-      }
-    ],
-    hours: {
-        monday: {
-            open: "22:00",
-            close: "11:00"
-        },
-        tuesday: {
-            open: "",
-            close: ""
-        },
-        wednesday: {
-            open: "",
-            close: ""
-        },
-        thursday: {
-            open: "",
-            close: ""
-        },
-        friday: {
-            open: "",
-            close: ""
-        },
-        saturday: {
-            open: "23:00",
-            close: "10:00"
-        },
-        sunday: {
-            open: "",
-            close: ""
-        },
-    },
-    screen: 1,
-    submitting: false,
-    success: false
-};
-
-  // todo, if form empty use default (just in case)
-
-  const [form, setForm] = useState(doc);
-  //console.log(form); 
-  //console.log(form);
-
   const maxScreenAmount = 8;
+
+  const { user } = useUserContext();
+
+  const [form, setForm] = useState();
+  const [loading, setLoading] = useState(true); 
+
+  useEffect( () => {
+
+    const get_doc= async () => {
+ 
+      let ref = await firestore.collection("restaurants").where("ownerId", "==", user.uid);
+      const snapshot = await ref.get();
+  
+      if (snapshot.empty) {
+        //return defaultEmpty; 
+        setForm(defaultEmpty); 
+      } 
+      else {
+        // temp solution, menu and menuItems name mixed up 
+        let doc = snapshot.docs[0].data();
+        console.log(doc);
+
+        let temp = defaultEmpty;
+        temp.name = doc.name;
+        temp.image = doc.image;
+        temp.description = doc.description;
+        temp.hours = doc.profile.hours; 
+        temp.menuItems = doc.menu; 
+        temp.screen = 1;
+        temp.submitting = false;
+        temp.success = false; 
+
+        setForm(temp); 
+        setLoading(false); 
+      }
+    }
+
+    get_doc(); 
+
+  }, [user.uid]);
+
+ 
+  // todo, if form empty use empty default (ex. sign-up but don't complete the newRest. wizard)
+
 
   const nextScreen = (e) => {
     if (e) e.preventDefault();
@@ -208,10 +182,14 @@ export default function RestaurantPage(){
     }
 }
 
+function isLoading(){
+  if(loading) return <div>temp fetching restaurant</div>
+  else return renderCurrentScreen(); 
+}
+
 return (
   <div id="test" style={restaurantFormStyles.animate}>
-    {renderCurrentScreen()}
+    {isLoading()}
   </div>
 )
-
 };
