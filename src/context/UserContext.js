@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import firebase, { auth, } from "../firebase.js"
+import firebase, { auth, firestore } from "../firebase.js"
 
 // auth (user), restaurant info  
 export const UserContext = createContext(null);
@@ -11,8 +11,10 @@ export const useUserContext = () => {
 export const UserContextProvider = ({ children }) => {
 
   const [user, set_user] = useState();
-  const [userDb, setUserDb] = useState();
+
+  const [userDb, setUserDb] = useState(null);
   const [loading, set_loading] = useState(true);
+  // let userDb = null;
 
   useEffect(() => {
     // set state observer w/ current user or null 
@@ -21,32 +23,63 @@ export const UserContextProvider = ({ children }) => {
       set_user(current_user);
       set_loading(false);
 
-      if (current_user)
-        getUserData();
+
+      console.log('auth change', current_user);
     })
 
     return unsubscribe;
   }, []);
 
-  const getUserData = () => {
+
+  const getUserData = (force) => {
     // get the user document inside the db
     // and add it to the user object
-    if (user && userDb === undefined) {
-      firebase.firestore()
+    if ((user !== undefined && user !== null) && (userDb === null || force)) {
+      console.log('getting user data forced:', force === undefined ? false : force);
+      set_loading(true);
+      firestore
         .collection("users")
         .doc(user.uid)
         .get()
         .then(doc => {
           if (doc.exists) {
-            setUserDb(doc.data());
+            // userDb = doc.data();
+            setUserDb(doc.data())
           }
         })
         .catch(err => {
           console.log("unable to get user table data", err);
+        })
+        .finally(() => {
+          console.log('done', userDb);
+          set_loading(false)
         });
+    } else {
+      console.log('already got user data', userDb)
     }
   }
 
+  useEffect(getUserData, [user, userDb]);
+
+  const insertUserIntoDb = async (user) => {
+    if (user === undefined)
+      return;
+    await firestore
+      .collection("users")
+      .doc(user.uid)
+      .set({
+        id: user.uid,
+        name: user.displayName ? user.displayName : "Foodie",
+        image: user.photoURL ? user.photoURL : "default image",
+        followedRestaurants: {}
+      })
+      .then(() => {
+        console.log('new user added');
+      })
+      .catch(err => {
+        console.log('unable to add new user', err);
+      });
+  }
 
   const sign_up_with_email_password = ((email, password) => {
     // create new account
@@ -71,7 +104,10 @@ export const UserContextProvider = ({ children }) => {
   });
 
 
-  const sign_out = () => auth.signOut();
+  const sign_out = () => {
+    setUserDb(null);
+    return auth.signOut();
+  }
 
   const assignRestaurantToUser = (restaurantId) => {
     if (user) {
@@ -96,6 +132,8 @@ export const UserContextProvider = ({ children }) => {
     sign_out,
     assignRestaurantToUser,
     userDb,
+    getUserData,
+    insertUserIntoDb
   }
 
   return (

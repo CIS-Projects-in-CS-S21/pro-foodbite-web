@@ -1,7 +1,7 @@
 import React from "react";
-import {Group, LongButton,Input } from "../styles/FormElements"
+import { Group, LongButton, Input } from "../styles/FormElements"
 import styled from "styled-components"
-import {useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useUserContext } from "../context/UserContext"
@@ -23,28 +23,31 @@ const Message = styled.div`
 
 export default function SignUp() {
   const history = useHistory();
-  const cancelClick = () =>{
+  const cancelClick = () => {
     history.push("/");
   }
 
-  const {sign_up_with_email_password} = useUserContext();
+  const { sign_up_with_email_password, insertUserIntoDb } = useUserContext();
 
-  const handle_submit = async(values) =>{
+  const handle_submit = async (values) => {
 
     // sign-up, auth context updated, navigate home. 
     await sign_up_with_email_password(values.email, values.password)
-      .then( () => history.push("/"))
+      .then((res) => {
+        insertUserIntoDb(res.user);
+        history.push("/");
+      })
       .catch(error => alert(error.message));
   }
 
 
   const formik = useFormik({
-    initialValues:{
-      email:"",
-      password:"",
-      confirmPassword:""
+    initialValues: {
+      email: "",
+      password: "",
+      confirmPassword: ""
     },
-  
+
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Enter a valid email")
@@ -59,44 +62,44 @@ export default function SignUp() {
         .required("Required"),
     }),
 
-    onSubmit:handle_submit,
+    onSubmit: handle_submit,
   });
 
   return (
     <Container>
       <form onSubmit={formik.handleSubmit}>
         <Group>
-          <label style={{textAlign:"left"}}>Email</label>
-          <Input type="email" 
-            id="email" 
-            onChange={formik.handleChange} 
-            value={formik.values.email}/>
+          <label style={{ textAlign: "left" }}>Email</label>
+          <Input type="email"
+            id="email"
+            onChange={formik.handleChange}
+            value={formik.values.email} />
           <Message>
-            {formik.errors.email? formik.errors.email: null}
+            {formik.errors.email ? formik.errors.email : null}
           </Message>
         </Group>
         <Group>
-          <label style={{textAlign:"left"}}>Password</label>
-          <Input type="password" 
-            id="password" 
-            onChange={formik.handleChange} 
-            value={formik.values.password}/>
+          <label style={{ textAlign: "left" }}>Password</label>
+          <Input type="password"
+            id="password"
+            onChange={formik.handleChange}
+            value={formik.values.password} />
           <Message>
-            {formik.errors.password ? formik.errors.password: null}
+            {formik.errors.password ? formik.errors.password : null}
           </Message>
         </Group>
         <Group>
-          <label style={{textAlign:"left"}}>Confirm Password</label>
-          <Input type="password" 
+          <label style={{ textAlign: "left" }}>Confirm Password</label>
+          <Input type="password"
             id="confirmPassword"
             onChange={formik.handleChange}
             value={formik.values.confirmPassword} />
           <Message>
-            {formik.errors.confirmPassword ? formik.errors.confirmPassword: null}
+            {formik.errors.confirmPassword ? formik.errors.confirmPassword : null}
           </Message>
         </Group>
         <LongButton onClick={cancelClick} primary>Cancel</LongButton>
-        <br/><br/>
+        <br /><br />
         <LongButton type="submit">Submit</LongButton>
       </form>
     </Container>

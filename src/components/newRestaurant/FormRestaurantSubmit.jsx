@@ -9,7 +9,7 @@ import { restaurantFormStyles } from './RestaurantFormStyles'
 
 const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
     const [redirect, setRedirect] = useState(false);
-    const { user, assignRestaurantToUser } = useUserContext();
+    const { user, assignRestaurantToUser, getUserData } = useUserContext();
 
     const submitRestaurantData = () => {
         setForm({ ...form, submitting: true });
@@ -76,6 +76,7 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
                 sessionStorage.clear();
                 setForm({ ...form, submitting: false });
                 setRedirect(true);
+                getUserData(true);
             })
             .catch(err => {
                 console.log(err);
