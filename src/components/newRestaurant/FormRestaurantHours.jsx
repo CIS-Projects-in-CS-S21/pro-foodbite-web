@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Row, Col } from 'react-bootstrap'
 import { restaurantFormStyles } from './RestaurantFormStyles'
+import { checkTimeRange } from '../../utils/Utils'
 
 const FormRestaurantHours = ({ nextScreen, prevScreen, form, setForm }) => {
     const [validTimes, setValidTimes] = useState(true);
@@ -15,20 +16,16 @@ const FormRestaurantHours = ({ nextScreen, prevScreen, form, setForm }) => {
         setForm(tempState);
     };
 
-    /**
-     * Compares time values in the format HH:MM:SS to
-     * make sure the time values don't overlap.
-     * 
-     * @param {string} a The value to compare against
-     * @param {string} b The value to compare to
-     * @returns If the time value a comes before the time value b
-     */
-    const checkTimeRange = (a, b) => a < b;
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
         // make sure all time values are within range
+        for (let day in form.hours) {
+            if (!checkTimeRange(day.open, day.close)) {
+                setValidTimes(false);
+                return;
+            }
+        }
         if (validTimes)
             nextScreen();
     };
