@@ -3,9 +3,9 @@ import {Group, LongButton, Container, Input} from "../styles/FormElements"
 import styled from "styled-components"
 import { auth} from "../firebase.js" 
 import PasswordEditForm from "./settingElement/editPassword"
-import MenuEditForm from "./settingElement/editMenu"
 import { useHistory } from "react-router";
 import firebase from "firebase"
+
 
 const UserPhotoButton = styled.button`
     display:flex;
@@ -28,7 +28,7 @@ const TopPage = styled.div`
     z-index:1;
     align-items:center;
     justify-content:center;
-    position:absolute;
+    position:fixed;
     border-radius:5px;
     width:100%;
     height:100%;
@@ -38,7 +38,6 @@ const TopPage = styled.div`
 `;
 
 const ChangeName = ({show, closeShow, currentUser}) => {
-    
     function chanegProfileName(){
         var first = document.getElementById("firstName");
         var last = document.getElementById("lastName");
@@ -88,10 +87,10 @@ const ChangeName = ({show, closeShow, currentUser}) => {
     )
 }
 
+
 export default function Setting() {
     
-
-    useEffect(() =>{
+    useEffect(() =>{//show profile image
         var imageName = currentUser.photoURL.match(/profile-img\..*\?/)[0].replace("?", "");
         var storageRef = firebase.storage().ref();
         var imageRef = storageRef.child("users/profileImage/" + currentUser.uid + "/"
@@ -103,27 +102,22 @@ export default function Setting() {
         })
     },[])
 
+    const currentUser = auth.currentUser;
+    const history = useHistory();
 
     const [imageUrl, setImageUrl] = useState("");
-    const history = useHistory();
-    const [theMenu, setTheMenu] = useState([]);
-    const [menuIsShow, setMenuIsShow] = useState(false);
     const [passwordIsShow, setPasswordIsShow] = useState(false);
     const [nameIsShow, setNameIsShow] = useState(false);
-    const currentUser = auth.currentUser;
 
     const photoClick = () =>{   
         var el = document.getElementById("uploadImage");
         el.click();
     }
 
-    
-
     const loadFile = (event) =>{
         var imgData = event.target.files[0];
         var output = document.getElementById("userPhoto");
         if(window.confirm("Change profile image?")){
-
             var storageRef = firebase.storage().ref();
             var imageRef = storageRef.child("users/profileImage/" + currentUser.uid + "/profile-img" + "." 
                 + imgData.name.split(".")[imgData.name.split(".").length - 1]);
@@ -145,29 +139,18 @@ export default function Setting() {
         }
     }
     
-    const registerRestaurant= () =>{
-        history.push("/new");
-    }
-
-    const getDataFromChild = (theData) =>{
-        setTheMenu(theData);
-        
-        //save the new menu information to db
+    const restaurantInfo= () =>{//open restaurant information page
+        history.push("/restaurantPage");
     }
 
     
 
     function PageShow(){
-        if(menuIsShow || passwordIsShow || nameIsShow){
+        if(passwordIsShow || nameIsShow){
             return(
                 <TopPage id="thePage">
                     <div style={{backgroundColor:"rgba(125,125,125,0.5)",
                     borderRadius:"5px", top:"50%"}}>
-                        <MenuEditForm show={menuIsShow} sendData={getDataFromChild}
-                            closeShow={()=>setMenuIsShow(false)}
-                            menuData={theMenu}
-                            style={{marginTop:"10px"}}>
-                            </MenuEditForm>
                         <PasswordEditForm show={passwordIsShow} 
                             closeShow = {() => setPasswordIsShow(false)}
                             style={{marginTop:10}}>              
@@ -176,6 +159,7 @@ export default function Setting() {
                             closeShow={()=> setNameIsShow(false)}
                             currentUser ={currentUser}>
                         </ChangeName>
+
                     </div>
                 </TopPage>
             )
@@ -183,7 +167,6 @@ export default function Setting() {
             return null;
         }
     }
-
 
     return(
         <Container id="container">
@@ -195,25 +178,16 @@ export default function Setting() {
                 onChange={loadFile} style={{display:"none"}} />
             <Group>
                 <text id="userName">Name: {currentUser.displayName?currentUser.displayName : "nameless"}</text>
-                <text>Email: {currentUser.email}</text>
+                <text style={{marginTop:10}}>Contact Info</text>
                 <text>Restaurant Name: Place Holder</text>
                 <text>Address: 123 Place Holder street</text>
-                <text>Hour:{<br/>}
-                    Monday:{<br/>}
-                    Tuesday:{<br/>}
-                    Wednesday:{<br/>}
-                    Thrusday:{<br/>}
-                    Friday:{<br/>}
-                    Saturday:{<br/>}
-                    Sunday:{<br/>}
-                </text>
+                <text>Email: {currentUser.email}</text>
+
                 <LongButton onClick={() => setNameIsShow(true)}>Change Name</LongButton>
                 <br/>
                 <LongButton onClick={() => setPasswordIsShow(true)}>Reset Password</LongButton>
                 <br/>
-                <LongButton onClick={() => setMenuIsShow(true)}>Menu item</LongButton>
-                <br/>
-                <LongButton onClick={registerRestaurant}>Register Restaurant</LongButton>
+                <LongButton onClick={restaurantInfo}>My Restaurant</LongButton>
             </Group>
             <PageShow></PageShow>
         </Container>
