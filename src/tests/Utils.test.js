@@ -27,11 +27,15 @@ describe("Test for valid time ranges", () => {
     it("has a valid time ranges", () => {
         expect(checkTimeRange("01:00", "21:00")).toBe(true)
         expect(checkTimeRange("20:00", "21:00")).toBe(true)
+        expect(checkTimeRange(undefined, undefined)).toBe(true)
+        expect(checkTimeRange(null, null)).toBe(true)
     });
 
     it("has invalid time ranges", () => {
         expect(checkTimeRange("11:00", "01:00")).toBe(false)
         expect(checkTimeRange("21:00", "21:00")).toBe(false)
+        expect(checkTimeRange(null, "21:00")).toBe(false)
+        expect(checkTimeRange("21:00", undefined)).toBe(false)
     });
 });
 

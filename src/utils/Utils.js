@@ -41,6 +41,5 @@ export function getFileExtension(filename) {
      * @returns If the time value a comes before the time value b
      */
 export function checkTimeRange(a, b) {
-    console.log('a: ' + a + ' b: ' + b + (a < b));
-    return a < b;
+    return (!a && !b) ? true : a < b;
 }
