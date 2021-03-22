@@ -31,22 +31,24 @@ export default function RestaurantPage(){
 
   const [form, setForm] = useState();
   const [loading, setLoading] = useState(true); 
+  const [path, setPath] = useState(); // temp for now, we should get our ownerId from context 
 
   useEffect( () => {
 
     const get_doc= async () => {
- 
+      
+      // TODO, get ownerId from our context, easier to grab our document. 
       let ref = await firestore.collection("restaurants").where("ownerId", "==", user.uid);
       const snapshot = await ref.get();
   
       if (snapshot.empty) {
-        //return defaultEmpty; 
         setForm(defaultEmpty); 
       } 
       else {
-        // temp solution, menu and menuItems name mixed up 
         let doc = snapshot.docs[0].data();
-        console.log(doc);
+        setPath(snapshot.docs[0].ref.path); 
+
+        //console.log(doc);
 
         let temp = defaultEmpty;
         temp.name = doc.name;
@@ -173,6 +175,7 @@ export default function RestaurantPage(){
               prevScreen={prevScreen}
               form={form}
               setForm={setForm}
+              path={path}
             />
         );
         default:
