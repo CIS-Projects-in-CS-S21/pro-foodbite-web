@@ -10,7 +10,7 @@ const MenuList = styled.ul`
     padding:0px;
     margin-top:50px;
     list-style:none;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 `
 
 const MenuItem = styled.li`
@@ -30,17 +30,8 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
     const [menuList, setMenuList] = useState([]);
 
     useEffect( () => {
-        for (let i = 0; i < menuObjectList.length; i++) {
-            const element = menuObjectList[i];
-            const theNewItem = <MenuItem id={"Menu"+i} >
-                {element.name}<br/>
-                {element.description}<br/>
-                $
-                {parseFloat(element.price).toFixed(2)}    
-            </MenuItem>
-            setMenuList(menuList => [...menuList, theNewItem]);
-        }
-    },[menuData])
+        refreshMenuList();
+    },[menuObjectList])
 
     function addItemToList(){
         var itemName = document.getElementById("itemName");
@@ -55,7 +46,7 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
 
         setMenuObjectList([...menuObjectList, temp]);
 
-        var theNewItem = <MenuItem id={"Menu"+menuList.length} >
+        const theNewItem = <MenuItem id={menuList.length} key={itemName.valuev + itemPrice} onClick={deleteItem} >
             {itemName.value}<br/>
             {itemDescription.value}<br/>
             $
@@ -68,7 +59,25 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
         itemPrice.value = "";
         itemName.value = "";
         itemDescription.value ="";
-        console.log("end display", menuObjectList);
+    }
+
+    function refreshMenuList(){
+        setMenuList([]);
+        for (let i = 0; i < menuObjectList.length; i++) {
+            const element = menuObjectList[i];
+            const theNewItem = <MenuItem id={i} key={element.name + element.price} onClick={deleteItem}>
+                {element.name}<br/>
+                {element.description}<br/>
+                $
+                {parseFloat(element.price).toFixed(2)}    
+            </MenuItem>
+            setMenuList(menuList => [...menuList, theNewItem]);
+        }
+    }
+
+    function deleteItem(e){
+        menuObjectList.splice(e.target.id,1);
+        refreshMenuList();
     }
 
     const menuFormik = useFormik({
@@ -99,7 +108,7 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
     }
     return(
         <Container>
-                <MenuList >
+                <MenuList id="items" >
                     {menuList}
                 </MenuList>
             <Group style={{justifyItems:"center", alignItems:"center"}}>
@@ -120,15 +129,10 @@ export default function MenuEditForm( {show, closeShow, sendData, menuData}){
                     <LongButton type="submit" style={{marginBottom:10}}>Add item</LongButton>
                 </form>
                 <Group>
-
                     <LongButton id="done" onClick={readyForClose}>Done</LongButton>
                 </Group>
             </Group>
         </Container>
     )
-    
-
-    
-
     
 }
