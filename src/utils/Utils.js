@@ -55,7 +55,10 @@ export function checkTimeRange(a, b) {
 export function shouldForceRestaurantSignup(user) {
     console.log('shouldForceRestaurantSignup', user);
 
-    console.log('shouldForceRestaurantSignup', (user !== null && user.ownedRestaurants.length > 0) ? false : true);
+    //console.log('shouldForceRestaurantSignup', (user !== null && user.ownedRestaurants.length > 0) ? false : true);
+
+    if(typeof user["ownedRestaurants"] === "undefined" ) return true;      
+
     return (user !== null && user.ownedRestaurants.length > 0) ? false : true;
 }
 
