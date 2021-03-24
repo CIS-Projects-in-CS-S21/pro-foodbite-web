@@ -1,0 +1,43 @@
+.new-restaurant-container {
+    padding: 1em;
+    max-width: 1200px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 2em;
+    color: rgb(54, 54, 54);
+}
+
+.new-restaurant-container button {
+    font-size: 20px;
+    margin: 4em 0.5em;
+}
+
+.new-restaurant-container > h1 {
+    font-size: 30px;
+    color: rgb(54, 54, 54);
+}
+
+.new-restaurant-container > form {
+    max-width: 600px;
+    margin: 2em auto;
+    padding-bottom: 1em;
+}
+
+.new-restaurant-container .new-restaurant-time-container {
+    text-align: left;
+}
+
+.new-restaurant-container .new-restaurant-time {
+    display: flex;
+}
+
+.new-restaurant-container .new-restaurant-time p {
+    padding: 0 10px;
+    justify-self: center;
+    align-self: center;
+}
+
+.error-message {
+    color: rgb(238, 49, 49);
+    font-weight: 400;
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import {Group, LongButton,Input } from "../styles/FormElements"
+import { Group, LongButton, Input } from "../styles/FormElements"
 import styled from "styled-components"
 import {useHistory} from "react-router-dom"
 import { Formik } from "formik"
@@ -24,11 +24,11 @@ const Message = styled.div`
 export default function SignUp( { onSubmit } ) {
 
   const history = useHistory();
-  const cancelClick = () =>{
+  const cancelClick = () => {
     history.push("/");
   }
 
-  const {sign_up_with_email_password} = useUserContext();
+  const { sign_up_with_email_password, insertUserIntoDb } = useUserContext();
 
   const sign_up_schema = Yup.object().shape({
     email: Yup.string()
@@ -45,7 +45,10 @@ export default function SignUp( { onSubmit } ) {
   const handle_submit = async(values) =>{
     // sign-up, auth context updated, navigate home. 
     await sign_up_with_email_password(values.email, values.password)
-      .then( () => history.push("/"))
+      .then((res) => {
+        insertUserIntoDb(res.user);
+        history.push("/");
+      })
       .catch(error => alert(error.message));
     
     // for tests/Auth.test
