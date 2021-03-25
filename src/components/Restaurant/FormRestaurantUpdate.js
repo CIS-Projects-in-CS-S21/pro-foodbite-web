@@ -7,12 +7,12 @@ import { Redirect } from 'react-router-dom';
 import { Button, Spinner } from "react-bootstrap"
 import { restaurantFormStyles } from "../newRestaurant/RestaurantFormStyles"
 
-export default function FormRestaurantUpdate( { prevScreen, form, setForm, path } ) {
+export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
 
     const [redirect, setRedirect] = useState(false);
-    const { user } = useUserContext();
+    const { user, userDb } = useUserContext();
 
-    console.log(form);
+    //console.log(form);
 
     const submitRestaurantData = () => {
         setForm({ ...form, submitting: true });
@@ -33,7 +33,7 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm, path 
         if(typeof form.image === "string"){
             restaurant.image = form.image; // if form.name is string they did not upload a new photo
 
-         firebase.firestore().doc(path).set(restaurant)
+        firebase.firestore().doc(`restaurants/${userDb.ownedRestaurants[0]}`).set(restaurant)
             .then( () => {
             console.log("success");
             setForm({ ...form, submitting: false });
@@ -61,7 +61,7 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm, path 
                 restaurant.image = imageUrl;
             })
             .then( () => {
-                firebase.firestore().doc(path).set(restaurant)
+                firebase.firestore().doc(`restaurants/${userDb.ownedRestaurants[0]}`).set(restaurant)
                     .then( () => {
                     console.log("success");
                     setForm({ ...form, submitting: false });
@@ -69,6 +69,7 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm, path 
                     }).catch(err => console.log(err)); 
             }); 
         }
+        
   }
 
   return (

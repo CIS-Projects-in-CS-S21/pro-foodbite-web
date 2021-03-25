@@ -27,28 +27,26 @@ export default function RestaurantPage(){
 
   const maxScreenAmount = 8;
 
-  const { user } = useUserContext();
+  const { user, userDb } = useUserContext();
+  console.log(userDb); 
 
   const [form, setForm] = useState();
   const [loading, setLoading] = useState(true); 
-  const [path, setPath] = useState(); // temp for now, we should get our ownerId from context 
 
   useEffect( () => {
 
     const get_doc= async () => {
       
-      // TODO, get ownerId from our context, easier to grab our document. 
-      let ref = await firestore.collection("restaurants").where("ownerId", "==", user.uid);
+     // let ref = await firestore.collection("restaurants").where("ownerId", "==", user.uid);
+      let ref = await firestore.doc(`restaurants/${userDb.ownedRestaurants[0]}`); 
       const snapshot = await ref.get();
   
       if (snapshot.empty) {
         setForm(defaultEmpty); 
       } 
       else {
-        let doc = snapshot.docs[0].data();
-        setPath(snapshot.docs[0].ref.path); 
-
-        //console.log(doc);
+       // let doc = snapshot.docs[0].data();
+        let doc = snapshot.data(); 
 
         let temp = defaultEmpty;
         temp.name = doc.name;
@@ -67,7 +65,7 @@ export default function RestaurantPage(){
 
     get_doc(); 
 
-  }, [user.uid]);
+  }, [user.uid, userDb.ownedRestaurants]);
 
  
   // todo, if form empty use empty default (ex. sign-up but don't complete the newRest. wizard)
@@ -175,7 +173,6 @@ export default function RestaurantPage(){
               prevScreen={prevScreen}
               form={form}
               setForm={setForm}
-              path={path}
             />
         );
         default:
@@ -186,7 +183,7 @@ export default function RestaurantPage(){
 }
 
 function isLoading(){
-  if(loading) return <div>temp fetching restaurant</div>
+  if(loading) return <div>Fetching Restaurant</div>
   else return renderCurrentScreen(); 
 }
 
