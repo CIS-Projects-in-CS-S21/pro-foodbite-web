@@ -9,7 +9,7 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
 
         if(!notNew){
             // newRestaurant
-            if (Object.keys(form.image).length !== 0) {
+            if (form.image) {
                 if(typeof form.image !== "string"){
                 const reader = new FileReader();
 
@@ -20,12 +20,6 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
 
                 reader.readAsDataURL(form.image);
             }
-            }
-            else if(sessionStorage.getItem("image")) {
-
-                // rare instance, refresh page after upload image screen, the image is stored in session state. 
-                const imageEle = document.getElementById("image-preview");
-                imageEle.src = sessionStorage.getItem("image");
             }
         }
     }, [form.image, notNew]);

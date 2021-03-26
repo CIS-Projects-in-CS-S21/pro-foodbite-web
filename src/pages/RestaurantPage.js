@@ -28,17 +28,33 @@ export default function RestaurantPage(){
   const maxScreenAmount = 8;
 
   const { user, userDb } = useUserContext();
-  console.log(userDb); 
 
   const [form, setForm] = useState();
   const [loading, setLoading] = useState(true); 
 
+
+  useEffect(() => {
+    // wanring, page refresh 
+    window.addEventListener("beforeunload", alertUser);
+
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  
+  }, []);
+
+
+  const alertUser = e => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
+
   useEffect( () => {
 
     const get_doc= async () => {
-      
-     // let ref = await firestore.collection("restaurants").where("ownerId", "==", user.uid);
-      let ref = await firestore.doc(`restaurants/${userDb.ownedRestaurants[0]}`); 
+
+      //let ref = await firestore.collection("restaurants").where("ownerId", "==", user.uid);
+      let ref = firestore.doc(`restaurants/${userDb.ownedRestaurants[0]}`); 
       const snapshot = await ref.get();
   
       if (snapshot.empty) {
@@ -66,9 +82,6 @@ export default function RestaurantPage(){
     get_doc(); 
 
   }, [user.uid, userDb.ownedRestaurants]);
-
- 
-  // todo, if form empty use empty default (ex. sign-up but don't complete the newRest. wizard)
 
 
   const nextScreen = (e) => {

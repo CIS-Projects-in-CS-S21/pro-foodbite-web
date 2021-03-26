@@ -8,7 +8,7 @@
  * @returns A multipage setup guide for new restaurants
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FormWelcome from '../components/newRestaurant/FormWelcome';
 import FormRestaurantName from '../components/newRestaurant/FormRestaurantName';
 import FormUploadImage from '../components/newRestaurant/FormUploadImage';
@@ -82,16 +82,25 @@ const NewRestaurantPage = () => {
         success: false
     };
 
-    //sessionStorage.clear(); 
-    let persistedForm = JSON.parse(sessionStorage.getItem("restaurantPersistState"));
-    let initFormState = persistedForm == null ? restaurantDefaultState : persistedForm;
+    
+    useEffect(() => {
+        // wanring, page refresh 
+        window.addEventListener("beforeunload", alertUser);
 
-    // const [form, setForm] = useState(restaurantDefaultState);
-    const [form, setForm] = useState(initFormState);
-    console.log(form);
+        return () => {
+        window.removeEventListener("beforeunload", alertUser);
+        };
+    
+    }, []);
 
-    //console.log(JSON.parse(sessionStorage.getItem("image")))
-    //console.log(sessionStorage.getItem("image")); 
+
+    const alertUser = e => {
+        e.preventDefault();
+        e.returnValue = "";
+    };
+
+
+    const [form, setForm] = useState(restaurantDefaultState);
 
     const maxScreenAmount = 8;
 
@@ -106,7 +115,6 @@ const NewRestaurantPage = () => {
 
         const ele = document.getElementById('test');
         fade(ele, 400, () => setForm({ ...form, screen: form.screen + 1 }));
-        sessionStorage.setItem("restaurantPersistState", JSON.stringify(form));
     };
 
     const prevScreen = () => {
@@ -117,7 +125,6 @@ const NewRestaurantPage = () => {
 
         const ele = document.getElementById('test');
         fade(ele, 400, () => setForm({ ...form, screen: form.screen - 1 }));
-        sessionStorage.setItem("restaurantPersistState", JSON.stringify(form));
     };
 
     const resetForm = () => {

@@ -24,17 +24,7 @@ const FormUploadImage = ({ nextScreen, prevScreen, form, setForm, notNew }) => {
             } else {
                 if (showErrorMsg === true)
                     setShowErrorMsg(false);
-                
-                // in the rare instance refresh page after this screen, to prevent error on preview page
-                // save image to session storage
-                const reader = new FileReader(); 
-                
-                reader.addEventListener("load", () => {
-                    sessionStorage.setItem("image", reader.result);
-                });
-                
-                reader.readAsDataURL(ele.target.files[0]); 
-                
+                 
                 setForm({ ...form, image: ele.target.files[0] });
             }
         };

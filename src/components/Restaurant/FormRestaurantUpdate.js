@@ -12,8 +12,6 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
     const [redirect, setRedirect] = useState(false);
     const { user, userDb } = useUserContext();
 
-    //console.log(form);
-
     const submitRestaurantData = () => {
         setForm({ ...form, submitting: true });
 
@@ -28,8 +26,6 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
             }
         };
 
-        // session storage if refreshed TODO 
-
         if(typeof form.image === "string"){
             restaurant.image = form.image; // if form.name is string they did not upload a new photo
 
@@ -42,7 +38,7 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
         }
         
         else{
-            
+
             console.log("new image added"); 
             const imageExt = getFileExtension(form.image.name);
             if (!imageExt) {
