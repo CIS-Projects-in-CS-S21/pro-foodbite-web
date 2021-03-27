@@ -1,6 +1,5 @@
 import React from "react"
 import styled from "styled-components"; 
-import { Button } from "../../styles/FormElements"
 import { ReactComponent as CheckMark } from "../../assets/check.svg"
 import { ReactComponent as CloseMark } from "../../assets/close.svg"
 
@@ -60,21 +59,21 @@ export default function OrdersHeader( { history, accepting, status } ) {
 
 const Container = styled.div`
   font-family: "Amatic SC", cursive;   
-  font-size: 2.2rem; 
+  font-size: 2.4rem; 
   font-weight: 700; 
  // border: 1px solid black; 
   display: flex; 
   justify-content: space-between;
   align-items: center; 
   width: 70%; 
-  margin: 1.5% auto; 
+  margin: 1.5% auto .8% auto; 
   background-color: #f0f3f5; 
 `;
 
 const OrdersCount = styled.div`
   display: flex; 
   align-items: center;
-  font-size: 2.4rem; 
+  //font-size: 2.4rem; 
   //color: #f9b767;   
   margin-left: 1%;
 `;
@@ -86,7 +85,7 @@ const Count = styled.div`
 `;
 
 const StatusButton = styled.button`
-  font-size: 2.2rem; 
+  //font-size: 2.4rem; 
   display: inline-block;
   padding: 3px 6px;
   border: medium none;
@@ -100,12 +99,11 @@ const StatusButton = styled.button`
 `;
 
 const ViewHistoryButton = styled.button`
-  font-size: 2.2rem; 
+  //font-size: 2.4rem; 
   font-weight: 800; 
   padding: 3px 6px;
   border: medium none;
   background-color: #ffffff;   
-  color: black; 
   margin-right: 1%; 
 
   &:hover {

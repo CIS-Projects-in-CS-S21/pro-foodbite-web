@@ -91,3 +91,112 @@ export const defaultEmpty = {
   submitting: false,
   success: false
 };
+
+
+export const mock_pending_orders = [
+    {
+        timestamp: "14:16", 
+        status: "todo",
+        name: "Rustin Cohle",
+        id: "123",
+        menuItems: [
+            {
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: "no tomato"
+                
+            },
+            {
+                name: "fries",
+                price: 2.70
+            },
+            {
+                name: "sprite",
+                price: 1.59
+            }
+        ]
+    },
+    {
+        timestamp: "14:35", 
+        status: "todo",
+        name: "Joseph Cooper",
+        id: "456",
+        menuItems: [
+            {
+                name: "Big Kahuna Chicken Sandwhich",
+                price: 6.50,
+                options: null
+                
+            },
+            {
+                name: "Big Kahuna Chicken Sandwhich",
+                price: 2.70
+            },
+
+        ]
+    },
+    {
+        timestamp: "14:40", 
+        status: "todo",
+        name: "John Cassavetes",
+        id: "789",
+        menuItems: [
+            {
+                name: "Big Kahuna Pinapple Sandwhich",
+                price: 7.40,
+                options: null
+                
+            },
+        ]
+    },
+    {
+        timestamp: "14:47", 
+        status: "todo",
+        name: "John Doe",
+        id: "910",
+        menuItems: [
+            {
+                name: "sprite",
+                price: 1.59,
+                options: null
+                
+            },
+        ]
+    },
+    {
+        timestamp: "14:49", 
+        status: "todo",
+        name: "Jane Doe",
+        id: "111",
+        menuItems: [
+            {
+                name: "sprite",
+                price: 1.59,
+                options: null
+                
+            },
+        ]
+    },
+    {
+        timestamp: "14:59", 
+        status: "todo",
+        name: "Frank Reynolds",
+        id: "134",
+        menuItems: [
+            {
+                name: "sprite",
+                price: 1.59,
+                options: null
+                
+            },
+            {
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: null 
+                
+            },
+        ]
+    },
+
+
+]
