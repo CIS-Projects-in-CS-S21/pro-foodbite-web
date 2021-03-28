@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import { Dropdown } from 'react-bootstrap';
 import styled from 'styled-components'
 
 const DetailLayout = styled.div`
@@ -44,7 +43,7 @@ function OrderDetail({selectOrder}){
         const orderList = selectOrder.orderItem;
         for (let i = 0; i < orderList.length; i++) {
             const element = orderList[i];
-            const newItem = <label key={i} style={{textAlign:'left'}}>#{element.itemNumber}.{element.itemName}:{element.itemAmount}</label>
+            const newItem = <label key={i} style={{textAlign:'left'}}>#{element.itemNumber}.{element.itemName}x{element.itemAmount}</label>
             setItems(items => [...items, newItem]);
         }
     }
@@ -63,6 +62,10 @@ function OrderDetail({selectOrder}){
     )
 }
 
+const StatusLi = styled.li`
+    list-style:none;
+`
+
 function OrderStatus({selectOrder}){
     
     if(selectOrder == null){
@@ -74,8 +77,9 @@ function OrderStatus({selectOrder}){
             width:"50%", textAlign:'left',
             }}>
             <br/>
-            <label>Status:  {selectOrder.status}</label>
-            <label>ETA:     {selectOrder.eta}</label>
+            <StatusLi>Address: {selectOrder.address}</StatusLi>
+            <StatusLi>Status:  {selectOrder.status}</StatusLi>
+            <StatusLi>ETA:     {selectOrder.eta}</StatusLi>
             
         </div>
     )
@@ -103,13 +107,16 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
                 <StateUpdate show={show} style={{width:'25%'}}>
                     <ActionButton onClick={()=>{
                             setArchived(selectOrder);
+                            setShow(!show);
                         }
                     }>Archived</ActionButton>
                     <ActionButton onClick={()=>{
                         setInProgress(selectOrder);
+                        setShow(!show);
                     }}>InProgress</ActionButton>
                     <ActionButton onClick={()=>{
                         setDeliver(selectOrder);
+                        setShow(!show);
                     }}>Delivered</ActionButton>
                 </StateUpdate>
                 <ActionButton style={{width:'50%', height:'100%'}} onClick={() =>{
@@ -132,6 +139,7 @@ export default function SelectOrderDetail({orderInfo,declineOrder, orderInProgre
 
     const emptyOrder = {
         orderNumber:"",
+        address:"",
         orderOwner:"",
         receivedAt :"",
         receivedDate : "",

@@ -12,8 +12,9 @@ const OrderCard = styled.button`
     text-align:left;
     border: 1px solid;
     min-width:80px;
+    max-width:200px;
     width:20%;
-    aspect-ratio:0.75;
+    aspect-ratio:1;
     margin:10px;
     background:none;
     :hover{
@@ -59,7 +60,6 @@ const CardDetail = ({theOrder}) =>{
         <div style={{ height:"100%", width:'100%', 
              display:'flex', flexDirection:'column'}}>
             <label style={{borderBottom:"1px solid", width:"100%"}}>{theOrder.orderNumber}) {theOrder.orderOwner}</label>
-            {/* {items} */}
             <label># of Item: {itemCount}</label>
             <label>Price: {theOrder.totalPrice}</label>
             <label>Received At: {theOrder.receivedAt}</label>
@@ -83,7 +83,7 @@ export default function OrderPreview({orders, selectOrder}) {
     function displayAllPreview(){
         for (let i = 0; i < orders.length; i++) {
             const element = orders[i];
-            const temp = <OrderCard onClick={() =>{
+            const temp = <OrderCard key={"preview" + i} onClick={() =>{
                 selectOrder(element);
             }}>
                 <CardDetail theOrder={element} ></CardDetail>
