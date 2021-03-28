@@ -1,21 +1,20 @@
 import React from "react"
-import { render, act, screen, waitFor, prettyDOM, } from '@testing-library/react';
-import userEvent from "@testing-library/user-event"
+import { render, act, screen,  } from '@testing-library/react';
 import { UserContextProvider } from "../context/UserContext.js";
-// import {  Router } from "react-router-dom"
-// import { createMemoryHistory } from "history";
 import FormRestaurantName from "../components/newRestaurant/FormRestaurantName"
 import FormRestaurantDescription from "../components/newRestaurant/FormRestaurantDescription"
 import FormUploadImage from "../components/newRestaurant/FormUploadImage"
 import FormRestaurantHours from "../components/newRestaurant/FormRestaurantHours"
 import FormRestaurantMenu from "../components/newRestaurant/FormRestaurantMenu"
+import FormRestaurantPreview from "../components/newRestaurant/FormRestaurantPreview"
+//import FormRestaurantSubmit from "../components/newRestaurant/FormRestaurantSubmit"
+//import FormRestaurantUpdate from "../components/Restaurant/FormRestaurantUpdate"
 
 
-const form = {
+let form = {
   "name": "Big Kahuna Burger"
 };
 const set_form = jest.fn();
-
 
 
 describe("<FormRestaurantName/>", () => {
@@ -226,51 +225,161 @@ describe("<FormRestaurantHours/>", () => {
 
 });
 
+describe("<FormRestaurantMenu/>", () => {
 
-// describe("<FormRestaurantMenu/>", () => {
+  describe("with menu items field filled, notNew restaurant", () => {
 
-//   describe("with menu items field filled", () => {
+    let container;
 
-//     let container;
+    beforeEach( async () => {
 
-//     beforeEach( async () => {
+      form.menuItems = [
+        {
+          description: "its a tasty burger",
+          name: "big kahuna burger",
+          price: "5.50"
+        },
+        {
+          description: "nothing special",
+          name: "fried",
+          price: "2.50"
+        }
+      ]
 
-//       form.menu = [
-//         {
-//           description: "its a tasty burger",
-//           name: "big kahuna burger",
-//           price: "5.50"
-//         },
-//         {
-//           description: "nothing special",
-//           name: "fried",
-//           price: "2.50"
-//         }
-//       ]
+        await act( async () => {
+        render(
+          <UserContextProvider>
+            <FormRestaurantMenu form={form} setForm={set_form} notNew={true} />
+          </UserContextProvider>
+        , container)
+      }); 
+    });
 
-//         await act( async () => {
-//         render(
-//           <UserContextProvider>
-//             <FormRestaurantMenu form={form} setForm={set_form} notNew={true} />
-//           </UserContextProvider>
-//         , container)
-//       }); 
-//     });
-
-//     it("renders without error", () => {
-//       expect.anything(); 
-//     });
+    it("renders without error", () => {
+      expect.anything(); 
+    });
     
-//     // this will throw error when it can't find the element, so leave it commented-out
-//     // it("img tag to not be rendered", () => {
-//     //   expect(screen.getByTestId(/image-preview/i)).toThrowError("Unable to find element"); 
-//     // });
+    it("displays correct menu items for notNew restaurant" , () => {
+      expect(screen.getByText(form.menuItems[0].name)).toBeInTheDocument();
+      expect(screen.getByText(form.menuItems[1].name)).toBeInTheDocument();
+    });
 
-//   }); 
+  }); 
+});
 
+describe("<FormRestaurantPreview/>", () => {
 
-// });
+  describe("with all form fields filled", () => {
 
+    let container;
 
+    beforeEach( async () => {
 
+    form = {
+      name: "Pizza planet",
+      image: "firebasestorage.googleapis.com/some-image-url-string-here",
+      description: "space themed family restaurant",
+      menuItems: [
+        {
+          description: "...",
+          name: "Medium cheese pizza",
+          price: "8.50"
+        },
+        {
+          description: "...",
+          name: "Large cheese pizza",
+          price: "10.48"
+        }
+        ],
+        hours: {
+            monday: {
+                open: "11:00",
+                close: "22:00"
+            },
+            tuesday: {
+                open: "11:00",
+                close: "22:00"
+            },
+            wednesday: {
+                open: "",
+                close: ""
+            },
+            thursday: {
+                open: "",
+                close: ""
+            },
+            friday: {
+                open: "",
+                close: ""
+            },
+            saturday: {
+                open: "09:00",
+                close: "23:00"
+            },
+            sunday: {
+                open: "",
+                close: ""
+            },
+        },
+        screen: 1,
+        submitting: false,
+        success: false
+    }
 
+      await act( async () => {
+        render(
+          <UserContextProvider>
+            <FormRestaurantPreview form={form} setForm={set_form} notNew={true} />
+          </UserContextProvider>
+        , container)
+      }); 
+    });
+
+    it("renders without error", () => {
+      expect.anything(); 
+    });
+
+    it("displays correct preview infromation for notNew restaurants", () => {
+
+      const p = screen.getByTestId("name");
+      expect(p).toHaveTextContent(form.name);
+
+      expect(screen.getByTestId("image").src).toBe("http://localhost/firebasestorage.googleapis.com/some-image-url-string-here");
+
+      const text_area = screen.getByTestId("description");
+      expect(text_area).toHaveTextContent(form.description);
+
+      expect(screen.getAllByText("11:00 AM to 10:00 PM")).toBeTruthy();
+      expect(screen.getByText("09:00 AM to 11:00 PM")).toBeInTheDocument();
+      
+      expect(screen.getByText(form.menuItems[0].name)).toBeInTheDocument();
+      expect(screen.getByText(form.menuItems[1].name)).toBeInTheDocument();
+    });
+  }); 
+
+});
+
+/*
+describe("<FormRestaurantSubmit/>", () => {
+
+  window.alert = jest.fn();
+
+  describe("with all form fields filled", () => {
+
+    const handle_submit = jest.fn( () => Promise.resolve(true)); // mock onSubmit (firebase call)
+    window.alert.mockClear();  
+    
+    act( async () => {
+      render(
+        <UserContextProvider>
+          <FormRestaurantSubmit form={form} setForm={set_form} notNew={true} />
+        </UserContextProvider>
+      )
+    }); 
+
+    //userEvent.click(screen.getByRole("button", { name: /submit/i })); 
+    // have to update source code 
+
+  });
+});
+*/ 

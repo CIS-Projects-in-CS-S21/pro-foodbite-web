@@ -1,21 +1,21 @@
-import { render, screen } from '@testing-library/react';
+//import { render, screen } from '@testing-library/react';
 //import Routes from "../Routes";
-import App from '../App';
+//import App from '../App';
 //import Navigation from '../components/Navigation';
 //import { UserContext } from "../context/UserContext.js";
 
 
 
-beforeEach(() => {
-  document.body.innerHTML = "";
-});
+// beforeEach(() => {
+//   document.body.innerHTML = "";
+// });
 
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText("stuff ...");
-  expect(linkElement).toBeInTheDocument();
-});
+// test('renders learn react link', () => {
+//   render(<App />);
+//   const linkElement = screen.getByText("stuff ...");
+//   expect(linkElement).toBeInTheDocument();
+// });
 
 
 

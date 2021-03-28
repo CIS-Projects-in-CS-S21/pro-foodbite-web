@@ -61,7 +61,7 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
     }
 
     function getImage(){
-        if(notNew || typeof form.image == "string") return <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} src={form.image}/>
+        if(notNew || typeof form.image == "string") return <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} src={form.image} data-testid="image"/>
         else return <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} />
     }
 
@@ -90,7 +90,7 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
                 <Row>
                     <Col>
                         <h4 style={styles.title}>Name: </h4>
-                        <p style={styles.name}>{form.name}</p>
+                        <p style={styles.name} data-testid="name">{form.name}</p>
                     </Col>
                 </Row>
                 <br />
@@ -99,7 +99,7 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
                 <Row>
                     <Col>
                         <h4 style={styles.title}>Description:</h4>
-                        <p style={styles.name}>{form.description}</p>
+                        <p style={styles.name} data-testid="description">{form.description}</p>
                     </Col>
                 </Row>
                 <br />
