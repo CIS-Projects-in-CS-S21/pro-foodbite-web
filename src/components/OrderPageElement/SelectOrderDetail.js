@@ -91,9 +91,11 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
     
     const [show, setShow] = useState(false)
 
-    if(selectOrder == null){
+
+    if(selectOrder.orderNumber == ""){
         return null;
     }
+
 
 
     return(
@@ -154,18 +156,19 @@ export default function SelectOrderDetail({orderInfo,declineOrder, orderInProgre
     }
 
     if(theOrder == null){
-        return( 
-            <DetailLayout>
-            <div style={{display:'flex', flexDirection:'row', maxHeight:'200px'}}>
-                <OrderDetail
-                    selectOrder={emptyOrder}></OrderDetail>
-                <OrderStatus 
-                     selectOrder={emptyOrder}></OrderStatus>
-            </div>
-            <OrderAction
-                selectOrder={emptyOrder}></OrderAction>
-        </DetailLayout>
-        )
+        return null;
+        // return( 
+        //     <DetailLayout>
+        //     <div style={{display:'flex', flexDirection:'row', maxHeight:'200px'}}>
+        //         <OrderDetail
+        //             selectOrder={emptyOrder}></OrderDetail>
+        //         <OrderStatus 
+        //              selectOrder={emptyOrder}></OrderStatus>
+        //     </div>
+        //     <OrderAction
+        //         selectOrder={emptyOrder}></OrderAction>
+        // </DetailLayout>
+        // )
     }
 
     return (

@@ -101,9 +101,9 @@ export default function ViewHistory({orders, closeShow}) {
                 setShow(!show);
                 setOrder(element);
             }}
-            >OrderNumber:{element.orderNumber} Number Of Item:
-             {itemCounter(element.orderItem)} Total Price:
-             {element.totalPrice} ReceivedAt:{element.receivedAt} TimeArchived:123:123Pm
+            >OrderNumber:{element.orderNumber} | OrderOwner:{element.orderOwner} | Number Of Item:
+             {itemCounter(element.orderItem)} | Total Price:
+             {element.totalPrice} | ReceivedAt:{element.receivedAt} | TimeArchived:123:123Pm
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
