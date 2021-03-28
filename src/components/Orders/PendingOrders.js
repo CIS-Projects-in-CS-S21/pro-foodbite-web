@@ -6,8 +6,6 @@ import { convertTime24to12 } from "../../utils/Utils"
 export default function PendingOrders( {orders, view} ) {
 
  
-  const count = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; 
-
   const get_short_name = ( (order) => {
     // shorten to first-name last initial 
     // set MAX character limit
@@ -22,8 +20,6 @@ export default function PendingOrders( {orders, view} ) {
   }); 
 
   const get_items_count = ( (order) => {
-
-    console.log(order);
 
     if(order.hasOwnProperty("menuItems")) return order.menuItems.length; 
     
@@ -45,46 +41,40 @@ export default function PendingOrders( {orders, view} ) {
   });
 
   // just for layout 
-  const temp = ( () => {
+  // const temp = ( () => {
 
-    return (
+  //   return (
       
-      <OrderContainer onClick={(e) => view(e, 123)}>
-        <OrderHeader>
-          <div style={{marginRight: "4%"}}>1.)</div>
-          Rustin Cohle
-        </OrderHeader>
+  //     <OrderContainer onClick={(e) => view(e, 123)}>
+  //       <OrderHeader>
+  //         <div style={{marginRight: "4%"}}>1.)</div>
+  //         Rustin Cohle
+  //       </OrderHeader>
 
-        <Info>#123</Info>
+  //       <Info>#123</Info>
 
-        <ItemsCount>
-          3 items
-        </ItemsCount>
+  //       <ItemsCount>
+  //         3 items
+  //       </ItemsCount>
 
-        <Info>
-          $8.24
-        </Info>
+  //       <Info>
+  //         $8.24
+  //       </Info>
 
-        <Info>
-          02:16
-        </Info>
+  //       <Info>
+  //         02:16
+  //       </Info>
 
-        <Status primary />
-    </OrderContainer>
+  //       <Status primary />
+  //   </OrderContainer>
 
-    )
+  //   )
     
-  });
+  // });
 
 
   return (
     <Container>
-
-      {/* {
-        count.map( num => {
-          return temp()
-        })
-      } */}
 
       {
         orders.map( (order, index) => {
@@ -122,7 +112,6 @@ export default function PendingOrders( {orders, view} ) {
 }
 
 const Container = styled.div`
-  //border: 1px solid black; 
   width: 70%;
   margin: 0 auto;
   display: flex;
@@ -135,7 +124,7 @@ const Container = styled.div`
 
 const OrderContainer = styled.div`
 
-  border: 2px solid;
+  border: 3.5px solid;
   min-height: 200px;
   min-width: 200px;
   margin: 1.5% 2%; 

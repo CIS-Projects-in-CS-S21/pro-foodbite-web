@@ -2,9 +2,11 @@ import React from "react"
 import styled from "styled-components"; 
 import { ReactComponent as CheckMark } from "../../assets/check.svg"
 import { ReactComponent as CloseMark } from "../../assets/close.svg"
+import { useUserContext } from "../../context/UserContext"
 
 
-export default function OrdersHeader( { history, accepting, status } ) {
+export default function OrdersHeader( { history, accepting, status, count } ) {
+
 
   const get_status = ( () => {
     // accepting orders either green w/ check 
@@ -32,9 +34,7 @@ export default function OrdersHeader( { history, accepting, status } ) {
 
   const get_count = ( () => {
     // current pending orders count
-
-    // TODO
-    return 8;
+    if(count !== undefined || count !== null) return count; 
   });
 
   return (
