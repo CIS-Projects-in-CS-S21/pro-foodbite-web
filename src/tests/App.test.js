@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import Routes from "../Routes";
+//import Routes from "../Routes";
 import App from '../App';
-import Navigation from '../components/Navigation';
-import { UserContext } from "../context/UserContext.js";
+//import Navigation from '../components/Navigation';
+//import { UserContext } from "../context/UserContext.js";
 
 
 
@@ -24,6 +24,7 @@ test('renders learn react link', () => {
  *          to make sure the correct links are display when a
  *          user is authenticated or not
  */
+/*
 describe("Testing Navigation Component", () => {
 
   it("should not show protected routes", () => {
@@ -58,3 +59,4 @@ describe("Testing Navigation Component", () => {
     expect(linkElement).toBeInTheDocument();
   });
 });
+*/ 

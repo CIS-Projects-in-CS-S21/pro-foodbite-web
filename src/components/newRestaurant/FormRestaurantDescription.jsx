@@ -21,6 +21,7 @@ const FormRestaurantDescription = ({ nextScreen, prevScreen, form, setForm }) =>
                         rows={3}
                         required
                         value={form.description}
+                        data-testid="description"
                     />
                 </Form.Group>
 

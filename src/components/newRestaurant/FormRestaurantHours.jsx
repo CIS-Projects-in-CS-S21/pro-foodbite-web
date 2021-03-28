@@ -50,6 +50,7 @@ const FormRestaurantHours = ({ nextScreen, prevScreen, form, setForm }) => {
                                     type="time"
                                     onChange={ele => handleTimeChange(ele, "open", "monday")}
                                     defaultValue={form.hours.monday.open}
+                                    data-testid="monday-open"
                                 />
 
                                 <p style={restaurantFormStyles.timeP}>to</p>
@@ -58,6 +59,7 @@ const FormRestaurantHours = ({ nextScreen, prevScreen, form, setForm }) => {
                                     type="time"
                                     onChange={ele => handleTimeChange(ele, "close", "monday")}
                                     defaultValue={form.hours.monday.close}
+                                    data-testid="monday-close"
                                 />
 
                             </div>

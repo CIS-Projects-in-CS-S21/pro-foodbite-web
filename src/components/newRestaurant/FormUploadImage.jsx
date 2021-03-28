@@ -43,7 +43,7 @@ const FormUploadImage = ({ nextScreen, prevScreen, form, setForm, notNew }) => {
                     <h4 style={styles.title}>Current Image:</h4>
                     </Col>
                 </Row>            
-                <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} src={form.image}/>
+                <img id="image-preview" alt="Preview of restaurant logo" style={styles.image} src={form.image} data-testid="image-preview"/>
             </Fragment>
         )
     }
