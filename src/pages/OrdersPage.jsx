@@ -1,7 +1,14 @@
+import OrderPageLayout from '../components/OrderPageLayout'
+
 
 const OrdersPage = () => {
     return (
-        <h4>Pending orders will be shown here</h4>
+        <div>
+        {/* <h4>Pending orders will be shown here</h4> */}
+            <OrderPageLayout>
+
+            </OrderPageLayout>
+        </div>
     )
 }
 
