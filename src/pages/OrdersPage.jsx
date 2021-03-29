@@ -14,7 +14,8 @@ const OrdersPage = () => {
     const [accepting_orders, set_accepting_orders] = useState(restaurant.available); 
     const [pending_orders, set_pending_orders] = useState(mock_pending_orders); // mock data for now 
     const [view_order_history, set_view_order_history] = useState(false); 
-    const [selected_order, set_selected_order] = useState(null);
+    const [show, setShow] = useState(false);
+    const [selectedOrder, setOrder] = useState(null);
 
     
     const accepting_orders_handler = async (e) => {
@@ -36,15 +37,15 @@ const OrdersPage = () => {
         // clicked "View Order History" btn 
         e.preventDefault();
     
-        console.log("clicked  view order"); 
-        set_view_order_history(true); 
+        console.log("clicked view order history"); 
+        setShow(true);  
     }
 
     const view_selected_handler = (e, order) => {
         e.preventDefault();
 
         console.log("clicked on specific order:");
-        set_view_order_history(order); 
+        setOrder(order); 
     }
     
     return (
