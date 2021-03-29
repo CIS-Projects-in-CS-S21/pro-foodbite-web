@@ -1,12 +1,16 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
+import { calc_amount } from "../../utils/Utils"
 
 const DetailLayout = styled.div`
     display:flex;
-    
     flex-direction:column;
-
     justify-items:left;
+    width: 70%;
+    margin: 0 auto;
+    background-color: #f0f3f5; 
+    margin-top: 2%; 
+    font-weight: 700; 
 `
 
 const ActionButton = styled.button`
@@ -29,21 +33,28 @@ const StateUpdate = styled.div`
 `
 
 
-function OrderDetail({selectOrder}){
+function OrderDetail({selectOrder}){ 
+
+    console.log(selectOrder); 
+
     useEffect(() => {
         returnOrderItem()
     }, [selectOrder]);
 
     const [items,setItems] = useState([]);
     const returnBasicOrderInfo = () =>{
-        return "Order# " + selectOrder.orderNumber + " " + selectOrder.orderOwner ;
+
+        // todo check not undefined
+
+        return "Order# " + selectOrder.id + " " + selectOrder.name ;
     }
     const returnOrderItem = () =>{
         setItems([]);
-        const orderList = selectOrder.orderItem;
+        //const orderList = selectOrder.orderItem;
+        const orderList = selectOrder.menuItems; 
         for (let i = 0; i < orderList.length; i++) {
             const element = orderList[i];
-            const newItem = <label key={i} style={{textAlign:'left'}}>#{element.itemNumber}.{element.itemName}x{element.itemAmount}</label>
+            const newItem = <label key={i} style={{textAlign:'left'}}>#{element.itemNumber}.{element.name.toUpperCase()}x{element.price}</label>
             setItems(items => [...items, newItem]);
         }
     }
@@ -57,7 +68,7 @@ function OrderDetail({selectOrder}){
             <label >{returnBasicOrderInfo()}</label>
             {items}              
             <br/>
-            <label>Order Price:{selectOrder.totalPrice}</label>
+            <label>Order Price:{calc_amount(selectOrder)}</label>
         </div>
     )
 }
@@ -86,13 +97,12 @@ function OrderStatus({selectOrder}){
 }
 
 
-
 function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setArchived}){
     
     const [show, setShow] = useState(false)
 
 
-    if(selectOrder.orderNumber == ""){
+    if(selectOrder.orderNumber === ""){
         return null;
     }
 
@@ -101,7 +111,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
     return(
         <div style={{display:'flex', flexDirection:'row', width:'100%', textAlign:'left', backgroundColor:'rgb(200,200,200)'}}>
             <label style={{width:'50%',height:'100%'}}>
-                ReceivedAt:{selectOrder.receivedAt}-{selectOrder.receivedDate}
+                ReceivedAt:{selectOrder.timestamp}-{selectOrder.receivedDate}
             </label>
             <div style={{width:"50%"}}>
                 <ActionButton style={{width:'50%', height:'100%'}} onClick={() => setShow(!show)}>
