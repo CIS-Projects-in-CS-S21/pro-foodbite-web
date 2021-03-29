@@ -97,7 +97,7 @@ export const defaultEmpty = {
 export const mock_pending_orders = [
     {
         timestamp: "14:16", 
-        status: "received",
+        status: "new",
         receivedDate : "3/29/2021",
         name: "Rustin Cohle",
         address: "4123 holder street",
@@ -127,7 +127,7 @@ export const mock_pending_orders = [
         timestamp: "14:35", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "todo",
+        status: "new",
         name: "Joseph Cooper",
         address: "123 place holder street",
         id: "456",
@@ -141,8 +141,8 @@ export const mock_pending_orders = [
             },
             {
                 itemNumber: 9,
-                name: "Big Kahuna Chicken Sandwhich for kids",
-                price: 4.70
+                name: "Big Kahuna Chicken Fingers",
+                price: 5.70
             },
 
         ]
@@ -151,7 +151,7 @@ export const mock_pending_orders = [
         timestamp: "14:40", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "todo",
+        status: "new",
         name: "John Cassavetes",
         address: "123 place holder street",
         id: "789",
@@ -169,7 +169,7 @@ export const mock_pending_orders = [
         timestamp: "14:47", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "canceled",
+        status: "new",
         name: "John Doe",
         address: "123 place holder street",
         id: "910",
@@ -187,7 +187,7 @@ export const mock_pending_orders = [
         timestamp: "14:49", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "todo",
+        status: "new",
         name: "Jane Doe",
         address: "123 place holder street",
         id: "111",
@@ -205,7 +205,7 @@ export const mock_pending_orders = [
         timestamp: "14:59", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "todo",
+        status: "new",
         name: "Frank Reynolds",
         address: "123 place holder street",
         id: "134",

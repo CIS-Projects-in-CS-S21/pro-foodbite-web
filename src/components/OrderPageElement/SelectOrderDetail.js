@@ -32,6 +32,11 @@ const StateUpdate = styled.div`
     box-shadow: 0 5px 15px rgba(0,0,0, 0.5);
 `
 
+const Value = styled.span`
+    font-weight: 600;
+    margin-left: 1%; 
+`;
+
 
 function OrderDetail({selectOrder}){ 
 
@@ -54,7 +59,7 @@ function OrderDetail({selectOrder}){
         const orderList = selectOrder.menuItems; 
         for (let i = 0; i < orderList.length; i++) {
             const element = orderList[i];
-            const newItem = <label key={i} style={{textAlign:'left'}}>#{element.itemNumber}.{element.name.toUpperCase()}x{element.price}</label>
+            const newItem = <label key={i} style={{textAlign:'left', fontWeight:"900"}}>#{element.itemNumber}.{element.name.toUpperCase()}x{element.price}</label>
             setItems(items => [...items, newItem]);
         }
     }
@@ -65,10 +70,10 @@ function OrderDetail({selectOrder}){
     return(
         <div style={{display:'flex', flexDirection:'column', maxHeight:'50%',
             textAlign:'left', width:'50%', overflowY:'scroll'}}>
-            <label >{returnBasicOrderInfo()}</label>
+            <label style={{margin:".5% 0 1.8% 0"}}>{returnBasicOrderInfo()}</label>
             {items}              
             <br/>
-            <label>Order Price:{calc_amount(selectOrder)}</label>
+            <label>Order Price:<Value>{calc_amount(selectOrder)}</Value></label>
         </div>
     )
 }
@@ -88,9 +93,9 @@ function OrderStatus({selectOrder}){
             width:"50%", textAlign:'left',
             }}>
             <br/>
-            <StatusLi>Address: {selectOrder.address}</StatusLi>
-            <StatusLi>Status:  {selectOrder.status}</StatusLi>
-            <StatusLi>ETA:     {selectOrder.eta}</StatusLi>
+            <StatusLi>Address: <Value>{selectOrder.address}</Value></StatusLi>
+            <StatusLi>Status:  <Value>{selectOrder.status}</Value></StatusLi>
+            <StatusLi>ETA:     <Value>{selectOrder.eta}</Value></StatusLi>
             
         </div>
     )
@@ -111,7 +116,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
     return(
         <div style={{display:'flex', flexDirection:'row', width:'100%', textAlign:'left', backgroundColor:'rgb(200,200,200)'}}>
             <label style={{width:'50%',height:'100%'}}>
-                ReceivedAt:{selectOrder.timestamp}-{selectOrder.receivedDate}
+                Received At:<Value>{selectOrder.timestamp}</Value> - <Value>{selectOrder.receivedDate}</Value>
             </label>
             <div style={{width:"50%"}}>
                 <ActionButton style={{width:'50%', height:'100%'}} onClick={() => setShow(!show)}>
@@ -125,14 +130,14 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
                     <ActionButton onClick={()=>{
                         setInProgress(selectOrder);
                         setShow(!show);
-                    }}>InProgress</ActionButton>
+                    }}>In Progress</ActionButton>
                     <ActionButton onClick={()=>{
                         setDeliver(selectOrder);
                         setShow(!show);
                     }}>Delivered</ActionButton>
                 </StateUpdate>
                 <ActionButton style={{width:'50%', height:'100%'}} onClick={() =>{
-                    declineOrder(selectOrder.orderNumber);
+                    declineOrder(selectOrder);
                 }}>Decline Order</ActionButton>
             </div>
         </div>

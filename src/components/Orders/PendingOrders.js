@@ -45,7 +45,7 @@ export default function PendingOrders( {orders, view} ) {
   const get_status_color = ( (order) => {
     // if red needs action
 
-    if(order.status === "received" || order.status === "canceled") return <Status />
+    if(order.status === "new" || order.status === "canceled" || order.status === "delivered") return <Status />
     else return <Status primary/>
 
   });

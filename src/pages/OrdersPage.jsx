@@ -70,33 +70,53 @@ const OrdersPage = () => {
     //     setOrder(theOrder);
     // }
 
+    function findOrder(theOrder){
+        for (let i = 0; i < orders.length; i++) {
+            const element = orders[i];
+            if(element.id === theOrder.id){
+                return i;
+            }
+        }
+    }
+
     const declineOrder = (theOrder) =>{
-        //delete the order from database
+        // todo delete the order from database (set status to canceled move to archived)
 
         console.log("decline order#" + theOrder);
+
+        // remove from orders state
+        let temp = orders.filter( order => order.id !== theOrder.id);
+        set_orders(temp);
+        setOrder(null);
     }
 
     const setOrderInProgress = (theOrder) =>{
-        //update database
-        // let temp = theOrder;
-        // temp.status = "In progress";
-        // theOrders.splice(findOrder(theOrder), 1);
-        // refreshOrders(items =>[temp, ...theOrders]);
+        // todo update database
+        
+        //update orders state
+        let temp = theOrder;
+        temp.status = "In progress";
 
+        orders.splice(findOrder(theOrder), 1);
+        set_orders(items =>[temp, ...orders]);
     }
 
     const setOrderDelivered = (theOrder) =>{
-        // let temp = theOrder;
-        // temp.status = "Deliverd";
-        // pending_orders.splice(findOrder(theOrder), 1);
-        // set_pending_orders(items =>[temp, ...pending_orders]);
+        // remove from orders state?
+
+        let temp = theOrder;
+        temp.status = "Delivered";
+        orders.splice(findOrder(theOrder), 1);
+        set_orders(items =>[temp, ...orders]);
     }
 
     const setOrderArchived = (theOrder) =>{
-        // let temp = theOrder;
-        // temp.status = "Archived";
-        // theOrders.splice(findOrder(theOrder), 1);
-        // refreshOrders(items =>[temp, ...theOrders]);
+        // remove from orders state?
+
+        let temp = theOrder;
+        temp.status = "Archived";
+        orders.splice(findOrder(theOrder), 1);
+        set_orders(items =>[temp, ...orders]);
     }
 
     const get_count = () => {
