@@ -59,7 +59,7 @@ function OrderDetail({selectOrder}){
         const orderList = selectOrder.menuItems; 
         for (let i = 0; i < orderList.length; i++) {
             const element = orderList[i];
-            const newItem = <label key={i} style={{textAlign:'left', fontWeight:"900"}}>#{element.itemNumber}.{element.name.toUpperCase()}x{element.price}</label>
+            const newItem = <label key={i} style={{textAlign:'left', fontWeight:"900"}}>#{element.itemNumber}.{element.name.toUpperCase()} (${element.price})</label>
             setItems(items => [...items, newItem]);
         }
     }
@@ -73,7 +73,7 @@ function OrderDetail({selectOrder}){
             <label style={{margin:".5% 0 1.8% 0"}}>{returnBasicOrderInfo()}</label>
             {items}              
             <br/>
-            <label>Order Price:<Value>{calc_amount(selectOrder)}</Value></label>
+            <label>Order Price: $<Value>{calc_amount(selectOrder)}</Value></label>
         </div>
     )
 }

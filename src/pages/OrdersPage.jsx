@@ -8,7 +8,17 @@ import SelectOrderDetail from "../components/OrderPageElement/SelectOrderDetail"
 import ViewHistory from "../components/OrderPageElement/ViewHistory"
 
 import { mock_pending_orders } from "../tempData"
+import styled from 'styled-components'
 
+const TopPage = styled.div`
+    display:${props => props.show ? 'flex': 'none'};
+    z-index:1000;
+    position:fixed;
+    width:100%;
+    height:100%;
+    background-color:white;
+    top:0px;
+`
 
 const OrdersPage = () => {
 
@@ -134,11 +144,11 @@ const OrdersPage = () => {
         <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
                 orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder}
         / >
-
+            <TopPage show={show}>
         {
             show ? <ViewHistory orders = {orders} closeShow={()=>{setShow(!show)}}  /> : null
         }
-
+            </TopPage>
         </div>
     )
 }

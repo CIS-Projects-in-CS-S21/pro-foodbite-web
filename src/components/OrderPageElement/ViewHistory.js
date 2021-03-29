@@ -95,7 +95,7 @@ export default function ViewHistory({orders, closeShow, }) {
         for (let i = 0; i < menuItems.length; i++) {
             const element = menuItems[i];
             const newItem = <li key={i} style={{textAlign:'center', listStyle:'none'}}
-                >#{element.itemNumber}.{element.name}x{element.price}</li>
+                >#{element.itemNumber}.{element.name}(${element.price})</li>
             setItems(items => [...items, newItem]);
         }
     }
@@ -110,7 +110,7 @@ export default function ViewHistory({orders, closeShow, }) {
             }}
             >OrderNumber:{element.id} | OrderOwner:{element.name} | Number Of Items:
              {itemCounter(element)} | Total Price: $
-             {calc_amount(element)} | ReceivedAt:{element.receivedAt} | TimeArchived:123:123Pm
+             {calc_amount(element)} | ReceivedAt:{element.timestamp + "-" + element.receivedDate}
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
@@ -123,9 +123,9 @@ export default function ViewHistory({orders, closeShow, }) {
             {orderDetail}
             <HistoryDetail show={show}>
                     <h4 style={{borderBottom:"1px solid", width:"100%"}}>Order#{selectOrder.id}) {selectOrder.name}</h4>
-                    Price: {selectOrder.totalPrice}<br/>
+                    Price: ${calc_amount(selectOrder)}<br/>
                     Address: {selectOrder.address}<br/>
-                    Received At: {selectOrder.receivedAt}<br/>
+                    Received At: {selectOrder.timestamp} | {selectOrder.receivedDate}<br/>
                     ETA: {selectOrder.eta}<br/><br/>
                     <h4 style={{borderBottom:"1px solid"}}>Order Items:</h4>
                     {items}
