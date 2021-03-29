@@ -24,15 +24,21 @@ const TopPage = styled.div`
 const OrdersPage = () => {
 
     const { restaurant, userDb } = useUserContext(); 
+    //console.log(restaurant);
 
-    const [accepting_orders, set_accepting_orders] = useState(restaurant.available); 
+    let init_accepting = false;
+
+    if(restaurant === null) init_accepting = false;
+    else init_accepting = restaurant.available; 
+
+    const [accepting_orders, set_accepting_orders] = useState(init_accepting); 
     const [orders, set_orders] = useState(mock_pending_orders); // pending orders, mock data for now 
-    const [view_order_history, set_view_order_history] = useState(false); 
+    //const [view_order_history, set_view_order_history] = useState(false); 
     const [show, setShow] = useState(false);
     const [selectedOrder, setOrder] = useState(null);
 
     useEffect(() => {
-        // wanring, page refresh 
+        // warning, page refresh 
         window.addEventListener("beforeunload", alertUser);
 
         return () => {

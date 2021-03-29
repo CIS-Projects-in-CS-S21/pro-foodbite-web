@@ -57,7 +57,8 @@ export function shouldForceRestaurantSignup(user) {
 
     //console.log('shouldForceRestaurantSignup', (user !== null && user.ownedRestaurants.length > 0) ? false : true);
 
-    if(typeof user["ownedRestaurants"] === "undefined" ) return true;      
+    if(user === null) return true; 
+    if(typeof user["ownedRestaurants"] === "undefined" ) return true;    
 
     return (user !== null && user.ownedRestaurants.length > 0) ? false : true;
 }

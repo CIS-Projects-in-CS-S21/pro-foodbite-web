@@ -12,7 +12,7 @@ import { useUserContext } from "../context/UserContext"
 export default function SignIn( { onSubmit } ) {
 
   const history = useHistory();
-  const { sign_in_with_email_password, sign_in_with_google, sign_in_with_facebook } = useUserContext(); 
+  const { sign_in_with_email_password, sign_in_with_google, sign_in_with_facebook, insertUserIntoDb } = useUserContext(); 
 
   const sign_in_schema = Yup.object().shape({
     email: Yup.string()
@@ -36,23 +36,19 @@ export default function SignIn( { onSubmit } ) {
   }; 
     
   const handle_google = async () => {
-     try{
-      await sign_in_with_google();
-      history.push("/"); 
-     }
-     catch{
-      alert("sign-in failed"); 
-     }
+    await sign_in_with_google()
+      .then((res) => {
+        insertUserIntoDb(res.user);
+        history.push("/restaurant");
+  }).catch(err => alert("sign-in failed")); 
   };
 
   const handle_facebook = async () => {
-    try{
-      await sign_in_with_facebook();
-      history.push("/"); 
-     }
-     catch{
-      alert("sign-in failed"); 
-     } 
+    await sign_in_with_facebook()
+      .then((res) => {
+        insertUserIntoDb(res.user);
+        history.push("/");
+    }).catch(err => alert("sign-in failed")); 
   };
 
   return (

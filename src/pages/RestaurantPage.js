@@ -27,7 +27,7 @@ export default function RestaurantPage(){
 
   const maxScreenAmount = 8;
 
-  const { user, userDb } = useUserContext();
+  const { user, userDb, restaurant } = useUserContext();
 
   const [form, setForm] = useState();
   const [loading, setLoading] = useState(true); 
@@ -80,6 +80,21 @@ export default function RestaurantPage(){
     }
 
     get_doc(); 
+
+    // let doc = restaurant;
+
+    // let temp = defaultEmpty;
+    // temp.name = doc.name;
+    // temp.image = doc.image;
+    // temp.description = doc.description;
+    // temp.hours = doc.profile.hours; 
+    // temp.menuItems = doc.menu; 
+    // temp.screen = 1;
+    // temp.submitting = false;
+    // temp.success = false; 
+
+    // setForm(temp); 
+    // setLoading(false); 
 
   }, [user.uid, userDb.ownedRestaurants]);
 
