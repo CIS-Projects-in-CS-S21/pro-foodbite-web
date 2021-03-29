@@ -96,7 +96,7 @@ export const defaultEmpty = {
 export const mock_pending_orders = [
     {
         timestamp: "14:16", 
-        status: "todo",
+        status: "received",
         name: "Rustin Cohle",
         id: "123",
         menuItems: [
@@ -151,7 +151,7 @@ export const mock_pending_orders = [
     },
     {
         timestamp: "14:47", 
-        status: "todo",
+        status: "canceled",
         name: "John Doe",
         id: "910",
         menuItems: [
