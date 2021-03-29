@@ -3,7 +3,7 @@ import OrdersHeader from "../components/Orders/OrdersHeader"
 import PendingOrders from "../components/Orders/PendingOrders"
 import { useUserContext } from "../context/UserContext"
 import { firestore } from "../firebase"
-import OrderPreview from "../components/OrderPageElement/OrderPreview"
+//import OrderPreview from "../components/OrderPageElement/OrderPreview"
 import SelectOrderDetail from "../components/OrderPageElement/SelectOrderDetail"
 import ViewHistory from "../components/OrderPageElement/ViewHistory"
 
@@ -63,6 +63,7 @@ const OrdersPage = () => {
         e.preventDefault();
 
         console.log("clicked on specific order:");
+        setShow(false);
         setOrder(order); 
     }
 
@@ -133,6 +134,10 @@ const OrdersPage = () => {
         <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
                 orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder}
         / >
+
+        {
+            show ? <ViewHistory orders = {orders} closeShow={()=>{setShow(!show)}}  /> : null
+        }
 
         </div>
     )

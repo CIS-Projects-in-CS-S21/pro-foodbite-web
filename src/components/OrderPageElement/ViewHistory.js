@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
+import { calc_amount } from "../../utils/Utils"
 
 const HistoryItem = styled.button`
     border:none;
@@ -15,14 +16,14 @@ const HistoryDetail = styled.div`
     z-index:1000;
     display:${props =>props.show? "flex": "none"};
     position:fixed;
-    width:100%;
+    width:70%;
     height:100%;
     align-content:center;
     background-color:white;
     flex-direction:column;
 `
 
-export default function ViewHistory({orders, closeShow}) {
+export default function ViewHistory({orders, closeShow, }) {
 
    
     const tempOrderFormat2 = {
@@ -57,7 +58,7 @@ export default function ViewHistory({orders, closeShow}) {
         totolPrice: "",
         status:"",
         eta:"",
-        orderItem : [{
+        menuItem : [{
             itemNumber: "",
             itemName :"",
             itemAmount: "",
@@ -70,25 +71,31 @@ export default function ViewHistory({orders, closeShow}) {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        menuLister(selectOrder.orderItem)
+        menuLister(selectOrder.menuItems)
     }, [selectOrder])
 
 
     function itemCounter(order){
-        let temp = 0;
-        for (let i = 0; i < order.length; i++) {
-            const element = order[i];
-            temp += element.itemAmount;
-        }
-        return temp;
+        
+        if(order.hasOwnProperty("menuItems")) return order.menuItems.length; 
+
+        // let temp = 0;
+        // for (let i = 0; i < order.length; i++) {
+        //     const element = order[i];
+        //     temp += element.itemAmount;
+        // }
+        // return temp;
     }
 
     function menuLister(menuItems){
+        
+        if(typeof menuItems === "undefined") return; 
+
         setItems([]);
         for (let i = 0; i < menuItems.length; i++) {
             const element = menuItems[i];
             const newItem = <li key={i} style={{textAlign:'center', listStyle:'none'}}
-                >#{element.itemNumber}.{element.itemName}x{element.itemAmount}</li>
+                >#{element.itemNumber}.{element.name}x{element.price}</li>
             setItems(items => [...items, newItem]);
         }
     }
@@ -101,32 +108,51 @@ export default function ViewHistory({orders, closeShow}) {
                 setShow(!show);
                 setOrder(element);
             }}
-            >OrderNumber:{element.orderNumber} | OrderOwner:{element.orderOwner} | Number Of Item:
-             {itemCounter(element.orderItem)} | Total Price:
-             {element.totalPrice} | ReceivedAt:{element.receivedAt} | TimeArchived:123:123Pm
+            >OrderNumber:{element.id} | OrderOwner:{element.name} | Number Of Items:
+             {itemCounter(element)} | Total Price: $
+             {calc_amount(element)} | ReceivedAt:{element.receivedAt} | TimeArchived:123:123Pm
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
-    }, [orders])
+    }, [orders, show])
 
 
     return (
-        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'100%'}}>
-            <h3>Order History</h3>
+        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'70%', margin: "2% auto", backgroundColor: "#f0f3f5"}}>
+            <Header>Order History</Header>
             {orderDetail}
             <HistoryDetail show={show}>
-                    <h4 style={{borderBottom:"1px solid", width:"100%"}}>Order#{selectOrder.orderNumber}) {selectOrder.orderOwner}</h4>
+                    <h4 style={{borderBottom:"1px solid", width:"100%"}}>Order#{selectOrder.id}) {selectOrder.name}</h4>
                     Price: {selectOrder.totalPrice}<br/>
                     Address: {selectOrder.address}<br/>
                     Received At: {selectOrder.receivedAt}<br/>
                     ETA: {selectOrder.eta}<br/><br/>
                     <h4 style={{borderBottom:"1px solid"}}>Order Items:</h4>
                     {items}
-                <button onClick={()=>{
+                <ViewHistoryButton onClick={()=>{
                     setShow(!show);
-                }}>close</button>
+                }}>close</ViewHistoryButton>
             </HistoryDetail>
-            <button onClick={closeShow}>close</button>
+            <ViewHistoryButton onClick={closeShow}>close</ViewHistoryButton>
         </div>
     )
 }
+
+const Header = styled.h3`
+    font-family: "Amatic SC", cursive;
+    font-size: 2.8rem; 
+`;
+
+const ViewHistoryButton = styled.button`
+    font-family: "Amatic SC", cursive;   
+    font-size: 2.4rem; 
+    font-weight: 800; 
+    padding: 3px 6px;
+    border: medium none;
+    background-color: #C0C2C4; 
+    margin-top: 2%;  
+
+    &:hover {
+    opacity: 70%; 
+    }
+`;
