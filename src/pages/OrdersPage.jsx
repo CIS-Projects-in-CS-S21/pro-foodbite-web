@@ -18,6 +18,7 @@ const TopPage = styled.div`
     height:100%;
     background-color:white;
     top:0px;
+    top: 100px; 
 `
 
 const OrdersPage = () => {
