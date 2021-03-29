@@ -93,24 +93,31 @@ export const defaultEmpty = {
 };
 
 
+// similar to document fields
 export const mock_pending_orders = [
     {
         timestamp: "14:16", 
-        status: "todo",
+        status: "new",
+        receivedDate : "3/29/2021",
         name: "Rustin Cohle",
+        address: "4123 holder street",
         id: "123",
+        eta: "TBA",
         menuItems: [
             {
+                itemNumber: 1,
                 name: "Big Kahuna Burger",
                 price: 5.50,
                 options: "no tomato"
                 
             },
             {
+                itemNumber: 6,
                 name: "fries",
                 price: 2.70
             },
             {
+                itemNumber: 10,
                 name: "sprite",
                 price: 1.59
             }
@@ -118,30 +125,39 @@ export const mock_pending_orders = [
     },
     {
         timestamp: "14:35", 
-        status: "todo",
+        eta: "TBA",
+        receivedDate : "3/29/2021",
+        status: "new",
         name: "Joseph Cooper",
+        address: "123 place holder street",
         id: "456",
         menuItems: [
             {
+                itemNumber: 3,
                 name: "Big Kahuna Chicken Sandwhich",
                 price: 6.50,
                 options: null
                 
             },
             {
-                name: "Big Kahuna Chicken Sandwhich",
-                price: 2.70
+                itemNumber: 9,
+                name: "Big Kahuna Chicken Fingers",
+                price: 5.70
             },
 
         ]
     },
     {
         timestamp: "14:40", 
-        status: "todo",
+        eta: "TBA",
+        receivedDate : "3/29/2021",
+        status: "new",
         name: "John Cassavetes",
+        address: "123 place holder street",
         id: "789",
         menuItems: [
             {
+                itemNumber: 4,
                 name: "Big Kahuna Pinapple Sandwhich",
                 price: 7.40,
                 options: null
@@ -151,11 +167,15 @@ export const mock_pending_orders = [
     },
     {
         timestamp: "14:47", 
-        status: "todo",
+        eta: "TBA",
+        receivedDate : "3/29/2021",
+        status: "new",
         name: "John Doe",
+        address: "123 place holder street",
         id: "910",
         menuItems: [
             {
+                itemNumber: 10,
                 name: "sprite",
                 price: 1.59,
                 options: null
@@ -165,11 +185,15 @@ export const mock_pending_orders = [
     },
     {
         timestamp: "14:49", 
-        status: "todo",
+        eta: "TBA",
+        receivedDate : "3/29/2021",
+        status: "new",
         name: "Jane Doe",
+        address: "123 place holder street",
         id: "111",
         menuItems: [
             {
+                itemNumber: 10,
                 name: "sprite",
                 price: 1.59,
                 options: null
@@ -179,17 +203,22 @@ export const mock_pending_orders = [
     },
     {
         timestamp: "14:59", 
-        status: "todo",
+        eta: "TBA",
+        receivedDate : "3/29/2021",
+        status: "new",
         name: "Frank Reynolds",
+        address: "123 place holder street",
         id: "134",
         menuItems: [
             {
+                itemNumber: 10,
                 name: "sprite",
                 price: 1.59,
                 options: null
                 
             },
             {
+                itemNumber: 1,
                 name: "Big Kahuna Burger",
                 price: 5.50,
                 options: null 
@@ -197,6 +226,5 @@ export const mock_pending_orders = [
             },
         ]
     },
-
 
 ]

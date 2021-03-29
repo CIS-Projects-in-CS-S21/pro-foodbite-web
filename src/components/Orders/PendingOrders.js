@@ -2,76 +2,53 @@ import React from "react"
 import styled from "styled-components"
 import { convertTime24to12 } from "../../utils/Utils"
 
-
 export default function PendingOrders( {orders, view} ) {
 
- 
   const get_short_name = ( (order) => {
-    // shorten to first-name last initial 
-    // set MAX character limit
+    // if name too long, "..."
 
-    // todo 
     if(order.hasOwnProperty("name")){
 
-      if(order.name.length > 12) return <div style={{fontSize: "1rem"}}>{order.name}</div>
-      return <div style={{fontSize: "1.3rem"}}>{order.name}</div>
-    }
+      let name = order.name; 
 
+      if(name.length > 12) {
+        name = name.substr(0, 11);
+        name += "..."; 
+      }
+
+      return <div style={{fontSize: "1.3rem"}}>{name}</div>
+    }
   }); 
 
   const get_items_count = ( (order) => {
 
     if(order.hasOwnProperty("menuItems")) return order.menuItems.length; 
-    
   });
 
   const get_timestamp = ( (order) => {
 
     if(order.hasOwnProperty("menuItems")) return convertTime24to12(order.timestamp);
-  })
+  });
 
   const calc_amount = ( (order) => {
-    // todo
-    return 8.24; 
+
+    if(order.hasOwnProperty("menuItems")){
+      // sum the price of each object in menuItems array
+
+      let amount = order.menuItems.reduce( (a, b) => ({price: a.price + b.price}));
+      //console.log(amount);
+
+      return amount.price.toFixed(2); 
+    }
   });
 
   const get_status_color = ( (order) => {
-    // todo
-    return <Status primary />
+    // if red needs action
+
+    if(order.status === "new" || order.status === "canceled" || order.status === "delivered") return <Status />
+    else return <Status primary/>
+
   });
-
-  // just for layout 
-  // const temp = ( () => {
-
-  //   return (
-      
-  //     <OrderContainer onClick={(e) => view(e, 123)}>
-  //       <OrderHeader>
-  //         <div style={{marginRight: "4%"}}>1.)</div>
-  //         Rustin Cohle
-  //       </OrderHeader>
-
-  //       <Info>#123</Info>
-
-  //       <ItemsCount>
-  //         3 items
-  //       </ItemsCount>
-
-  //       <Info>
-  //         $8.24
-  //       </Info>
-
-  //       <Info>
-  //         02:16
-  //       </Info>
-
-  //       <Status primary />
-  //   </OrderContainer>
-
-  //   )
-    
-  // });
-
 
   return (
     <Container>
@@ -79,7 +56,7 @@ export default function PendingOrders( {orders, view} ) {
       {
         orders.map( (order, index) => {
           return (
-            <OrderContainer onClick={(e) => view(e, order.id)}>
+            <OrderContainer onClick={(e) => view(e, order)}>
               <OrderHeader>
                 <div style={{marginRight: "4%"}}>{index+1}</div>
                 {get_short_name(order)}
@@ -99,7 +76,7 @@ export default function PendingOrders( {orders, view} ) {
                 {get_timestamp(order)}
               </Info>
 
-              {get_status_color()}
+              {get_status_color(order)}
       
           </OrderContainer>
           )
