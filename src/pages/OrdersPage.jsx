@@ -138,14 +138,14 @@ const OrdersPage = () => {
     }
 
     const get_count = () => {
-        if(orders !== null) return orders.length;
+        if(orders !== null || orders !== undefined) return orders.length;
         else return 0; 
     };
 
 
     return (
         <div>
-        <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count}/>
+        <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()}/>
         <PendingOrders orders={orders} view={view_selected_handler}/>
         
         <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
