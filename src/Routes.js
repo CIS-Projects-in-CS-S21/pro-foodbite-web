@@ -9,35 +9,61 @@ import OrdersPage from "./pages/OrdersPage"
 import { useUserContext } from "./context/UserContext"
 import AnalyticsPage from "./pages/AnalyticsPage";
 import ErrorPage from "./pages/ErrorPage";
+import NewRestaurantPage from "./pages/NewRestaurantPage";
+import RestaurantPage from "./pages/RestaurantPage";
+import { shouldForceRestaurantSignup } from './utils/Utils';
 
 
 export default function Routes() {
 
-  const { user } = useUserContext();
+  const { user, userDb } = useUserContext();
 
   return (
     <Router>
       <Header></Header>
       <Switch>
+
         <Route exact path="/" component={HomePage}></Route>
-        <Route path="/sign-in" component={SignInPage}></Route>
-        <Route path="/sign-up" component={SignUpPage}></Route>
+        <Route
+          path="/sign-in"
+          render={() => {
+            return user ? <Redirect to="/" /> : <SignInPage />
+          }}>
+        </Route>
+        <Route
+          path="/sign-up"
+          render={() => {
+            return user ? <Redirect to="/" /> : <SignUpPage />
+          }}>
+        </Route>
         <Route
           path="/account"
           render={() => {
-            return user ? <Account></Account> : <Redirect to="sign-in" />
+            return user ? shouldForceRestaurantSignup(userDb) ? <Redirect to="/new-restaurant" /> : <Account /> : <Redirect to="sign-in" />
           }}>
         </Route>
         <Route
           path="/orders"
           render={() => {
-            return user ? <OrdersPage></OrdersPage> : <Redirect to="sign-in" />
+            return user ? shouldForceRestaurantSignup(userDb) ? <Redirect to="/new-restaurant" /> : <OrdersPage /> : <Redirect to="sign-in" />
           }}>
         </Route>
         <Route
           path="/analytics"
           render={() => {
-            return user ? <AnalyticsPage /> : <Redirect to="sign-in" />
+            return user ? shouldForceRestaurantSignup(userDb) ? <Redirect to="/new-restaurant" /> : <AnalyticsPage /> : <Redirect to="sign-in" />
+          }}>
+        </Route>
+        <Route
+          path="/restaurant"
+          render={() => {
+            return user ? shouldForceRestaurantSignup(userDb) ? <Redirect to="/new-restaurant" /> : <RestaurantPage /> : <Redirect to="sign-in" />
+          }}>
+        </Route>
+        <Route
+          path="/new-restaurant"
+          render={() => {
+            return user ? <NewRestaurantPage /> : <Redirect to="sign-in" />
           }}>
         </Route>
 

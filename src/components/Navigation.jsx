@@ -37,7 +37,7 @@ const Navigation = () => {
 
           <NavDropdown alignRight title="Account" id="basic-nav-dropdown">
             <Link className="dropdown-item" to="/">Settings</Link>
-            <Link className="dropdown-item" to="/">Restaruant Management</Link>
+            <Link className="dropdown-item" to="/restaurant">Restaurant Management</Link>
 
             <NavDropdown.Divider />
             <Link className="dropdown-item" onClick={handleSignOut} to="/">Sign Out</Link>
