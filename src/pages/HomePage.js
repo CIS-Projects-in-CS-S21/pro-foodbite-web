@@ -13,11 +13,17 @@ export default function SignInPage() {
   }
 
   const demo2 = () => {
-    if(userDb) return <temp  style={{ fontWeight: 700, fontSize: "1.2em" }}>TRUE</temp>
-    else return <temp style={{ fontWeight: 800 }}>FALSE</temp>
+    //console.log(userDb);
+
+    if(userDb === null) return <temp style={{ fontWeight: 800 }}>FALSE</temp>
+    if(userDb.hasOwnProperty("ownedRestaurants") === false) return <temp style={{ fontWeight: 800 }}>FALSE</temp>
+    else return <temp  style={{ fontWeight: 700, fontSize: "1.2em" }}>TRUE</temp>
+    // if(userDb.hasOwnPropery("ownedRestaurants"))
+    // else return <temp  style={{ fontWeight: 700, fontSize: "1.2em" }}>TRUE</temp>
   }
 
-  console.log(user);
+  //console.log(user);
+  //console.log(userDb); 
   //sessionStorage.clear();
 
   return (
