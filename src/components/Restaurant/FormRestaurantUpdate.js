@@ -12,10 +12,14 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
     const [redirect, setRedirect] = useState(false);
     const { user, userDb } = useUserContext();
 
+    console.log(userDb.ownedRestaurants[0]); 
+
     const submitRestaurantData = () => {
         setForm({ ...form, submitting: true });
 
         const restaurant = {
+        
+        id: userDb.ownedRestaurants[0],
         ownerId: user.uid,
         name: form.name,
         description: form.description,

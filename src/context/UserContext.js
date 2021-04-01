@@ -144,8 +144,15 @@ export const UserContextProvider = ({ children }) => {
     return null;
   };
 
-  // change password todo
-  // change ... todo 
+  
+  const get_doc = (path, update) => {
+    // realtime updates for a specfic document
+
+    return firebase.firestore()
+        .doc(path)
+        .onSnapshot(update);
+  }
+
 
   const values = {
     user,
@@ -158,7 +165,8 @@ export const UserContextProvider = ({ children }) => {
     userDb,
     getUserData,
     insertUserIntoDb,
-    restaurant
+    restaurant,
+    get_doc
   }
 
   return (

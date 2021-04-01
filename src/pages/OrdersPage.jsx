@@ -23,8 +23,7 @@ const TopPage = styled.div`
 
 const OrdersPage = () => {
 
-    const { restaurant, userDb } = useUserContext(); 
-    //console.log(restaurant);
+    const { restaurant, userDb, get_doc } = useUserContext(); 
 
     let init_accepting = false;
 
@@ -32,10 +31,23 @@ const OrdersPage = () => {
     else init_accepting = restaurant.available; 
 
     const [accepting_orders, set_accepting_orders] = useState(init_accepting); 
-    const [orders, set_orders] = useState(mock_pending_orders); // pending orders, mock data for now 
-    //const [view_order_history, set_view_order_history] = useState(false); 
+    //const [orders, set_orders] = useState(mock_pending_orders); // pending orders, mock data for now 
     const [show, setShow] = useState(false);
     const [selectedOrder, setOrder] = useState(null);
+
+
+    const [orders, set_orders] = useState([]); // real-data
+
+
+    useEffect(() => {
+        // get realtime updates for pending orders
+
+        get_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, (result) => {
+            const doc = result.data();
+            set_orders(doc.orders); 
+        }); 
+        
+      }, [userDb.ownedRestaurants, get_doc]);
 
     useEffect(() => {
         // warning, page refresh 
@@ -84,9 +96,6 @@ const OrdersPage = () => {
         setOrder(order); 
     }
 
-    // const selectPreview = (theOrder) =>{
-    //     setOrder(theOrder);
-    // }
 
     function findOrder(theOrder){
         for (let i = 0; i < orders.length; i++) {
@@ -138,24 +147,24 @@ const OrdersPage = () => {
     }
 
     const get_count = () => {
-        if(orders !== null || orders !== undefined) return orders.length;
-        else return 0; 
+        if(orders === null || orders === undefined) return 0; 
+        else  return orders.length;
     };
 
 
     return (
         <div>
-        <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()}/>
-        <PendingOrders orders={orders} view={view_selected_handler}/>
-        
-        <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
-                orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder}
-        / >
-            <TopPage show={show}>
-        {
-            show ? <ViewHistory orders = {orders} closeShow={()=>{setShow(!show)}}  /> : null
-        }
-            </TopPage>
+            <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()}/>
+             <PendingOrders orders={orders} view={view_selected_handler}/>
+            {/*
+            <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
+                    orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder}
+            / >
+                <TopPage show={show}>
+            {
+                show ? <ViewHistory orders = {orders} closeShow={()=>{setShow(!show)}}  /> : null
+            }
+                </TopPage> */}
         </div>
     )
 }
