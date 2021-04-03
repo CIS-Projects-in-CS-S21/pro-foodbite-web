@@ -59,15 +59,16 @@ export default function OrdersHeader( { history, accepting, status, count } ) {
 
 const Container = styled.div`
   font-family: "Amatic SC", cursive;   
-  font-size: 2.4rem; 
+  font-size: 2.8rem; 
   font-weight: 700; 
  // border: 1px solid black; 
   display: flex; 
   justify-content: space-between;
   align-items: center; 
-  width: 70%; 
+ // width: 70%; 
   margin: 1.5% auto .8% auto; 
   background-color: #f0f3f5; 
+  width: 85%; 
 `;
 
 const OrdersCount = styled.div`

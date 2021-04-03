@@ -4,12 +4,15 @@ import { convertTime24to12 } from "../../utils/Utils"
 
 export default function PendingOrders( {orders, view} ) {
 
+  //console.log(orders)
+
+
   const get_short_name = ( (order) => {
     // if name too long, "..."
 
     if(order.hasOwnProperty("name")){
 
-      let name = order.name; 
+      let name = order.name.toUpperCase(); 
 
       if(name.length > 12) {
         name = name.substr(0, 11);
@@ -89,19 +92,20 @@ export default function PendingOrders( {orders, view} ) {
 }
 
 const Container = styled.div`
-  width: 70%;
+  //width: 70%;
+  width: 85%; 
   margin: 0 auto;
   display: flex;
   flex-direction: row; 
   overflow-x: scroll; 
   //background-color: #e9f7ff;  
-  background-color: #f0f3f5; 
+  background-color: #f0f3f5;
 `;
 
 
 const OrderContainer = styled.div`
-
-  border: 3.5px solid;
+  
+  border: 3.5px solid #181818;
   min-height: 200px;
   min-width: 200px;
   margin: 1.5% 2%; 
@@ -113,6 +117,8 @@ const OrderContainer = styled.div`
 
   position: relative; 
   text-align: left;
+  background-color: #ffffff; 
+  background-color: #FEFFCD; 
 `;
 
 const OrderHeader = styled.div`
@@ -128,11 +134,12 @@ const OrderHeader = styled.div`
 
 const Info = styled.div`
   padding: 10px;
+  font-weight: 600;
 `; 
 
 const ItemsCount = styled.div`
   font-size: 1.0rem;  
-  font-weight: 800; 
+  font-weight: 900; 
   padding: 10px; 
 `; 
 

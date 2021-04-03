@@ -23,7 +23,9 @@ const HistoryDetail = styled.div`
     flex-direction:column;
 `
 
-export default function ViewHistory({orders, closeShow, }) {
+export default function ViewHistory( {orders, history, closeShow } ) {
+
+    
 
    
     const tempOrderFormat2 = {

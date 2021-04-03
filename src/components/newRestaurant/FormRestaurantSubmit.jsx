@@ -78,7 +78,7 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
                     .doc(restaurant.id)
                     .set({
                         id: restaurant.id,
-                        orders: []
+                        //orders: []
                     })
             })
             .then( () => {
@@ -88,7 +88,7 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
                     .doc(restaurant.id)
                     .set({
                         id: restaurant.id,
-                        orders: []
+                        //orders: []
                     })
             })
             .then(() => {

@@ -11,6 +11,7 @@ const DetailLayout = styled.div`
     background-color: #f0f3f5; 
     margin-top: 2%; 
     font-weight: 700; 
+    width: 85%; 
 `
 
 const ActionButton = styled.button`

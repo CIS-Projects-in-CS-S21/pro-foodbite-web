@@ -145,12 +145,27 @@ export const UserContextProvider = ({ children }) => {
   };
 
   
-  const get_doc = (path, update) => {
-    // realtime updates for a specfic document
+  const get_doc_snapshot = (path, update) => {
+    // realtime updates for a specific document
 
     return firebase.firestore()
-        .doc(path)
-        .onSnapshot(update);
+          .doc(path)
+          .onSnapshot(update);
+  }
+
+  const get_doc = (path) => {
+    // get a specific document
+
+    return firebase.firestore()
+          .doc(path)
+          .get()
+  }
+
+  const update_doc = (path, updated) => {
+
+    return firebase.firestore()
+          .doc(path)
+          .update(updated)
   }
 
 
@@ -166,7 +181,9 @@ export const UserContextProvider = ({ children }) => {
     getUserData,
     insertUserIntoDb,
     restaurant,
-    get_doc
+    get_doc_snapshot,
+    get_doc,
+    update_doc
   }
 
   return (

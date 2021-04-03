@@ -23,7 +23,7 @@ const TopPage = styled.div`
 
 const OrdersPage = () => {
 
-    const { restaurant, userDb, get_doc } = useUserContext(); 
+    const { restaurant, userDb, get_doc_snapshot, get_doc, update_doc } = useUserContext(); 
 
     let init_accepting = false;
 
@@ -34,6 +34,7 @@ const OrdersPage = () => {
     //const [orders, set_orders] = useState(mock_pending_orders); // pending orders, mock data for now 
     const [show, setShow] = useState(false);
     const [selectedOrder, setOrder] = useState(null);
+    const [history, set_history] = useState([]); 
 
 
     const [orders, set_orders] = useState([]); // real-data
@@ -42,12 +43,24 @@ const OrdersPage = () => {
     useEffect(() => {
         // get realtime updates for pending orders
 
-        get_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, (result) => {
+        const unsubscribe = get_doc_snapshot(`pendingOrders/${userDb.ownedRestaurants[0]}`, (result) => {
             const doc = result.data();
-            set_orders(doc.orders); 
+
+            let temp = []; 
+
+            for(let key in doc){
+                if(doc.hasOwnProperty(key))
+                    if(key.includes("order#"))
+                        temp.push(doc[key]); 
+            }
+
+            //set_orders(doc.orders); 
+            set_orders(temp); 
         }); 
+
+        return () => unsubscribe(); 
         
-      }, [userDb.ownedRestaurants, get_doc]);
+      }, [userDb.ownedRestaurants, get_doc_snapshot]);
 
     useEffect(() => {
         // warning, page refresh 
@@ -80,11 +93,16 @@ const OrdersPage = () => {
                 .catch(err => console.log(err)); 
     }
 
-    const view_order_history_handler = (e) => {
+    const view_order_history_handler = async (e) => {
         // clicked "View Order History" btn 
         e.preventDefault();
-    
-        console.log("clicked view order history"); 
+        
+        await get_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`)
+                .then( doc => {
+                    if(doc.exists) set_history(doc.data());
+                    else set_history([]); 
+                });
+        
         setShow(true);  
     }
 
@@ -117,19 +135,29 @@ const OrdersPage = () => {
         setOrder(null);
     }
 
-    const setOrderInProgress = (theOrder) =>{
+    const setOrderInProgress = async (theOrder) =>{
         // todo update database
         
         //update orders state
         let temp = theOrder;
         temp.status = "In progress";
 
-        orders.splice(findOrder(theOrder), 1);
-        set_orders(items =>[temp, ...orders]);
+        let index = findOrder(theOrder); 
+
+        let updated = {
+           
+        }
+
+        // { ownedRestaurants: firebase.firestore.FieldValue.arrayUnion(restaurantId) }
+
+        await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, updated);
+
+        // orders.splice(findOrder(theOrder), 1);
+        // set_orders(items =>[temp, ...orders]);
     }
 
     const setOrderDelivered = (theOrder) =>{
-        // remove from orders state?
+        // send to archived orders document
 
         let temp = theOrder;
         temp.status = "Delivered";
@@ -156,15 +184,15 @@ const OrdersPage = () => {
         <div>
             <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()}/>
              <PendingOrders orders={orders} view={view_selected_handler}/>
-            {/*
+            
             <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
                     orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder}
             / >
                 <TopPage show={show}>
             {
-                show ? <ViewHistory orders = {orders} closeShow={()=>{setShow(!show)}}  /> : null
+                show ? <ViewHistory orders={orders} history={history} closeShow={()=>{setShow(!show)}}  /> : null
             }
-                </TopPage> */}
+                </TopPage>
         </div>
     )
 }
