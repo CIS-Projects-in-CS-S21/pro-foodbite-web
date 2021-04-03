@@ -71,6 +71,26 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
                 // assign the new restaurant to the user
                 return assignRestaurantToUser(restaurant.id);
             })
+            .then( () => {
+                firebase
+                    .firestore()
+                    .collection("pendingOrders")
+                    .doc(restaurant.id)
+                    .set({
+                        id: restaurant.id,
+                        orders: []
+                    })
+            })
+            .then( () => {
+                firebase
+                    .firestore()
+                    .collection("archivedOrders")
+                    .doc(restaurant.id)
+                    .set({
+                        id: restaurant.id,
+                        orders: []
+                    })
+            })
             .then(() => {
                 console.log("user document updated successfully");
                 sessionStorage.clear();
