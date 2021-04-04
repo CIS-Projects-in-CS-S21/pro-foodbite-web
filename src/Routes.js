@@ -12,6 +12,8 @@ import ErrorPage from "./pages/ErrorPage";
 import NewRestaurantPage from "./pages/NewRestaurantPage";
 import RestaurantPage from "./pages/RestaurantPage";
 import { shouldForceRestaurantSignup } from './utils/Utils';
+import RatingPage from "./pages/RatingPage";
+import SalesPage from "./pages/SalesPage";
 
 
 export default function Routes() {
@@ -66,7 +68,18 @@ export default function Routes() {
             return user ? <NewRestaurantPage /> : <Redirect to="sign-in" />
           }}>
         </Route>
-
+        <Route
+          path="/my-ratings"
+          render={() =>{
+            return user ? <RatingPage /> : <Redirect to ="sign-in" />
+          }}>
+        </Route>
+        <Route
+          path="/sales"
+          render={() =>{
+            return user ? <SalesPage/> : <Redirect to ="sign-in"/>
+          }}>
+        </Route>
         <Route component={ErrorPage} />
       </Switch>
     </Router>
