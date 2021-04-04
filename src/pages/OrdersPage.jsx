@@ -3,11 +3,10 @@ import OrdersHeader from "../components/Orders/OrdersHeader"
 import PendingOrders from "../components/Orders/PendingOrders"
 import { useUserContext } from "../context/UserContext"
 import firebase, { firestore } from "../firebase"
-//import OrderPreview from "../components/OrderPageElement/OrderPreview"
 import SelectOrderDetail from "../components/OrderPageElement/SelectOrderDetail"
 import ViewHistory from "../components/OrderPageElement/ViewHistory"
 
-//import { mock_pending_orders } from "../tempData"
+import { mock_pending_orders, mock_archived_orders } from "../tempData"
 import styled from 'styled-components'
 
 const TopPage = styled.div`
@@ -18,7 +17,7 @@ const TopPage = styled.div`
     height:100%;
     background-color:white;
     top:0px;
-    top: 100px; 
+    top: 115px; 
 `
 
 const OrdersPage = () => {
@@ -35,7 +34,6 @@ const OrdersPage = () => {
     const [show, setShow] = useState(false);
     const [selectedOrder, setOrder] = useState(null);
     const [history, set_history] = useState([]); 
-
 
     const [orders, set_orders] = useState([]); // real-data
 
@@ -56,6 +54,7 @@ const OrdersPage = () => {
                 temp.push(orderz[id]); 
             }
 
+            console.log("STATUS CHANGE!")
             set_orders(temp);
         }); 
 
@@ -97,13 +96,35 @@ const OrdersPage = () => {
     const view_order_history_handler = async (e) => {
         e.preventDefault();
         
-        await get_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`)
+        await get_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`)
                 .then( doc => {
-                    if(doc.exists) set_history(doc.data());
+                    if(doc.exists){
+                        let orderss = doc.data().orders; 
+                        let temp = [];
+            
+                        for (const id in orderss){
+                            temp.push(orderss[id]); 
+                        }
+
+                        let both = orders; 
+                        both = both.concat(temp);
+                        
+                        set_history(both);
+                        setShow(true);  
+                    }
+                    
                     else set_history([]); 
                 });
-        
-        setShow(true);  
+
+
+        // TODO 
+        // PARSE ARCHIVED TO GET ONLY TODAY'S DATE
+
+        // let temp = mock_pending_orders; 
+        // temp = temp.concat(mock_archived_orders); 
+
+        // set_history(temp); 
+        // setShow(true);  
     }
 
     const view_selected_handler = (e, order) => {
@@ -194,7 +215,7 @@ const OrdersPage = () => {
             / >
                 <TopPage show={show}>
             {
-                show ? <ViewHistory orders={orders} history={history} closeShow={()=>{setShow(!show)}}  /> : null
+                show ? <ViewHistory orders={history} closeShow={()=>{setShow(!show)}}  /> : null
             }
                 </TopPage>
         </div>

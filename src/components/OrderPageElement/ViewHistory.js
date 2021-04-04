@@ -6,6 +6,13 @@ const HistoryItem = styled.button`
     border:none;
     background-color:white;
     border-bottom:1px solid;
+    font-size: 1.2rem; 
+    padding: 10px; 
+    display: flex;
+    flex-direction: row; 
+    width: 100%; 
+    justify-content: center; 
+     
 
     :hover{
         background-color:rgb(200,200,200);
@@ -16,18 +23,17 @@ const HistoryDetail = styled.div`
     z-index:1000;
     display:${props =>props.show? "flex": "none"};
     position:fixed;
-    width:70%;
+    width:85%;
     height:100%;
     align-content:center;
     background-color:white;
-    flex-direction:column;
+    flex-direction:column;  
+    font-size: 1.2rem;  
 `
 
 export default function ViewHistory( {orders, history, closeShow } ) {
 
-    
 
-   
     const tempOrderFormat2 = {
         orderNumber: 2,
         orderOwner: "Test Test2",
@@ -67,14 +73,53 @@ export default function ViewHistory( {orders, history, closeShow } ) {
         }]
     }
 
+
     const [show, setShow] = useState(false);
     const [orderDetail, setDetail] = useState();
     const [selectOrder, setOrder] = useState(emptyOrder);
     const [items, setItems] = useState([]);
+    const [sort, set_sort] = useState(""); 
 
     useEffect(() => {
         menuLister(selectOrder.menuItems)
     }, [selectOrder])
+
+    function menuLister(menuItems){
+        
+        if(typeof menuItems === "undefined") return; 
+
+        setItems([]);
+        for (let i = 0; i < menuItems.length; i++) {
+            const element = menuItems[i];
+            const newItem = <li key={i} style={{textAlign:'center', listStyle:'none', fontWeight: "700"}}
+                >#{element.itemNumber}.{element.name}(${element.price.toFixed(2)})</li>
+            setItems(items => [...items, newItem]);
+        }
+    }
+
+    const get_time = (timestamp) => {
+        if(timestamp === undefined) return ""; 
+
+        let split = timestamp.split(",");
+
+        return split[1].trim();
+    }
+
+    useEffect(() => {
+        setDetail([]);
+        for (let i = 0; i < orders.length; i++) {
+            const element = orders[i];
+            let temp = <HistoryItem key={"order"+i} onClick={()=>{
+                setShow(!show);
+                setOrder(element);
+            }}
+            >Order Id: {element.id}  | Name: {element.name.toUpperCase()} | Number Of Items:
+             {itemCounter(element)} | Total Price: $
+             {calc_amount(element)} | Received At: {get_time(element.timestamp)} | Status:<Status>{element.status}</Status>
+                </HistoryItem>
+            setDetail(orderDetail => [...orderDetail, temp]);
+        }
+    }, [orders, show])
 
 
     function itemCounter(order){
@@ -89,48 +134,31 @@ export default function ViewHistory( {orders, history, closeShow } ) {
         // return temp;
     }
 
-    function menuLister(menuItems){
-        
-        if(typeof menuItems === "undefined") return; 
+    const get_count = () => {
 
-        setItems([]);
-        for (let i = 0; i < menuItems.length; i++) {
-            const element = menuItems[i];
-            const newItem = <li key={i} style={{textAlign:'center', listStyle:'none'}}
-                >#{element.itemNumber}.{element.name}(${element.price})</li>
-            setItems(items => [...items, newItem]);
-        }
+        if(orders !== null || orders !== undefined) return orders.length;
+        else return 0; 
     }
 
-    useEffect(() => {
-        setDetail([]);
-        for (let i = 0; i < orders.length; i++) {
-            const element = orders[i];
-            let temp = <HistoryItem key={"order"+i} onClick={()=>{
-                setShow(!show);
-                setOrder(element);
-            }}
-            >OrderNumber:{element.id} | OrderOwner:{element.name} | Number Of Items:
-             {itemCounter(element)} | Total Price: $
-             {calc_amount(element)} | ReceivedAt:{element.timestamp + "-" + element.receivedDate}
-                </HistoryItem>
-            setDetail(orderDetail => [...orderDetail, temp]);
-        }
-    }, [orders, show])
 
 
     return (
-        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'70%', margin: "2% auto", backgroundColor: "#f0f3f5"}}>
-            <Header>Order History</Header>
-            {orderDetail}
+        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", backgroundColor: "#f0f3f5"}}>
+            <Header>Today's Order History: {get_count()}</Header>
+            <Selection>
+             {orderDetail}
+            </Selection>
+
             <HistoryDetail show={show}>
-                    <h4 style={{borderBottom:"1px solid", width:"100%"}}>Order#{selectOrder.id}) {selectOrder.name}</h4>
+                    <h4 style={{borderBottom:"1px solid", width:"100%", marginBottom: "1%"}}>Order#{selectOrder.id}) {selectOrder.name}</h4>
                     Price: ${calc_amount(selectOrder)}<br/>
                     Address: {selectOrder.address}<br/>
-                    Received At: {selectOrder.timestamp} | {selectOrder.receivedDate}<br/>
-                    ETA: {selectOrder.eta}<br/><br/>
-                    <h4 style={{borderBottom:"1px solid"}}>Order Items:</h4>
+                    Received At:  {get_time(selectOrder.timestamp)}<br/>
+                    <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>Status: <span style={{fontWeight: "bold", marginLeft: "1%"}}>{selectOrder.status}</span></div> <br/>
+                    {/* ETA: {selectOrder.eta}<br/><br/> */}
+                    <h4 style={{borderBottom:"1px solid", marginTop: "2%"}}>Order Items:</h4>
                     {items}
+                    <div style={{marginBottom: "5%"}}></div>
                 <ViewHistoryButton onClick={()=>{
                     setShow(!show);
                 }}>close</ViewHistoryButton>
@@ -142,7 +170,7 @@ export default function ViewHistory( {orders, history, closeShow } ) {
 
 const Header = styled.h3`
     font-family: "Amatic SC", cursive;
-    font-size: 2.8rem; 
+    font-size: 3.4rem; 
 `;
 
 const ViewHistoryButton = styled.button`
@@ -157,4 +185,16 @@ const ViewHistoryButton = styled.button`
     &:hover {
     opacity: 70%; 
     }
+
+    background-color: #5bc0de; 
+`;
+
+const Selection = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const Status = styled.div`
+    font-weight: bold; 
+    margin-left: .2%;  
 `;

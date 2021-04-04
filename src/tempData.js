@@ -96,8 +96,8 @@ export const defaultEmpty = {
 // similar to document fields
 export const mock_pending_orders = [
     {
-        timestamp: "14:16", 
-        status: "new",
+        timestamp: "4/4/2021, 3:25:41 PM", 
+        status: "NEW",
         receivedDate : "3/29/2021",
         name: "Rustin Cohle",
         address: "4123 holder street",
@@ -124,10 +124,10 @@ export const mock_pending_orders = [
         ]
     },
     {
-        timestamp: "14:35", 
+        timestamp: "4/4/2021, 3:28:41 PM", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "new",
+        status: "NEW",
         name: "Joseph Cooper",
         address: "123 place holder street",
         id: "456",
@@ -148,10 +148,10 @@ export const mock_pending_orders = [
         ]
     },
     {
-        timestamp: "14:40", 
+        timestamp: "4/4/2021, 3:32:41 PM", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "new",
+        status: "NEW",
         name: "John Cassavetes",
         address: "123 place holder street",
         id: "789",
@@ -166,10 +166,10 @@ export const mock_pending_orders = [
         ]
     },
     {
-        timestamp: "14:47", 
+        timestamp: "4/4/2021, 3:41:42 PM", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "new",
+        status: "NEW",
         name: "John Doe",
         address: "123 place holder street",
         id: "910",
@@ -184,10 +184,10 @@ export const mock_pending_orders = [
         ]
     },
     {
-        timestamp: "14:49", 
+        timestamp: "4/4/2021, 3:52:41 PM", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "new",
+        status: "NEW",
         name: "Jane Doe",
         address: "123 place holder street",
         id: "111",
@@ -202,10 +202,10 @@ export const mock_pending_orders = [
         ]
     },
     {
-        timestamp: "14:59", 
+        timestamp:"4/4/2021, 3:59:41 PM", 
         eta: "TBA",
         receivedDate : "3/29/2021",
-        status: "new",
+        status: "NEW",
         name: "Frank Reynolds",
         address: "123 place holder street",
         id: "134",
@@ -226,5 +226,78 @@ export const mock_pending_orders = [
             },
         ]
     },
+    {
+        timestamp: "4/4/2021, 4:01:41 PM", 
+        eta: "TBA",
+        receivedDate : "3/29/2021",
+        status: "NEW",
+        name: "Dennis Reynolds",
+        address: "123 place holder street",
+        id: "134",
+        menuItems: [
+            {
+                itemNumber: 1,
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: null 
+                
+            },
+        ]
+    },
 
+]
+
+export const mock_archived_orders = [
+    {
+        timestamp: "4/4/2021, 2:25:41 PM", 
+        status: "DELIVERED",
+        receivedDate : "3/29/2021",
+        name: "Ben Simmons",
+        address: "4123 holder street",
+        id: "123",
+        eta: "TBA",
+        menuItems: [
+            {
+                itemNumber: 1,
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: "no tomato"
+                
+            },
+            {
+                itemNumber: 6,
+                name: "fries",
+                price: 2.70
+            },
+            {
+                itemNumber: 10,
+                name: "sprite",
+                price: 1.59
+            }
+        ]
+    },
+    {
+        timestamp: "4/4/2021, 2:28:41 PM", 
+        eta: "TBA",
+        receivedDate : "3/29/2021",
+        status: "CANCELED",
+        name: "TOBIAS HARRIS",
+        address: "123 place holder street",
+        id: "456",
+        menuItems: [
+            {
+                itemNumber: 3,
+                name: "Big Kahuna Chicken Sandwhich",
+                price: 6.50,
+                options: null
+                
+            },
+            {
+                itemNumber: 9,
+                name: "Big Kahuna Chicken Fingers",
+                price: 5.70
+            },
+
+        ]
+    },
 ]

@@ -2,11 +2,8 @@ import React from "react"
 import styled from "styled-components"; 
 import { ReactComponent as CheckMark } from "../../assets/check.svg"
 import { ReactComponent as CloseMark } from "../../assets/close.svg"
-import { useUserContext } from "../../context/UserContext"
-
 
 export default function OrdersHeader( { history, accepting, status, count } ) {
-
 
   const get_status = ( () => {
     // accepting orders either green w/ check 
@@ -68,7 +65,7 @@ const Container = styled.div`
  // width: 70%; 
   margin: 1.5% auto .8% auto; 
   background-color: #f0f3f5; 
-  width: 85%; 
+  width: 85%;  
 `;
 
 const OrdersCount = styled.div`
@@ -110,4 +107,8 @@ const ViewHistoryButton = styled.button`
   &:hover {
     opacity: 70%; 
   }
+
+  background-color: #5bc0de;
+  margin: .8%; 
+  margin-left: 0;
 `;

@@ -9,10 +9,10 @@ export default function PendingOrders( {orders, view} ) {
 
     if(order.hasOwnProperty("name")){
 
-      let name = order.name.toUpperCase(); 
+      let name = order.name.toUpperCase();  
 
-      if(name.length > 12) {
-        name = name.substr(0, 11);
+      if(name.length > 10) {
+        name = name.substr(0, 9);
         name += "..."; 
       }
 
@@ -22,12 +22,19 @@ export default function PendingOrders( {orders, view} ) {
 
   const get_items_count = ( (order) => {
 
-    if(order.hasOwnProperty("menuItems")) return order.menuItems.length; 
+    if(order.hasOwnProperty("timestamp")) return order.menuItems.length;
+
   });
 
   const get_timestamp = ( (order) => {
+    
+    if(order.hasOwnProperty("menuItems")) {
+        
+      let split = order.timestamp.split(",");
 
-    if(order.hasOwnProperty("menuItems")) return convertTime24to12(order.timestamp);
+      return split[1].trim();
+    }
+    
   });
 
   const calc_amount = ( (order) => {
@@ -114,7 +121,6 @@ const OrderContainer = styled.div`
 
   position: relative; 
   text-align: left;
-  background-color: #ffffff; 
   background-color: #FEFFCD; 
 `;
 
