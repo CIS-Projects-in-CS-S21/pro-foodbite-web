@@ -53,7 +53,7 @@ export function checkTimeRange(a, b) {
  * restaurant 
  */
 export function shouldForceRestaurantSignup(user) {
-    console.log('shouldForceRestaurantSignup', user);
+    //console.log('shouldForceRestaurantSignup', user);
 
     //console.log('shouldForceRestaurantSignup', (user !== null && user.ownedRestaurants.length > 0) ? false : true);
 

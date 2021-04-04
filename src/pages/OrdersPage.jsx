@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react"
 import OrdersHeader from "../components/Orders/OrdersHeader"
 import PendingOrders from "../components/Orders/PendingOrders"
 import { useUserContext } from "../context/UserContext"
-import { firestore } from "../firebase"
+import firebase, { firestore } from "../firebase"
 //import OrderPreview from "../components/OrderPageElement/OrderPreview"
 import SelectOrderDetail from "../components/OrderPageElement/SelectOrderDetail"
 import ViewHistory from "../components/OrderPageElement/ViewHistory"
 
-import { mock_pending_orders } from "../tempData"
+//import { mock_pending_orders } from "../tempData"
 import styled from 'styled-components'
 
 const TopPage = styled.div`
@@ -45,17 +45,18 @@ const OrdersPage = () => {
 
         const unsubscribe = get_doc_snapshot(`pendingOrders/${userDb.ownedRestaurants[0]}`, (result) => {
             const doc = result.data();
+            
+            // currently, there is an object orders
+            // which contains all the order objects, whose key is their order id
+            let orderz = doc.orders;
 
-            let temp = []; 
+            let temp = []
 
-            for(let key in doc){
-                if(doc.hasOwnProperty(key))
-                    if(key.includes("order#"))
-                        temp.push(doc[key]); 
+            for (const id in orderz){
+                temp.push(orderz[id]); 
             }
 
-            //set_orders(doc.orders); 
-            set_orders(temp); 
+            set_orders(temp);
         }); 
 
         return () => unsubscribe(); 
@@ -94,7 +95,6 @@ const OrdersPage = () => {
     }
 
     const view_order_history_handler = async (e) => {
-        // clicked "View Order History" btn 
         e.preventDefault();
         
         await get_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`)
@@ -109,7 +109,6 @@ const OrdersPage = () => {
     const view_selected_handler = (e, order) => {
         e.preventDefault();
 
-        console.log("clicked on specific order:");
         setShow(false);
         setOrder(order); 
     }
@@ -124,49 +123,54 @@ const OrdersPage = () => {
         }
     }
 
-    const declineOrder = (theOrder) =>{
-        // todo delete the order from database (set status to canceled move to archived)
+    const declineOrder = async (theOrder) =>{
+        // update status for the correct order
+        // move the order to archived orders 
 
-        console.log("decline order#" + theOrder);
+        theOrder.status = "CANCELED"; 
 
-        // remove from orders state
-        let temp = orders.filter( order => order.id !== theOrder.id);
-        set_orders(temp);
+        let updated = {}
+        updated[`orders.${theOrder.id}`] = firebase.firestore.FieldValue.delete(); 
+
+        await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, updated);
+
+        updated = {}
+        updated[`orders.${theOrder.id}`] = theOrder; 
+        await update_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`, updated);
+
         setOrder(null);
     }
 
     const setOrderInProgress = async (theOrder) =>{
-        // todo update database
+        // update status for the correct order
+
+        let key = theOrder.id; 
         
-        //update orders state
-        let temp = theOrder;
-        temp.status = "In progress";
+        let updated = {}
+        updated[`orders.${key}.status`] = "IN PROGRESS"
 
-        let index = findOrder(theOrder); 
+        await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, updated);
+    }
 
-        let updated = {
-           
-        }
+    const setOrderDelivered = async (theOrder) =>{
+        // send to archived orders document
 
-        // { ownedRestaurants: firebase.firestore.FieldValue.arrayUnion(restaurantId) }
+        theOrder.status = "DELIVERED"; 
+
+        let updated = {}
+        updated[`orders.${theOrder.id}`] = firebase.firestore.FieldValue.delete(); 
 
         await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, updated);
 
-        // orders.splice(findOrder(theOrder), 1);
-        // set_orders(items =>[temp, ...orders]);
-    }
+        updated = {}
+        updated[`orders.${theOrder.id}`] = theOrder; 
+        await update_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`, updated);
 
-    const setOrderDelivered = (theOrder) =>{
-        // send to archived orders document
-
-        let temp = theOrder;
-        temp.status = "Delivered";
-        orders.splice(findOrder(theOrder), 1);
-        set_orders(items =>[temp, ...orders]);
+        setOrder(null);
     }
 
     const setOrderArchived = (theOrder) =>{
-        // remove from orders state?
+        // don't need this?
 
         let temp = theOrder;
         temp.status = "Archived";

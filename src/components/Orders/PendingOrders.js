@@ -4,9 +4,6 @@ import { convertTime24to12 } from "../../utils/Utils"
 
 export default function PendingOrders( {orders, view} ) {
 
-  //console.log(orders)
-
-
   const get_short_name = ( (order) => {
     // if name too long, "..."
 
@@ -48,7 +45,7 @@ export default function PendingOrders( {orders, view} ) {
   const get_status_color = ( (order) => {
     // if red needs action
 
-    if(order.status === "new" || order.status === "canceled" || order.status === "delivered") return <Status />
+    if(order.status === "NEW" || order.status === "CANCELED" || order.status === "DELIVERED") return <Status />
     else return <Status primary/>
 
   });
