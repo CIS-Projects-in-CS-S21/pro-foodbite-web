@@ -120,6 +120,7 @@ const OrdersPage = () => {
         // TODO 
         // PARSE ARCHIVED TO GET ONLY TODAY'S DATE
 
+        // MOCK
         // let temp = mock_pending_orders; 
         // temp = temp.concat(mock_archived_orders); 
 
@@ -203,6 +204,8 @@ const OrdersPage = () => {
         if(orders === null || orders === undefined) return 0; 
         else  return orders.length;
     };
+
+
 
 
     return (

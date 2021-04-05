@@ -80,6 +80,8 @@ export default function ViewHistory( {orders, history, closeShow } ) {
     const [items, setItems] = useState([]);
     const [sort, set_sort] = useState(""); 
 
+    const [current, set_curret] = useState(orders); 
+
     useEffect(() => {
         menuLister(selectOrder.menuItems)
     }, [selectOrder])
@@ -107,8 +109,11 @@ export default function ViewHistory( {orders, history, closeShow } ) {
 
     useEffect(() => {
         setDetail([]);
-        for (let i = 0; i < orders.length; i++) {
-            const element = orders[i];
+
+
+        
+        for (let i = 0; i < current.length; i++) {
+            const element = current[i];
             let temp = <HistoryItem key={"order"+i} onClick={()=>{
                 setShow(!show);
                 setOrder(element);
@@ -119,7 +124,7 @@ export default function ViewHistory( {orders, history, closeShow } ) {
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
-    }, [orders, show])
+    }, [current, show])
 
 
     function itemCounter(order){
@@ -140,11 +145,42 @@ export default function ViewHistory( {orders, history, closeShow } ) {
         else return 0; 
     }
 
+    const handle_orders = (event) => {
+
+        let option = event.target.value;
+        let filtered = []; 
+
+        if(option === "PENDING"){
+            filtered = orders.filter( order => order.status === "NEW" || order.status === "IN PROGRESS");
+            set_curret(filtered); 
+        }
+        else if(option === "ARCHIVED"){
+            filtered = orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED");
+            set_curret(filtered); 
+        }
+        else{
+            // ALL 
+            set_curret(orders);
+        }
+    }
 
 
     return (
         <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", backgroundColor: "#f0f3f5"}}>
-            <Header>Today's Order History: {get_count()}</Header>
+            <HeaderContainer>
+                <div></div>
+                <Header>Today's Order History: {get_count()}</Header>
+                <div style={{display: "flex"}}>
+
+                    <Select onChange={(e) => handle_orders(e)}>
+                        <Option>ALL</Option>
+                        <Option>PENDING</Option>
+                        <Option>ARCHIVED</Option>
+                    </Select>
+
+                </div>
+            </HeaderContainer>
+
             <Selection>
              {orderDetail}
             </Selection>
@@ -168,9 +204,17 @@ export default function ViewHistory( {orders, history, closeShow } ) {
     )
 }
 
+const HeaderContainer = styled.div`
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: center
+`; 
+
 const Header = styled.h3`
     font-family: "Amatic SC", cursive;
     font-size: 3.4rem; 
+    margin-left: 12%; 
 `;
 
 const ViewHistoryButton = styled.button`
@@ -198,3 +242,29 @@ const Status = styled.div`
     font-weight: bold; 
     margin-left: .2%;  
 `;
+
+const Select = styled.select`
+  background-color: #da4e2e; 
+  font-family: "Amatic SC", cursive;
+  font-size: 2.0rem; 
+  color: #fff; 
+  padding: 10px; 
+  font-size: 1.9rem; 
+  width: 200px;
+  margin-right: 1.2%; 
+
+  &:hover{
+    opacity: .8;
+  }
+
+  &:focus{
+    outline: none; 
+  }
+
+
+`;
+
+const Option = styled.option`
+  background-color: #f0f3f5; 
+  color: black;  
+`; 
