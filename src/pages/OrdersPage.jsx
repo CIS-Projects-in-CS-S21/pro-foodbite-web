@@ -166,6 +166,7 @@ const OrdersPage = () => {
     const setOrderInProgress = async (theOrder) =>{
         // update status for the correct order
 
+        theOrder.status = "IN PROGRESS"
         let key = theOrder.id; 
         
         let updated = {}
@@ -173,6 +174,17 @@ const OrdersPage = () => {
 
         await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, updated);
     }
+
+    const setOrderOnTheWay = async (theOrder) => {
+        // update status for the correct oders
+
+        theOrder.status = "ON THE WAY"
+        let key = theOrder.id;
+        let updated = {}
+        updated[`orders.${key}.status`] = "ON THE WAY"
+
+        await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}`, updated);
+    };
 
     const setOrderDelivered = async (theOrder) =>{
         // send to archived orders document
@@ -214,7 +226,7 @@ const OrdersPage = () => {
              <PendingOrders orders={orders} view={view_selected_handler}/>
             
             <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
-                    orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder}
+                    orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder} orderOnTheWay={setOrderOnTheWay}
             / >
                 <TopPage show={show}>
             {

@@ -52,7 +52,7 @@ export default function PendingOrders( {orders, view} ) {
   const get_status_color = ( (order) => {
     // if red needs action
 
-    if(order.status === "NEW" || order.status === "CANCELED" || order.status === "DELIVERED") return <Status />
+    if(order.status === "NEW" || order.status === "CANCELED") return <Status />
     else return <Status primary/>
 
   });
@@ -103,7 +103,7 @@ const Container = styled.div`
   flex-direction: row; 
   overflow-x: scroll; 
   //background-color: #e9f7ff;  
-  background-color: #f0f3f5;
+  background-color: #f0f3f5; 
 `;
 
 
@@ -112,7 +112,7 @@ const OrderContainer = styled.div`
   border: 3.5px solid #181818;
   min-height: 200px;
   min-width: 200px;
-  margin: 1.5% 2%; 
+  margin: 1.2% 2%; 
 
   &:hover {
     cursor: pointer;
@@ -147,9 +147,9 @@ const ItemsCount = styled.div`
 `; 
 
 const Status = styled.div`
-  bottom: 0px;
-  right: 0px;
+  bottom: 1px;
+  right: 1px;
   position: absolute;
-  border-bottom: ${props => props.primary ? "70px solid #5bb55f" : "70px solid #fb2e0f"};
+  border-bottom: ${props => props.primary ? "70px solid #5bdebb" : "70px solid #de795b"};
   border-left: 60px solid transparent;
 `; 
