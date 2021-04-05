@@ -51,7 +51,7 @@ const NameAndStar = styled.div`
 const RatingButton = styled.div`
     background-color:white;
     border:none;
-    font-size:1.5em;
+    font-size:20px;
     font-weight:bold;
     :hover{
         background-color:rgba(125,125,125, 0.5);
