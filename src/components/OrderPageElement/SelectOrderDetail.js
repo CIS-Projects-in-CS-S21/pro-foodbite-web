@@ -152,7 +152,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
                 Received At:<Value>{selectOrder.timestamp}</Value>
             </label>
             <div style={{width:"50%"}}>
-                <ActionButton style={{width:'50%', height:'100%', backgroundColor: "#5bdebb", fontWeight: 500, borderLeft: "1px solid #5a5a5a"}} onClick={() => setShow(!show)}>
+                <ActionButton data-testid="update-status" style={{width:'50%', height:'100%', backgroundColor: "#5bdebb", fontWeight: 500, borderLeft: "1px solid #5a5a5a"}} onClick={() => setShow(!show)}>
                     UPDATE STATUS</ActionButton>
                 <StateUpdate show={show} style={{width:'21.3%'}}>
                     {/* <ActionButton onClick={()=>{
@@ -163,7 +163,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
                     <ActionButton onClick={()=>{
                         setInProgress(selectOrder);
                         setShow(!show);
-                    }}>IN PROGRESS</ActionButton>
+                    }}data-testid="in-progress">IN PROGRESS</ActionButton>
                     <ActionButton onClick={()=>{
                         setOneTheWay(selectOrder);
                         setShow(!show);

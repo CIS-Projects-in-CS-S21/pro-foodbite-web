@@ -197,7 +197,7 @@ export default function ViewHistory( {orders, history, closeShow } ) {
                     <div style={{marginBottom: "5%"}}></div>
                 <ViewHistoryButton onClick={()=>{
                     setShow(!show);
-                }}>close</ViewHistoryButton>
+                }} data-testid="close-btn">close</ViewHistoryButton>
             </HistoryDetail>
             <ViewHistoryButton onClick={closeShow}>close</ViewHistoryButton>
         </div>
