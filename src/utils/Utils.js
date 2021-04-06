@@ -88,3 +88,9 @@ export function calc_amount(order){
       return amount.price.toFixed(2); 
     }
   };
+
+
+
+export function average(nums){
+    return nums.reduce((a, b) => (a + b)) / nums.length;
+}
