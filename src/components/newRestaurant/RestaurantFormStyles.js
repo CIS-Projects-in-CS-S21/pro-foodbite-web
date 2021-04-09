@@ -5,8 +5,8 @@ export const restaurantFormStyles = {
         textAlign: "center",
         margin: "0 auto",
         marginTop: "2em",
-        color: "rgb(54, 54, 54)"
-
+        color: "rgb(54, 54, 54)",
+        width: "75%"
     },
     button: {
         fontSize: "20px",
