@@ -11,6 +11,7 @@ import { useUserContext } from "../context/UserContext"
 import { firestore } from "../firebase"
 import { defaultEmpty } from "../tempData"
 import styled from "styled-components"
+import "../App.css"
 
 
 export default function RestaurantPage(){
@@ -32,7 +33,6 @@ export default function RestaurantPage(){
 
   const [form, setForm] = useState();
   const [loading, setLoading] = useState(true); 
-  const [active, set_active] = useState(screens.WELCOME_BACK);
 
 
   useEffect(() => {
@@ -79,7 +79,8 @@ export default function RestaurantPage(){
         setForm(temp); 
         setLoading(false); 
 
-        document.getElementById(temp.screen).style.color = "#e9eaeb";
+       document.getElementById(temp.screen).style.color = "#e9eaeb";
+       //document.getElementById(temp.screen).classList.add("active");
       }
     }
 
@@ -134,10 +135,10 @@ export default function RestaurantPage(){
   const handle_navigate = (number) => {
 
     let temp = document.getElementById(form.screen);
-    temp.style.color = "#868e95"; 
-
+    temp.removeAttribute("style");
+    
     temp = document.getElementById(number);
-    temp.style.color = "#e9eaeb";
+    document.getElementById(number).style.color = "#e9eaeb";
 
     setForm({ ...form, screen: number }); 
   }
