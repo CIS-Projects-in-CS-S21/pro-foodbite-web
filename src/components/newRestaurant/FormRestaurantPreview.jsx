@@ -33,9 +33,6 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
     function makeHoursElement(day, index) {
         const hours = form.hours;
 
-        console.log(hours[day].open);
-        
-
         if (hours[day].open.length > 0 && hours[day].close.length > 0)
             return (
                 <Row key={index}>
