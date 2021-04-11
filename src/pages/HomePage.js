@@ -46,14 +46,14 @@ export default function SignInPage() {
   const greeting = () => {
 
     if(!user){
-      // user and has restaurant
+      // not user
       return (
       <Container>
         <GreetingContainer>
             <GetStartedContainer>
-              <h1 style={{color: "#ffffff" , marginTop: "2%", textTransform: "none"}}>Get detailed restaurant analytics  <br></br> through the Foodbite web portal</h1>
+              <h1 style={{color: "black" , marginTop: "2%", textTransform: "none"}}>Get detailed restaurant analytics  <br></br> through the Foodbite web portal</h1>
 
-              <p style={{color: "#ffffff", margin: "2% 0"}}>
+              <p style={{color: "black", margin: "2% 0"}}>
                 View trends about your restaurant. 
               </p>
 
@@ -143,6 +143,19 @@ export default function SignInPage() {
         </Container>
       )
     }
+    else{
+      // user but haven't registered your restaurant
+
+      return (
+        <Container>
+          <div style={{marginTop: "2.5%"}}>
+            <h3 style={{opacity: ".8"}}>WELCOME BACK</h3> <br></br> <h1>{user.email}</h1>
+            <LongButton style={{fontSize: "2em", marginTop: "2%", width: "50%"}} onClick={() => history.push("/new-restaurant")}>register restaurant now!</LongButton>
+          </div>
+        </Container>
+      )
+
+    }
   }
 
   //console.log(user);
@@ -164,16 +177,17 @@ const Container = styled.div`
 `; 
 
 const GreetingContainer = styled.div`
-  border: 2px solid black;
+  //border: 2px solid black;
   display: flex;
   flex-direction: row; 
   justify-content: space-around; 
   align-items: center; 
-  font-size: 1.4em; 
-  background-color: #004d53;   
-  margin-top: 1.8%; 
+  font-size: 1.4em;   
+  margin-top: 4.5%; 
 
-  background: linear-gradient(to right, #004c52, #5bdebb);
+  //background: linear-gradient(to right, #004c52, #5bdebb);
+
+
 `;
 
 const GetStartedContainer = styled.div`
@@ -183,20 +197,20 @@ const GetStartedContainer = styled.div`
 `; 
 
 const FeaturesContainer = styled.div`
-  margin-top: 2.5%; 
-  background-color: #333a40;
+  margin-top: 6%; 
+ // background-color: #333a40;
   display: flex;
   border: 2px solid black;
 `; 
 
 const HowContainer = styled.div`
   margin-top: 2.5%; 
-  background-color: #333a40;
+  //background-color: #333a40;
   display: flex;
   flex-direction: column; 
   width: 80%;
-  margin: 3% auto;  
-  background-color: #5bc0de; 
+  margin: 4% auto;  
+ // background-color: #5bc0de; 
 `; 
 
 const Row = styled.div`
@@ -240,7 +254,7 @@ const card_style = {
   //color: "#e9eaeb", 
   color: "black", 
   width: "33.33%",
-  backgroundColor: "#5bc0de",
+  //backgroundColor: "#5bc0de",
 }
 
 const card_style2 = {
