@@ -1,6 +1,4 @@
-import { setIn } from 'formik'
 import React, {useState, useEffect} from 'react'
-import { ChatLeftText } from 'react-bootstrap-icons'
 import styled from 'styled-components'
 import {average} from '../utils/Utils'
 
@@ -53,13 +51,23 @@ const NameAndStar = styled.div`
 `
 
 const RatingButton = styled.button`
-    background-color:white;
+    background-color:transparent;
     border:none;
-    
-
 
     :hover{
         background-color:rgba(125,125,125, 0.5);
+    }
+`
+
+const MoreButton = styled.button`
+    background-color:transparent;
+    margin:10px;
+    border:1px solid;
+    border-radius:2px;
+    padding-left:20px;
+    padding-right:20px;
+    :hover{
+        background-color:rgba(125,125,125,0.5);
     }
 `
 
@@ -260,7 +268,7 @@ const RatingCard = ({userRating}) => {
                     }}>All Ratings</button>
             </HorizontalDiv>
             {ratingList}
-            <button id="showMore" onClick={showMoreFunction}>Show More</button>
+            <MoreButton disabled={selectTrue? ratingIndex >= selectRating.length : ratingIndex >= ratingData.length} onClick={showMoreFunction}>Show More</MoreButton>
         </div>  
     )
 }
@@ -435,12 +443,6 @@ export default function Rating({restaurantRatings}) {
                     <text >3:{ratingList.filter(a => a === 3).length}</text>
                     <text >2:{ratingList.filter(a => a === 2).length}</text>
                     <text >1:{ratingList.filter(a => a === 1).length}</text>
-                    {/* <RatingButton onClick={()=>{ratingSelect(5)}}>5:{ratingList.filter(a => a === 5).length}</RatingButton>
-                    <RatingButton onClick={()=>{ratingSelect(4)}}>4:{ratingList.filter(a => a === 4).length}</RatingButton>
-                    <RatingButton onClick={()=>{ratingSelect(3)}}>3:{ratingList.filter(a => a === 3).length}</RatingButton>
-                    <RatingButton onClick={()=>{ratingSelect(2)}}>2:{ratingList.filter(a => a === 2).length}</RatingButton>
-                    <RatingButton onClick={()=>{ratingSelect(1)}}>1:{ratingList.filter(a => a === 1).length}</RatingButton> */}
-                    {/* <button style={{backgroundColor:'white', border:'none'}}disabled={allOrder} onClick={()=>{setAll(true); setList(temp_ratings)}}>All Ratings</button> */}
                 </VerticalDiv>
             </HorizontalDiv>
             <RatingCard userRating = {theList}></RatingCard>
