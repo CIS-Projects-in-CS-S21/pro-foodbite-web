@@ -17,18 +17,20 @@ export default function SignInPage() {
   const { user, userDb, restaurant } = useUserContext();
   const history = useHistory();
 
-  const test = () => {
-    // test auth context 
-    if (user) return <temp style={{ fontWeight: 700, fontSize: "1.2em" }}>TRUE</temp>
-    else return <temp style={{ fontWeight: 800 }}>FALSE</temp>
-  }
+  //console.log(userDb);
 
-  const demo2 = () => {
-    //console.log(userDb);
-    if(userDb === null) return <temp style={{ fontWeight: 800 }}>FALSE</temp>
-    if(userDb.hasOwnProperty("ownedRestaurants") === false) return <temp style={{ fontWeight: 800 }}>FALSE</temp>
-    else return <temp  style={{ fontWeight: 700, fontSize: "1.2em" }}>TRUE</temp>
-  }
+  // const test = () => {
+  //   // test auth context 
+  //   if (user) return <temp style={{ fontWeight: 700, fontSize: "1.2em" }}>TRUE</temp>
+  //   else return <temp style={{ fontWeight: 800 }}>FALSE</temp>
+  // }
+
+  // const demo2 = () => {
+  //   //console.log(userDb);
+  //   if(userDb === null) return <temp style={{ fontWeight: 800 }}>FALSE</temp>
+  //   if(userDb.hasOwnProperty("ownedRestaurants") === false) return <temp style={{ fontWeight: 800 }}>FALSE</temp>
+  //   else return <temp  style={{ fontWeight: 700, fontSize: "1.2em" }}>TRUE</temp>
+  // }
 
   const get_today = () => {
     // display their current hours today

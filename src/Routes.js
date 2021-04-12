@@ -18,7 +18,8 @@ import SalesPage from "./pages/SalesPage";
 
 export default function Routes() {
 
-  const { user, userDb } = useUserContext();
+  const { user, userDb, restaurant } = useUserContext();
+  //console.log(user);
 
   return (
     <Router>
@@ -65,7 +66,7 @@ export default function Routes() {
         <Route
           path="/new-restaurant"
           render={() => {
-            return user ? <NewRestaurantPage /> : <Redirect to="sign-in" />
+            return user ? restaurant ? <Redirect to="/restaurant" /> : <NewRestaurantPage /> : <Redirect to="sign-in" />
           }}>
         </Route>
         <Route

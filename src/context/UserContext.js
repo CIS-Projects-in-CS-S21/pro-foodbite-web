@@ -11,18 +11,27 @@ export const useUserContext = () => {
 export const UserContextProvider = ({ children }) => {
 
   const [user, set_user] = useState();
-
   const [userDb, setUserDb] = useState(null);
   const [loading, set_loading] = useState(true);
   const [restaurant, set_restaurant] = useState(null); 
-  // let userDb = null;
-
 
   useEffect(() => {
     // set state observer w/ current user or null 
 
     const unsubscribe = auth.onAuthStateChanged((current_user) => {
-      
+
+      if(current_user){
+        
+        firestore
+          .collection("restaurants")
+          .where("ownerId", "==", current_user.uid)
+          .get()
+          .then( snapshot => {
+            if(snapshot.empty) set_restaurant(null);
+            else set_restaurant(snapshot.docs[0].data());
+          }); 
+      }
+
       set_user(current_user);
       set_loading(false);
 
@@ -36,6 +45,7 @@ export const UserContextProvider = ({ children }) => {
   const getUserData = (force) => {
     // get the user document inside the db
     // and add it to the user object
+
     if ((user !== undefined && user !== null) && (userDb === null || force)) {
       console.log('getting user data forced:', force === undefined ? false : force);
       set_loading(true);
@@ -54,35 +64,36 @@ export const UserContextProvider = ({ children }) => {
         })
         .finally(() => {
           //console.log('done', userDb);
+          
           set_loading(false)
         });
     } else {
       //console.log('already got user data', userDb)
     }
+
   }
 
   useEffect(getUserData, [user, userDb]);
 
-  const get_restaurant = () => {
-    set_loading(true);
-    if (user !== undefined && user !== null) {
+  // const get_restaurant = () => {
+  //   set_loading(true);
+  //   if (user !== undefined && user !== null) {
 
-      firestore
-        .collection("restaurants")
-        .where("ownerId", "==", user.uid)
-        .get()
-        .then( snapshot => {
-          if(snapshot.empty) set_restaurant(null);
-          else set_restaurant(snapshot.docs[0].data());
-        }); 
-    }
+  //     firestore
+  //       .collection("restaurants")
+  //       .where("ownerId", "==", user.uid)
+  //       .get()
+  //       .then( snapshot => {
+  //         if(snapshot.empty) set_restaurant(null);
+  //         else set_restaurant(snapshot.docs[0].data());
+  //       }); 
+  //   }
 
-    set_loading(false);
-    console.log("set restaurant"); 
-  }
+  //   set_loading(false);
+  //   console.log("set restaurant"); 
+  // }
 
-
-  useEffect(get_restaurant, [user]); 
+  // useEffect(get_restaurant, [user]); 
 
 
   const insertUserIntoDb = async (user) => {

@@ -93,7 +93,6 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
             })
             .then(() => {
                 console.log("user document updated successfully");
-                sessionStorage.clear();
                 setForm({ ...form, submitting: false });
                 setRedirect(true);
                 getUserData(true);

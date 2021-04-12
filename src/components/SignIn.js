@@ -7,12 +7,13 @@ import { ReactComponent as FacebookLogo } from "../assets/facebook.svg"
 import { Group, Input, LongButton } from "../styles/FormElements"
 import { useHistory } from "react-router-dom"
 import { useUserContext } from "../context/UserContext"
+import {  shouldForceRestaurantSignup } from "../utils/Utils"
 
 
 export default function SignIn( { onSubmit } ) {
 
   const history = useHistory();
-  const { sign_in_with_email_password, sign_in_with_google, sign_in_with_facebook, insertUserIntoDb } = useUserContext(); 
+  const { sign_in_with_email_password, sign_in_with_google, sign_in_with_facebook, insertUserIntoDb, restaurant } = useUserContext(); 
 
   const sign_in_schema = Yup.object().shape({
     email: Yup.string()
@@ -38,7 +39,8 @@ export default function SignIn( { onSubmit } ) {
   const handle_google = async () => {
     await sign_in_with_google()
       .then((res) => {
-        insertUserIntoDb(res.user);
+
+        if(restaurant) insertUserIntoDb(res.user);
         history.push("/restaurant");
   }).catch(err => alert("sign-in failed")); 
   };
@@ -46,7 +48,8 @@ export default function SignIn( { onSubmit } ) {
   const handle_facebook = async () => {
     await sign_in_with_facebook()
       .then((res) => {
-        insertUserIntoDb(res.user);
+
+        if(restaurant) insertUserIntoDb(res.user);
         history.push("/");
     }).catch(err => alert("sign-in failed")); 
   };
