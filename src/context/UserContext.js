@@ -56,19 +56,30 @@ export const UserContextProvider = ({ children }) => {
         .then(doc => {
           if (doc.exists) {
             // userDb = doc.data();
-            setUserDb(doc.data())
+            setUserDb(doc.data());
           }
         })
         .catch(err => {
           console.log("unable to get user table data", err);
         })
         .finally(() => {
-          //console.log('done', userDb);
+          console.log('done', userDb);
+        
+          if(user){
+            firestore
+            .collection("restaurants")
+            .where("ownerId", "==", user.uid)
+            .get()
+            .then( snapshot => {
+              if(snapshot.empty) set_restaurant(null);
+              else set_restaurant(snapshot.docs[0].data());
+            }); 
+         }
           
-          set_loading(false)
+          set_loading(false); 
         });
     } else {
-      //console.log('already got user data', userDb)
+      console.log('already got user data', userDb)
     }
 
   }
@@ -99,6 +110,8 @@ export const UserContextProvider = ({ children }) => {
   const insertUserIntoDb = async (user) => {
     if (user === undefined)
       return;
+    
+    set_loading(true);
     await firestore
       .collection("users")
       .doc(user.uid)
@@ -114,6 +127,7 @@ export const UserContextProvider = ({ children }) => {
       .catch(err => {
         console.log('unable to add new user', err);
       });
+      set_loading(false);
   }
 
   const sign_up_with_email_password = ((email, password) => {

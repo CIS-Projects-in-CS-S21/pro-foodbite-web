@@ -40,7 +40,7 @@ export default function SignIn( { onSubmit } ) {
     await sign_in_with_google()
       .then((res) => {
 
-        if(restaurant) insertUserIntoDb(res.user);
+        if(!restaurant) insertUserIntoDb(res.user);
         history.push("/restaurant");
   }).catch(err => alert("sign-in failed")); 
   };
@@ -49,8 +49,8 @@ export default function SignIn( { onSubmit } ) {
     await sign_in_with_facebook()
       .then((res) => {
 
-        if(restaurant) insertUserIntoDb(res.user);
-        history.push("/");
+        if(!restaurant) insertUserIntoDb(res.user);
+        history.push("/restaurant");
     }).catch(err => alert("sign-in failed")); 
   };
 

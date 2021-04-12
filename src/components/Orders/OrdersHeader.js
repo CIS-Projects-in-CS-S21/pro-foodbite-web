@@ -64,7 +64,7 @@ const Container = styled.div`
   align-items: center; 
  // width: 70%; 
   margin: 1.5% auto .8% auto; 
-  background-color: #f0f3f5; 
+  //background-color: #f0f3f5; 
   width: 85%;  
 `;
 
@@ -86,9 +86,10 @@ const StatusButton = styled.button`
   //font-size: 2.4rem; 
   display: inline-block;
   padding: 3px 6px;
-  border: medium none;
+  
+  background-color: #ffffff; 
+  border: none;   
   background-color: #f0f3f5; 
-  background-color: #ffffff;   
   color: ${props => props.primary ? "#5bb55f" : "#fb2e0f"};
 
   &:hover {

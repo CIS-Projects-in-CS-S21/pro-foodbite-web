@@ -78,7 +78,6 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
                     .doc(restaurant.id)
                     .set({
                         id: restaurant.id,
-                        //orders: []
                     })
             })
             .then( () => {
@@ -88,14 +87,13 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
                     .doc(restaurant.id)
                     .set({
                         id: restaurant.id,
-                        //orders: []
                     })
             })
             .then(() => {
                 console.log("user document updated successfully");
+                getUserData(true); 
                 setForm({ ...form, submitting: false });
                 setRedirect(true);
-                getUserData(true);
             })
             .catch(err => {
                 console.log(err);
