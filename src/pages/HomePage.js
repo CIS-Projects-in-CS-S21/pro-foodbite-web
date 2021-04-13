@@ -10,14 +10,10 @@ import OrdersIcon from "../assets/order.png"
 import CustomerIcon from "../assets/customer.png"
 import { convertTime24to12 } from "../utils/Utils"
 
-
-
 export default function SignInPage() {
 
   const { user, userDb, restaurant } = useUserContext();
   const history = useHistory();
-
-  //console.log(userDb);
 
   // const test = () => {
   //   // test auth context 
@@ -160,9 +156,6 @@ export default function SignInPage() {
     }
   }
 
-  //console.log(user);
-  //console.log(userDb); 
-  //sessionStorage.clear();
 
   return (
     <div>
@@ -179,17 +172,12 @@ const Container = styled.div`
 `; 
 
 const GreetingContainer = styled.div`
-  //border: 2px solid black;
   display: flex;
   flex-direction: row; 
   justify-content: space-around; 
   align-items: center; 
   font-size: 1.4em;   
   margin-top: 4.5%; 
-
-  //background: linear-gradient(to right, #004c52, #5bdebb);
-
-
 `;
 
 const GetStartedContainer = styled.div`
@@ -257,13 +245,6 @@ const card_style = {
   color: "black", 
   width: "33.33%",
   //backgroundColor: "#5bc0de",
-}
-
-const card_style2 = {
-  backgroundColor: "#333a40", 
-  color: "#ffffff", 
-  //width: "33.33%",
-  border: "none"
 }
 
 const icon = {

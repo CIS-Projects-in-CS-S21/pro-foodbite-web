@@ -8,11 +8,12 @@ const DetailLayout = styled.div`
     justify-items:left;
     width: 70%;
     margin: 0 auto;
-    background-color: #f0f3f5; 
+   // background-color: #f0f3f5; 
     margin-top: 2%; 
     font-weight: 700; 
     width: 85%; 
-    
+
+    border-top: 2px solid #f0f3f5; 
 `
 
 const ActionButton = styled.button`
@@ -49,6 +50,8 @@ const Value = styled.span`
 function OrderDetail({selectOrder}){ 
 
 
+
+
     useEffect(() => {
         returnOrderItem()
     }, [selectOrder,]);
@@ -59,8 +62,19 @@ function OrderDetail({selectOrder}){
         // todo check not undefined
 
         // return "Order# " + selectOrder.id + " " + selectOrder.name ;
-        return "Order: " + selectOrder.id;
+        return "Order: " + selectOrder.orderId;
     }
+
+    const get_options = () => {
+
+        if(selectOrder.hasOwnProperty("options")){
+            return selectOrder.options; 
+        }
+
+        return "none"; 
+    }
+
+
     const returnOrderItem = () =>{
         setItems([]);
         //const orderList = selectOrder.orderItem;
@@ -70,11 +84,12 @@ function OrderDetail({selectOrder}){
             // const newItem = <label key={i} style={{textAlign:'left', fontWeight:"900"}}>#{element.itemNumber}.{element.name.toUpperCase()} (${element.price})</label>
 
             // TODO, amount? over displaying price?
+
             
             const newItem = 
                 <div>
-                    <div key={i} style={{textAlign:'left', fontWeight: 900, marginLeft: "1%"}}>{element.name.toUpperCase()} (${element.price.toFixed(2)})</div>
-                    <Options>{element.options}</Options>
+                    <div key={i} style={{textAlign:'left', fontWeight: 900, marginLeft: "1%"}}>{element.name.toUpperCase()} (${element.price})</div>
+                    <Options>{get_options()}</Options>
                 </div>
 
 
@@ -92,7 +107,7 @@ function OrderDetail({selectOrder}){
             <label style={{margin:".5% 0 1.8% 1%"}}>{returnBasicOrderInfo()}</label>
             {items}              
             <br/>
-            <label style={{marginLeft: "1%"}}>Order Price: $<Value>{calc_amount(selectOrder)}</Value></label>
+            <label style={{marginLeft: "1%"}}>Order Price: $<Value>{selectOrder.total.toFixed(2)}</Value></label>
         </div>
     )
 }
@@ -135,7 +150,7 @@ function OrderStatus({selectOrder}){
 }
 
 
-function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setArchived, setOneTheWay}){
+function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setReady, setOneTheWay}){
     
     const [show, setShow] = useState(false)
 
@@ -144,12 +159,19 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
         return null;
     }
 
+    const get_full_date = (timestamp) => {
+        if(timestamp === undefined) return ""; 
 
+        let time = new Date(0);
+        time.setUTCSeconds(timestamp);
+        
+        return `0${time.getHours()}:${time.getMinutes()}`; 
+    }
 
     return(
         <div style={{display:'flex', flexDirection:'row', width:'100%', textAlign:'left', backgroundColor:'rgb(200,200,200)'}}>
             <label style={{width:'50%',height:'100%', marginLeft: "1%", marginTop: "1%"}}>
-                Received At:<Value>{selectOrder.timestamp}</Value>
+                Received At:<Value>{get_full_date(selectOrder.createdAt)}</Value>
             </label>
             <div style={{width:"50%"}}>
                 <ActionButton data-testid="update-status" style={{width:'50%', height:'100%', backgroundColor: "#5bdebb", fontWeight: 500, borderLeft: "1px solid #5a5a5a"}} onClick={() => setShow(!show)}>
@@ -169,7 +191,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
                         setShow(!show);
                     }}>ON THE WAY</ActionButton>
                     <ActionButton onClick={()=>{
-                        setOneTheWay(selectOrder);
+                        setReady(selectOrder);
                         setShow(!show);
                     }}>READY FOR PICKUP</ActionButton>
                     <ActionButton onClick={()=>{
@@ -186,7 +208,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
 
 }
 
-export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgress, orderDeliver, orderArchived, orderOnTheWay}) {
+export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgress, orderDeliver, orderReady, orderOnTheWay}) {
 
     useEffect(() => {
         setOrder(orderInfo);
@@ -229,13 +251,13 @@ export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgr
 
     return (
         <DetailLayout>
-            <div style={{display:'flex', flexDirection:'row', maxHeight:'200px'}}>
+            <div style={{display:'flex', flexDirection:'row', maxHeight:'200px', marginTop: "1.5%"}}>
                 <OrderDetail
                     selectOrder={theOrder}></OrderDetail>
                 <OrderStatus 
                      selectOrder={theOrder}></OrderStatus>
             </div>
-            <OrderAction setInProgress={orderInProgress} setDeliver={orderDeliver} setArchived={orderArchived}
+            <OrderAction setInProgress={orderInProgress} setDeliver={orderDeliver} setReady={orderReady}
                 selectOrder={theOrder} declineOrder={declineOrder} setOneTheWay={orderOnTheWay}></OrderAction>
         </DetailLayout>
     )

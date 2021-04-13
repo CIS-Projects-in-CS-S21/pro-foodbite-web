@@ -12,7 +12,6 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
     const [redirect, setRedirect] = useState(false);
     const { user, userDb } = useUserContext();
 
-    console.log(userDb.ownedRestaurants[0]); 
 
     const submitRestaurantData = () => {
         setForm({ ...form, submitting: true });
@@ -24,7 +23,7 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
         name: form.name,
         description: form.description,
         menu: form.menuItems,
-        available: false,
+        available: true,
         profile: {
             hours: form.hours
             }

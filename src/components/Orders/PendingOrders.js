@@ -18,23 +18,38 @@ export default function PendingOrders( {orders, view} ) {
 
       return <div style={{fontSize: "1.3rem"}}>{name}</div>
     }
+
+    return <div style={{fontSize: "1.3rem"}}>NO NAME</div>
   }); 
 
   const get_items_count = ( (order) => {
 
-    if(order.hasOwnProperty("timestamp")) return order.menuItems.length;
+    if(order.hasOwnProperty("menuItems")) return order.menuItems.length;
+    else return 0; 
 
   });
 
   const get_timestamp = ( (order) => {
-    
-    if(order.hasOwnProperty("menuItems")) {
-        
-      let split = order.timestamp.split(",");
+    // when last updated 
+  
+    if(order.hasOwnProperty("updated")) {
 
-      return split[1].trim();
+      let time = new Date(0);
+      time.setUTCSeconds(order.updated);
+
+      time = `0${time.getHours()}:${time.getMinutes()}`; 
+
+      return time; 
     }
-    
+    else if(order.hasOwnProperty("createdAt")){
+
+      let time = new Date(0);
+      time.setUTCSeconds(order.createdAt);
+
+      time = `0${time.getHours()}:${time.getMinutes()}`; 
+
+      return time; 
+    }
   });
 
   const calc_amount = ( (order) => {
@@ -42,10 +57,10 @@ export default function PendingOrders( {orders, view} ) {
     if(order.hasOwnProperty("menuItems")){
       // sum the price of each object in menuItems array
 
-      let amount = order.menuItems.reduce( (a, b) => ({price: a.price + b.price}));
-      //console.log(amount);
+      if(order.menuItems.length === 1) return parseFloat(order.menuItems[0].price); 
 
-      return amount.price.toFixed(2); 
+      let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
+      return amount.price.toFixed(2);  
     }
   });
 
@@ -63,7 +78,7 @@ export default function PendingOrders( {orders, view} ) {
       {
         orders.map( (order, index) => {
           return (
-            <OrderContainer onClick={(e) => view(e, order)}>
+            <OrderContainer onClick={(e) => view(e, order)} key={order.orderId}>
               <OrderHeader>
                 <div style={{marginRight: "4%"}}>{index+1}</div>
                 {get_short_name(order)}
@@ -103,7 +118,10 @@ const Container = styled.div`
   flex-direction: row; 
   overflow-x: scroll; 
   //background-color: #e9f7ff;  
-  background-color: #f0f3f5; 
+  //background-color: #f0f3f5; 
+
+  border-top: 2px solid #f0f3f5; 
+  border-bottom: 4px solid #f0f3f5; 
 `;
 
 

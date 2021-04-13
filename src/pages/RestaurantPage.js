@@ -111,11 +111,14 @@ export default function RestaurantPage(){
     const ele = document.getElementById('test');
     fade(ele, 700, () => setForm({ ...form, screen: form.screen + 1 }));
 
-        
-    let temp = document.getElementById(form.screen);
-    temp.removeAttribute("style");
     
-    document.getElementById(form.screen+1).style.color = "#e9eaeb";
+    if(form.screen + 1 !== 8){
+      console.log(form.screen);
+      let temp = document.getElementById(form.screen);
+      temp.removeAttribute("style");
+      
+      document.getElementById(form.screen+1).style.color = "#e9eaeb";
+    }
   };
 
   const prevScreen = () => {

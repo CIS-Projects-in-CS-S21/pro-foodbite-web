@@ -12,8 +12,7 @@ const HistoryItem = styled.button`
     flex-direction: row; 
     width: 100%; 
     justify-content: center; 
-     
-
+    
     :hover{
         background-color:rgb(200,200,200);
     }
@@ -94,17 +93,27 @@ export default function ViewHistory( {orders, history, closeShow } ) {
         for (let i = 0; i < menuItems.length; i++) {
             const element = menuItems[i];
             const newItem = <li key={i} style={{textAlign:'center', listStyle:'none', fontWeight: "700"}}
-                >#{element.itemNumber}.{element.name}(${element.price.toFixed(2)})</li>
+                >{element.name}(${parseFloat(element.price).toFixed(2)})</li>
             setItems(items => [...items, newItem]);
         }
     }
 
-    const get_time = (timestamp) => {
+    const get_date = (timestamp) => {
         if(timestamp === undefined) return ""; 
 
-        let split = timestamp.split(",");
+        let time = new Date(0);
+        time.setUTCSeconds(timestamp);
+        
+        return time.toLocaleDateString();
+    }
 
-        return split[1].trim();
+    const get_full_date = (timestamp) => {
+        if(timestamp === undefined) return ""; 
+
+        let time = new Date(0);
+        time.setUTCSeconds(timestamp);
+        
+        return time.toLocaleString();
     }
 
     useEffect(() => {
@@ -114,13 +123,16 @@ export default function ViewHistory( {orders, history, closeShow } ) {
         
         for (let i = 0; i < current.length; i++) {
             const element = current[i];
+            
+            if(element.name === undefined) console.log(element);
+
             let temp = <HistoryItem key={"order"+i} onClick={()=>{
                 setShow(!show);
                 setOrder(element);
             }}
-            >Order Id: {element.id}  | Name: {element.name.toUpperCase()} | Number Of Items:
+            >Order Id: {element.orderId}  | Name: {element.name.toUpperCase()} | Number Of Items:
              {itemCounter(element)} | Total Price: $
-             {calc_amount(element)} | Received At: {get_time(element.timestamp)} | Status:<Status>{element.status}</Status>
+             {calc_amount(element)} | Date: {get_date(element.createdAt)} | Status:<Status>{element.status}</Status>
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
@@ -189,9 +201,8 @@ export default function ViewHistory( {orders, history, closeShow } ) {
                     <h4 style={{borderBottom:"1px solid", width:"100%", marginBottom: "1%"}}>Order#{selectOrder.id}) {selectOrder.name}</h4>
                     Price: ${calc_amount(selectOrder)}<br/>
                     Address: {selectOrder.address}<br/>
-                    Received At:  {get_time(selectOrder.timestamp)}<br/>
+                    Received:  {get_full_date(selectOrder.createdAt)}<br/>
                     <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>Status: <span style={{fontWeight: "bold", marginLeft: "1%"}}>{selectOrder.status}</span></div> <br/>
-                    {/* ETA: {selectOrder.eta}<br/><br/> */}
                     <h4 style={{borderBottom:"1px solid", marginTop: "2%"}}>Order Items:</h4>
                     {items}
                     <div style={{marginBottom: "5%"}}></div>
@@ -208,12 +219,12 @@ const HeaderContainer = styled.div`
     display: flex;
     flex-direction: row; 
     justify-content: space-between; 
-    align-items: center
+    align-items: center;
 `; 
 
 const Header = styled.h3`
     font-family: "Amatic SC", cursive;
-    font-size: 3.4rem; 
+    font-size: 3.8rem; 
     margin-left: 12%; 
 `;
 
