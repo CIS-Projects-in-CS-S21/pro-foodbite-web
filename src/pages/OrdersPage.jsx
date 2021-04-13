@@ -47,18 +47,9 @@ const OrdersPage = () => {
             .onSnapshot( (snapshot) => {
 
                 let orders = []; 
+
                 snapshot.forEach( doc => {
-
-                    let time = new Date(0);
-                    time.setUTCSeconds(firebase.firestore.Timestamp.now().seconds);
-
-                    let order = doc.data(); 
-                    console.log(order);
-                    order["updated"] = time; 
-
-                    //order["createdAt"] = time; // TEMP
-
-                    orders.push(order); 
+                    orders.push(doc.data()); 
                 });
 
                 set_orders(orders);
@@ -90,11 +81,11 @@ const OrdersPage = () => {
         await get_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`)
                 .then( doc => {
                     if(doc.exists){
-                        let orderss = doc.data().orders; 
+                        let orderz = doc.data().orders; 
                         let temp = [];
             
-                        for (const id in orderss){
-                            temp.push(orderss[id]); 
+                        for (const id in orderz){
+                            temp.push(orderz[id]); 
                         }
 
                         let both = orders; 
@@ -136,6 +127,10 @@ const OrdersPage = () => {
         }
     }
 
+    const get_timestamp = () => {
+        return firebase.firestore.Timestamp.now().seconds; 
+    }
+
     const declineOrder = async (theOrder) =>{
         // update status for the correct order
         // move the order to archived orders 
@@ -153,7 +148,8 @@ const OrdersPage = () => {
     const setOrderInProgress = async (theOrder) =>{
         // update status for the correct order
 
-        theOrder.status = "IN PROGRESS"
+        theOrder.status = "IN PROGRESS";
+        theOrder.updated = get_timestamp(); 
 
         await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`, theOrder);
     }
@@ -161,7 +157,8 @@ const OrdersPage = () => {
     const setOrderOnTheWay = async (theOrder) => {
         // update status for the correct oders
 
-        theOrder.status = "ON THE WAY"
+        theOrder.status = "ON THE WAY";
+        theOrder.updated = get_timestamp(); 
 
         await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`, theOrder);
     };
@@ -170,6 +167,7 @@ const OrdersPage = () => {
         // send to archived orders document
 
         theOrder.status = "DELIVERED"; 
+        theOrder.updated = get_timestamp();
         await firestore.doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`).delete().then( () => console.log("deleted")); 
 
         let updated = {}
@@ -185,6 +183,8 @@ const OrdersPage = () => {
         // for now, wont be sent to archives (manually set delivered to do so)
 
         theOrder.status = "READY";
+        theOrder.updated = get_timestamp(); 
+        
         await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`, theOrder);
     }
 
@@ -196,7 +196,7 @@ const OrdersPage = () => {
 
     return (
         <div>
-            <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()}/>
+            <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()} name={restaurant.name}/>
              <PendingOrders orders={orders} view={view_selected_handler}/>
             
             <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}

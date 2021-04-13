@@ -30,10 +30,22 @@ export default function PendingOrders( {orders, view} ) {
   });
 
   const get_timestamp = ( (order) => {
+    // when last updated 
   
-    if(order.hasOwnProperty("createdAt")) {
+    if(order.hasOwnProperty("updated")) {
 
-      let time = order.updated;
+      let time = new Date(0);
+      time.setUTCSeconds(order.updated);
+
+      time = `0${time.getHours()}:${time.getMinutes()}`; 
+
+      return time; 
+    }
+    else if(order.hasOwnProperty("createdAt")){
+
+      let time = new Date(0);
+      time.setUTCSeconds(order.createdAt);
+
       time = `0${time.getHours()}:${time.getMinutes()}`; 
 
       return time; 
@@ -45,9 +57,9 @@ export default function PendingOrders( {orders, view} ) {
     if(order.hasOwnProperty("menuItems")){
       // sum the price of each object in menuItems array
 
-      let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
-      //console.log(amount);
+      if(order.menuItems.length === 1) return parseFloat(order.menuItems[0].price); 
 
+      let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
       return amount.price.toFixed(2);  
     }
   });

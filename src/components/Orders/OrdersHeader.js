@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ReactComponent as CheckMark } from "../../assets/check.svg"
 import { ReactComponent as CloseMark } from "../../assets/close.svg"
 
-export default function OrdersHeader( { history, accepting, status, count } ) {
+export default function OrdersHeader( { history, accepting, status, count, name } ) {
 
    
 
@@ -13,10 +13,13 @@ export default function OrdersHeader( { history, accepting, status, count } ) {
   
     if(status){
       return (
-        <StatusButton primary onClick={accepting}>
-          accepting orders 
-          <CheckMark style={{width: "40px", marginLeft: "15px"}} />
-        </StatusButton>
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center", whiteSpace: "nowrap"}}>
+          <div style={{fontSize: ".8em", marginRight: "2%"}}>{name}</div>
+          <StatusButton primary onClick={accepting}>
+            accepting orders 
+            <CheckMark style={{width: "40px", marginLeft: "15px"}} />
+          </StatusButton>
+        </div>
       )
     }
 
@@ -38,7 +41,6 @@ export default function OrdersHeader( { history, accepting, status, count } ) {
 
   return (
     <Container>
-
       <OrdersCount>
         Orders: 
         <Count>
@@ -51,7 +53,6 @@ export default function OrdersHeader( { history, accepting, status, count } ) {
       <ViewHistoryButton onClick={history}>
         View Order History
       </ViewHistoryButton>
-      
     </Container>
   )
 }
@@ -65,7 +66,7 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center; 
  // width: 70%; 
-  margin: 1.5% auto .8% auto; 
+  margin: .9% auto .8% auto; 
   //background-color: #f0f3f5; 
   width: 85%;  
 `;

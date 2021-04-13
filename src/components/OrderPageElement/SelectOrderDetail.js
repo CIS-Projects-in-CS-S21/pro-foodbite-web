@@ -62,7 +62,7 @@ function OrderDetail({selectOrder}){
         // todo check not undefined
 
         // return "Order# " + selectOrder.id + " " + selectOrder.name ;
-        return "Order: " + selectOrder.id;
+        return "Order: " + selectOrder.orderId;
     }
 
     const get_options = () => {
@@ -107,7 +107,7 @@ function OrderDetail({selectOrder}){
             <label style={{margin:".5% 0 1.8% 1%"}}>{returnBasicOrderInfo()}</label>
             {items}              
             <br/>
-            <label style={{marginLeft: "1%"}}>Order Price: $<Value>{calc_amount(selectOrder)}</Value></label>
+            <label style={{marginLeft: "1%"}}>Order Price: $<Value>{selectOrder.total.toFixed(2)}</Value></label>
         </div>
     )
 }
@@ -159,12 +159,19 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setR
         return null;
     }
 
+    const get_full_date = (timestamp) => {
+        if(timestamp === undefined) return ""; 
 
+        let time = new Date(0);
+        time.setUTCSeconds(timestamp);
+        
+        return `0${time.getHours()}:${time.getMinutes()}`; 
+    }
 
     return(
         <div style={{display:'flex', flexDirection:'row', width:'100%', textAlign:'left', backgroundColor:'rgb(200,200,200)'}}>
             <label style={{width:'50%',height:'100%', marginLeft: "1%", marginTop: "1%"}}>
-                Received At:<Value>{selectOrder.timestamp}</Value>
+                Received At:<Value>{get_full_date(selectOrder.createdAt)}</Value>
             </label>
             <div style={{width:"50%"}}>
                 <ActionButton data-testid="update-status" style={{width:'50%', height:'100%', backgroundColor: "#5bdebb", fontWeight: 500, borderLeft: "1px solid #5a5a5a"}} onClick={() => setShow(!show)}>
@@ -244,7 +251,7 @@ export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgr
 
     return (
         <DetailLayout>
-            <div style={{display:'flex', flexDirection:'row', maxHeight:'200px'}}>
+            <div style={{display:'flex', flexDirection:'row', maxHeight:'200px', marginTop: "1.5%"}}>
                 <OrderDetail
                     selectOrder={theOrder}></OrderDetail>
                 <OrderStatus 
