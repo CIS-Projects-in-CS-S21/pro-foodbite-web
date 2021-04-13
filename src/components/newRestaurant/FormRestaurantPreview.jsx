@@ -5,6 +5,8 @@ import { restaurantFormStyles } from './RestaurantFormStyles'
 
 const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
 
+    const days_order = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]; 
+
     useEffect(() => {
 
         if(!notNew){
@@ -24,9 +26,9 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
         }
     }, [form.image, notNew]);
 
-    const hoursElement = Object.getOwnPropertyNames(form.hours).map((day, index) => {
-        return makeHoursElement(day, index);
-    });
+    // const hoursElement = Object.getOwnPropertyNames(form.hours).map((day, index) => {
+    //     return makeHoursElement(day, index);
+    // });
 
     function makeHoursElement(day, index) {
         const hours = form.hours;
@@ -123,7 +125,12 @@ const FormRestaurantPreview = ({ nextScreen, prevScreen, form, notNew }) => {
                     </Col>
                 </Row>
 
-                {hoursElement}
+                {/* {hoursElement()} */}
+                {                      
+                    days_order.map( (day, index) => {
+                     return makeHoursElement(day, index); 
+                    })
+                }
 
                 <br />
 

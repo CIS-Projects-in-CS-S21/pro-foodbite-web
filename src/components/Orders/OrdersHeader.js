@@ -2,11 +2,10 @@ import React from "react"
 import styled from "styled-components"; 
 import { ReactComponent as CheckMark } from "../../assets/check.svg"
 import { ReactComponent as CloseMark } from "../../assets/close.svg"
-import { useUserContext } from "../../context/UserContext"
 
+export default function OrdersHeader( { history, accepting, status, count, name } ) {
 
-export default function OrdersHeader( { history, accepting, status, count } ) {
-
+   
 
   const get_status = ( () => {
     // accepting orders either green w/ check 
@@ -14,10 +13,13 @@ export default function OrdersHeader( { history, accepting, status, count } ) {
   
     if(status){
       return (
-        <StatusButton primary onClick={accepting}>
-          accepting orders 
-          <CheckMark style={{width: "40px", marginLeft: "15px"}} />
-        </StatusButton>
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center", whiteSpace: "nowrap"}}>
+          <div style={{fontSize: ".8em", marginRight: "2%"}}>{name}</div>
+          <StatusButton primary onClick={accepting}>
+            accepting orders 
+            <CheckMark style={{width: "40px", marginLeft: "15px"}} />
+          </StatusButton>
+        </div>
       )
     }
 
@@ -39,7 +41,6 @@ export default function OrdersHeader( { history, accepting, status, count } ) {
 
   return (
     <Container>
-
       <OrdersCount>
         Orders: 
         <Count>
@@ -52,22 +53,22 @@ export default function OrdersHeader( { history, accepting, status, count } ) {
       <ViewHistoryButton onClick={history}>
         View Order History
       </ViewHistoryButton>
-      
     </Container>
   )
 }
 
 const Container = styled.div`
   font-family: "Amatic SC", cursive;   
-  font-size: 2.4rem; 
+  font-size: 2.8rem; 
   font-weight: 700; 
  // border: 1px solid black; 
   display: flex; 
   justify-content: space-between;
   align-items: center; 
-  width: 70%; 
-  margin: 1.5% auto .8% auto; 
-  background-color: #f0f3f5; 
+ // width: 70%; 
+  margin: .9% auto .8% auto; 
+  //background-color: #f0f3f5; 
+  width: 85%;  
 `;
 
 const OrdersCount = styled.div`
@@ -88,9 +89,10 @@ const StatusButton = styled.button`
   //font-size: 2.4rem; 
   display: inline-block;
   padding: 3px 6px;
-  border: medium none;
+  
+  background-color: #ffffff; 
+  border: none;   
   background-color: #f0f3f5; 
-  background-color: #ffffff;   
   color: ${props => props.primary ? "#5bb55f" : "#fb2e0f"};
 
   &:hover {
@@ -109,4 +111,8 @@ const ViewHistoryButton = styled.button`
   &:hover {
     opacity: 70%; 
   }
+
+  background-color: #5bc0de;
+  margin: .8%; 
+  margin-left: 0;
 `;

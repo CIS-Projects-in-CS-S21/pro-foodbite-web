@@ -53,7 +53,7 @@ export function checkTimeRange(a, b) {
  * restaurant 
  */
 export function shouldForceRestaurantSignup(user) {
-    console.log('shouldForceRestaurantSignup', user);
+    //console.log('shouldForceRestaurantSignup', user);
 
     //console.log('shouldForceRestaurantSignup', (user !== null && user.ownedRestaurants.length > 0) ? false : true);
 
@@ -82,9 +82,18 @@ export function checkMaxFileSize(file, maxSize) {
 
 export function calc_amount(order){
 
-    if(order.hasOwnProperty("menuItems")){
-      // sum the price of each object in menuItems array
-      let amount = order.menuItems.reduce( (a, b) => ({price: a.price + b.price}));
-      return amount.price.toFixed(2); 
+    if(order.hasOwnProperty("menuItems")){    
+        // sum the price of each object in menuItems array
+        
+        let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
+        amount = parseFloat(amount.price).toFixed(2); 
+
+        return amount; 
     }
   };
+
+
+
+export function average(nums){
+    return nums.reduce((a, b) => (a + b)) / nums.length;
+}

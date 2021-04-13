@@ -9,7 +9,7 @@ import { restaurantFormStyles } from './RestaurantFormStyles'
 
 const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
     const [redirect, setRedirect] = useState(false);
-    const { user, assignRestaurantToUser, getUserData } = useUserContext();
+    const { user, assignRestaurantToUser, getUserData, get_restaurant } = useUserContext();
 
     const submitRestaurantData = () => {
         setForm({ ...form, submitting: true });
@@ -71,12 +71,32 @@ const FormRestaurantSubmit = ({ prevScreen, form, setForm }) => {
                 // assign the new restaurant to the user
                 return assignRestaurantToUser(restaurant.id);
             })
+            .then( () => {
+                firebase
+                    .firestore()
+                    .collection("pendingOrders")
+                    .doc(restaurant.id)
+                    .set({
+                        id: restaurant.id,
+                        orders: {}
+                    })
+            })
+            .then( () => {
+                firebase
+                    .firestore()
+                    .collection("archivedOrders")
+                    .doc(restaurant.id)
+                    .set({
+                        id: restaurant.id,
+                        orders: {}
+                    })
+            })
             .then(() => {
                 console.log("user document updated successfully");
-                sessionStorage.clear();
+                getUserData(true); 
+                get_restaurant();
                 setForm({ ...form, submitting: false });
                 setRedirect(true);
-                getUserData(true);
             })
             .catch(err => {
                 console.log(err);

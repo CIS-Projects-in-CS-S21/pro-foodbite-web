@@ -12,11 +12,14 @@ import ErrorPage from "./pages/ErrorPage";
 import NewRestaurantPage from "./pages/NewRestaurantPage";
 import RestaurantPage from "./pages/RestaurantPage";
 import { shouldForceRestaurantSignup } from './utils/Utils';
+import RatingPage from "./pages/RatingPage";
+import SalesPage from "./pages/SalesPage";
 
 
 export default function Routes() {
 
-  const { user, userDb } = useUserContext();
+  const { user, userDb, restaurant } = useUserContext();
+  //console.log(user);
 
   return (
     <Router>
@@ -63,10 +66,21 @@ export default function Routes() {
         <Route
           path="/new-restaurant"
           render={() => {
-            return user ? <NewRestaurantPage /> : <Redirect to="sign-in" />
+            return user ? restaurant ? <Redirect to="/restaurant" /> : <NewRestaurantPage /> : <Redirect to="sign-in" />
           }}>
         </Route>
-
+        <Route
+          path="/my-ratings"
+          render={() =>{
+            return user ? <RatingPage /> : <Redirect to ="sign-in" />
+          }}>
+        </Route>
+        <Route
+          path="/sales"
+          render={() =>{
+            return user ? <SalesPage/> : <Redirect to ="sign-in"/>
+          }}>
+        </Route>
         <Route component={ErrorPage} />
       </Switch>
     </Router>

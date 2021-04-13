@@ -9,25 +9,47 @@ export default function PendingOrders( {orders, view} ) {
 
     if(order.hasOwnProperty("name")){
 
-      let name = order.name; 
+      let name = order.name.toUpperCase();  
 
-      if(name.length > 12) {
-        name = name.substr(0, 11);
+      if(name.length > 10) {
+        name = name.substr(0, 9);
         name += "..."; 
       }
 
       return <div style={{fontSize: "1.3rem"}}>{name}</div>
     }
+
+    return <div style={{fontSize: "1.3rem"}}>NO NAME</div>
   }); 
 
   const get_items_count = ( (order) => {
 
-    if(order.hasOwnProperty("menuItems")) return order.menuItems.length; 
+    if(order.hasOwnProperty("menuItems")) return order.menuItems.length;
+    else return 0; 
+
   });
 
   const get_timestamp = ( (order) => {
+    // when last updated 
+  
+    if(order.hasOwnProperty("updated")) {
 
-    if(order.hasOwnProperty("menuItems")) return convertTime24to12(order.timestamp);
+      let time = new Date(0);
+      time.setUTCSeconds(order.updated);
+
+      time = `0${time.getHours()}:${time.getMinutes()}`; 
+
+      return time; 
+    }
+    else if(order.hasOwnProperty("createdAt")){
+
+      let time = new Date(0);
+      time.setUTCSeconds(order.createdAt);
+
+      time = `0${time.getHours()}:${time.getMinutes()}`; 
+
+      return time; 
+    }
   });
 
   const calc_amount = ( (order) => {
@@ -35,17 +57,17 @@ export default function PendingOrders( {orders, view} ) {
     if(order.hasOwnProperty("menuItems")){
       // sum the price of each object in menuItems array
 
-      let amount = order.menuItems.reduce( (a, b) => ({price: a.price + b.price}));
-      //console.log(amount);
+      if(order.menuItems.length === 1) return parseFloat(order.menuItems[0].price); 
 
-      return amount.price.toFixed(2); 
+      let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
+      return amount.price.toFixed(2);  
     }
   });
 
   const get_status_color = ( (order) => {
     // if red needs action
 
-    if(order.status === "new" || order.status === "canceled" || order.status === "delivered") return <Status />
+    if(order.status === "NEW" || order.status === "CANCELED") return <Status />
     else return <Status primary/>
 
   });
@@ -56,7 +78,7 @@ export default function PendingOrders( {orders, view} ) {
       {
         orders.map( (order, index) => {
           return (
-            <OrderContainer onClick={(e) => view(e, order)}>
+            <OrderContainer onClick={(e) => view(e, order)} key={order.orderId}>
               <OrderHeader>
                 <div style={{marginRight: "4%"}}>{index+1}</div>
                 {get_short_name(order)}
@@ -89,22 +111,26 @@ export default function PendingOrders( {orders, view} ) {
 }
 
 const Container = styled.div`
-  width: 70%;
+  //width: 70%;
+  width: 85%; 
   margin: 0 auto;
   display: flex;
   flex-direction: row; 
   overflow-x: scroll; 
   //background-color: #e9f7ff;  
-  background-color: #f0f3f5; 
+  //background-color: #f0f3f5; 
+
+  border-top: 2px solid #f0f3f5; 
+  border-bottom: 4px solid #f0f3f5; 
 `;
 
 
 const OrderContainer = styled.div`
-
-  border: 3.5px solid;
+  
+  border: 3.5px solid #181818;
   min-height: 200px;
   min-width: 200px;
-  margin: 1.5% 2%; 
+  margin: 1.2% 2%; 
 
   &:hover {
     cursor: pointer;
@@ -113,6 +139,7 @@ const OrderContainer = styled.div`
 
   position: relative; 
   text-align: left;
+  background-color: #FEFFCD; 
 `;
 
 const OrderHeader = styled.div`
@@ -128,18 +155,19 @@ const OrderHeader = styled.div`
 
 const Info = styled.div`
   padding: 10px;
+  font-weight: 600;
 `; 
 
 const ItemsCount = styled.div`
   font-size: 1.0rem;  
-  font-weight: 800; 
+  font-weight: 900; 
   padding: 10px; 
 `; 
 
 const Status = styled.div`
-  bottom: 0px;
-  right: 0px;
+  bottom: 1px;
+  right: 1px;
   position: absolute;
-  border-bottom: ${props => props.primary ? "70px solid #5bb55f" : "70px solid #fb2e0f"};
+  border-bottom: ${props => props.primary ? "70px solid #5bdebb" : "70px solid #de795b"};
   border-left: 60px solid transparent;
 `; 

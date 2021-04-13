@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react"
 import OrdersHeader from "../components/Orders/OrdersHeader"
 import PendingOrders from "../components/Orders/PendingOrders"
 import { useUserContext } from "../context/UserContext"
-import { firestore } from "../firebase"
-//import OrderPreview from "../components/OrderPageElement/OrderPreview"
+import firebase, { firestore } from "../firebase"
 import SelectOrderDetail from "../components/OrderPageElement/SelectOrderDetail"
 import ViewHistory from "../components/OrderPageElement/ViewHistory"
-
-import { mock_pending_orders } from "../tempData"
+//import { mock_pending_orders, mock_archived_orders } from "../tempData"
 import styled from 'styled-components'
 
 const TopPage = styled.div`
@@ -18,13 +16,12 @@ const TopPage = styled.div`
     height:100%;
     background-color:white;
     top:0px;
-    top: 100px; 
+    top: 115px; 
 `
 
 const OrdersPage = () => {
 
-    const { restaurant, userDb } = useUserContext(); 
-    //console.log(restaurant);
+    const { restaurant, userDb, get_doc, update_doc } = useUserContext(); 
 
     let init_accepting = false;
 
@@ -32,25 +29,35 @@ const OrdersPage = () => {
     else init_accepting = restaurant.available; 
 
     const [accepting_orders, set_accepting_orders] = useState(init_accepting); 
-    const [orders, set_orders] = useState(mock_pending_orders); // pending orders, mock data for now 
-    //const [view_order_history, set_view_order_history] = useState(false); 
+    //const [orders, set_orders] = useState(mock_pending_orders); // pending orders, mock data for now 
     const [show, setShow] = useState(false);
     const [selectedOrder, setOrder] = useState(null);
+    const [history, set_history] = useState([]); 
+
+    const [orders, set_orders] = useState([]); // real-data
+
 
     useEffect(() => {
-        // warning, page refresh 
-        window.addEventListener("beforeunload", alertUser);
+        // get realtime updates for pending orders
 
-        return () => {
-        window.removeEventListener("beforeunload", alertUser);
-        };
-    
-    }, []);
+        const unsubscribe = firestore
+            .collection("pendingOrders")
+            .doc(userDb.ownedRestaurants[0])
+            .collection("orders")
+            .onSnapshot( (snapshot) => {
 
-    const alertUser = e => {
-        e.preventDefault();
-        e.returnValue = "";
-    };
+                let orders = []; 
+
+                snapshot.forEach( doc => {
+                    orders.push(doc.data()); 
+                });
+
+                set_orders(orders);
+            });
+
+        return () => unsubscribe(); 
+        
+      }, [userDb.ownedRestaurants]);
 
     
     const accepting_orders_handler = async (e) => {
@@ -68,25 +75,48 @@ const OrdersPage = () => {
                 .catch(err => console.log(err)); 
     }
 
-    const view_order_history_handler = (e) => {
-        // clicked "View Order History" btn 
+    const view_order_history_handler = async (e) => {
         e.preventDefault();
-    
-        console.log("clicked view order history"); 
-        setShow(true);  
+        
+        await get_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`)
+                .then( doc => {
+                    if(doc.exists){
+                        let orderz = doc.data().orders; 
+                        let temp = [];
+            
+                        for (const id in orderz){
+                            temp.push(orderz[id]); 
+                        }
+
+                        let both = orders; 
+                        both = both.concat(temp);
+                        
+                        set_history(both);
+                        setShow(true);  
+                    }
+                    
+                    else set_history([]); 
+                });
+
+
+        // TODO 
+        // PARSE ARCHIVED TO GET ONLY TODAY'S DATE
+
+        // MOCK
+        // let temp = mock_pending_orders; 
+        // temp = temp.concat(mock_archived_orders); 
+
+        // set_history(temp); 
+        // setShow(true);  
     }
 
     const view_selected_handler = (e, order) => {
         e.preventDefault();
 
-        console.log("clicked on specific order:");
         setShow(false);
         setOrder(order); 
     }
 
-    // const selectPreview = (theOrder) =>{
-    //     setOrder(theOrder);
-    // }
 
     function findOrder(theOrder){
         for (let i = 0; i < orders.length; i++) {
@@ -97,65 +127,86 @@ const OrdersPage = () => {
         }
     }
 
-    const declineOrder = (theOrder) =>{
-        // todo delete the order from database (set status to canceled move to archived)
+    const get_timestamp = () => {
+        return firebase.firestore.Timestamp.now().seconds; 
+    }
 
-        console.log("decline order#" + theOrder);
+    const declineOrder = async (theOrder) =>{
+        // update status for the correct order
+        // move the order to archived orders 
 
-        // remove from orders state
-        let temp = orders.filter( order => order.id !== theOrder.id);
-        set_orders(temp);
+        theOrder.status = "CANCELED"; 
+        await firestore.doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`).delete().then( () => console.log("deleted")); 
+
+        let updated = {}
+        updated[`orders.${theOrder.orderId}`] = theOrder; 
+        await update_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`, updated);
+
         setOrder(null);
     }
 
-    const setOrderInProgress = (theOrder) =>{
-        // todo update database
+    const setOrderInProgress = async (theOrder) =>{
+        // update status for the correct order
+
+        theOrder.status = "IN PROGRESS";
+        theOrder.updated = get_timestamp(); 
+
+        await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`, theOrder);
+    }
+
+    const setOrderOnTheWay = async (theOrder) => {
+        // update status for the correct oders
+
+        theOrder.status = "ON THE WAY";
+        theOrder.updated = get_timestamp(); 
+
+        await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`, theOrder);
+    };
+
+    const setOrderDelivered = async (theOrder) =>{
+        // send to archived orders document
+
+        theOrder.status = "DELIVERED"; 
+        theOrder.updated = get_timestamp();
+        await firestore.doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`).delete().then( () => console.log("deleted")); 
+
+        let updated = {}
+        updated[`orders.${theOrder.orderId}`] = theOrder; 
+        await update_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`, updated);
+
+        setOrder(null);
+    }
+
+
+
+    const setOrderReady = async (theOrder) =>{
+        // for now, wont be sent to archives (manually set delivered to do so)
+
+        theOrder.status = "READY";
+        theOrder.updated = get_timestamp(); 
         
-        //update orders state
-        let temp = theOrder;
-        temp.status = "In progress";
-
-        orders.splice(findOrder(theOrder), 1);
-        set_orders(items =>[temp, ...orders]);
-    }
-
-    const setOrderDelivered = (theOrder) =>{
-        // remove from orders state?
-
-        let temp = theOrder;
-        temp.status = "Delivered";
-        orders.splice(findOrder(theOrder), 1);
-        set_orders(items =>[temp, ...orders]);
-    }
-
-    const setOrderArchived = (theOrder) =>{
-        // remove from orders state?
-
-        let temp = theOrder;
-        temp.status = "Archived";
-        orders.splice(findOrder(theOrder), 1);
-        set_orders(items =>[temp, ...orders]);
+        await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`, theOrder);
     }
 
     const get_count = () => {
-        if(orders !== null || orders !== undefined) return orders.length;
-        else return 0; 
+        if(orders === null || orders === undefined) return 0; 
+        else  return orders.length;
     };
 
 
     return (
         <div>
-        <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()}/>
-        <PendingOrders orders={orders} view={view_selected_handler}/>
-        
-        <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
-                orderArchived={setOrderArchived} orderInfo={selectedOrder} declineOrder ={declineOrder}
-        / >
-            <TopPage show={show}>
-        {
-            show ? <ViewHistory orders = {orders} closeShow={()=>{setShow(!show)}}  /> : null
-        }
-            </TopPage>
+            <OrdersHeader history={view_order_history_handler} accepting={accepting_orders_handler} status={accepting_orders} count={get_count()} name={restaurant.name}/>
+             <PendingOrders orders={orders} view={view_selected_handler}/>
+            
+            <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
+                    orderReady={setOrderReady} orderInfo={selectedOrder} declineOrder ={declineOrder} orderOnTheWay={setOrderOnTheWay}
+            / >
+                <TopPage show={show}>
+            {
+                show ? <ViewHistory orders={history} closeShow={()=>{setShow(!show)}}  /> : null
+            }
+                </TopPage>
         </div>
     )
 }

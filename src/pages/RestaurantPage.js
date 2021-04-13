@@ -10,6 +10,8 @@ import { restaurantFormStyles } from "../components/newRestaurant/RestaurantForm
 import { useUserContext } from "../context/UserContext"
 import { firestore } from "../firebase"
 import { defaultEmpty } from "../tempData"
+import styled from "styled-components"
+import "../App.css"
 
 
 export default function RestaurantPage(){
@@ -27,7 +29,7 @@ export default function RestaurantPage(){
 
   const maxScreenAmount = 8;
 
-  const { user, userDb, restaurant } = useUserContext();
+  const { user, userDb } = useUserContext();
 
   const [form, setForm] = useState();
   const [loading, setLoading] = useState(true); 
@@ -76,6 +78,9 @@ export default function RestaurantPage(){
 
         setForm(temp); 
         setLoading(false); 
+
+       document.getElementById(temp.screen).style.color = "#e9eaeb";
+       //document.getElementById(temp.screen).classList.add("active");
       }
     }
 
@@ -105,6 +110,15 @@ export default function RestaurantPage(){
 
     const ele = document.getElementById('test');
     fade(ele, 700, () => setForm({ ...form, screen: form.screen + 1 }));
+
+    
+    if(form.screen + 1 !== 8){
+      console.log(form.screen);
+      let temp = document.getElementById(form.screen);
+      temp.removeAttribute("style");
+      
+      document.getElementById(form.screen+1).style.color = "#e9eaeb";
+    }
   };
 
   const prevScreen = () => {
@@ -112,6 +126,12 @@ export default function RestaurantPage(){
 
     const ele = document.getElementById('test');
     fade(ele, 700, () => setForm({ ...form, screen: form.screen - 1 }));
+
+    
+    let temp = document.getElementById(form.screen);
+    temp.removeAttribute("style");
+    
+    document.getElementById(form.screen-1).style.color = "#e9eaeb";
   };
 
   function fade(ele, time, callback) {
@@ -125,6 +145,17 @@ export default function RestaurantPage(){
 
         callback();
     }, time)
+  }
+
+  const handle_navigate = (number) => {
+
+    let temp = document.getElementById(form.screen);
+    temp.removeAttribute("style");
+    
+    temp = document.getElementById(number);
+    document.getElementById(number).style.color = "#e9eaeb";
+
+    setForm({ ...form, screen: number }); 
   }
 
   function renderCurrentScreen() {
@@ -210,9 +241,37 @@ export default function RestaurantPage(){
     }
 }
 
+function getNavigation(){
+
+ if(form.screen !== 8){
+    return (
+        <Container>
+        <Field onClick={() => handle_navigate(screens.WELCOME_BACK)} id="1">OVERVIEW</Field>
+        <Field onClick={() => handle_navigate(screens.EDIT_NAME)} id="2">NAME</Field>
+        <Field onClick={() => handle_navigate(screens.EDIT_IMAGE)} id="3">IMAGE</Field>
+        <Field onClick={() => handle_navigate(screens.EDIT_DESC)} id="4">DESCRIPTION</Field>
+        <Field onClick={() => handle_navigate(screens.EDIT_HOURS)} id="5">HOURS</Field>
+        <Field onClick={() => handle_navigate(screens.EDIT_MENU)} id="6">MENU</Field>
+        <Field onClick={() => handle_navigate(screens.PREVIEW)} id="7">PREVIEW</Field>
+    </Container>
+    )
+ }
+}
+
 function isLoading(){
   if(loading) return <div>Fetching Restaurant</div>
-  else return renderCurrentScreen(); 
+  else {
+    return (
+      <div>
+
+        {getNavigation()}
+        {renderCurrentScreen()}
+
+      </div>
+      
+    )
+  }  
+    
 }
 
 return (
@@ -221,3 +280,26 @@ return (
   </div>
 )
 };
+
+const Container = styled.div`
+  //border: 1px solid black; 
+  position: absolute;
+  margin-left: 1%; 
+  margin-top: 2em;
+  //background-color: #f0f3f5; 
+  background-color: #333a40; 
+  padding: 2px; 
+`; 
+
+const Field = styled.div`
+  padding: 10px; 
+  font-size: 1.5rem; 
+
+  color: #868e95;
+  
+  &:hover{
+    cursor: pointer; 
+    color: #e9eaeb; 
+  }
+
+`;
