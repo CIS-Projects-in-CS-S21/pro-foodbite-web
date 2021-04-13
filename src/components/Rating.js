@@ -87,6 +87,24 @@ const RatingStar = ({fill}) => {
     )
 }
 
+const SearchContent = ({findContent}) =>{
+    return(
+        <HorizontalDiv>
+            <input style={{width:"100px" ,border:"none"}} id="searchContent" placeholder="content" type="string"/>
+            <button style={{backgroundColor:'transparent', border:"1px solid"}} onClick={findContent}>find</button>
+        </HorizontalDiv>
+    )
+}
+
+const SearchUser = ({findContent}) =>{
+    return(
+        <HorizontalDiv>
+            <input style={{width:"100px" ,border:"none"}} id="searchUser" placeholder="User Name" type="string"/>
+            <button style={{backgroundColor:'transparent', border:"1px solid"}} onClick={findContent}>find</button>
+        </HorizontalDiv>
+    )
+}
+
 const RatingCard = ({userRating}) => {
 
     const [ratingList, setList] = useState([]);
@@ -100,11 +118,10 @@ const RatingCard = ({userRating}) => {
     const [chooseRating, setChooseRating] = useState(-1);
     const [sortBy, setSortBy] = useState(-1);
 
-    const indexStep = 5;
+    const indexStep = 50;
 
 
     useEffect(()=>{
-        console.log("here");
         getFromDifferentData();
     }, [ratingIndex, selectTrue, selectRating]);
 
@@ -203,10 +220,29 @@ const RatingCard = ({userRating}) => {
         checkSelected();
     }
 
+    function sortByContent(){
+        setSortBy("contentLength")
+        resetListAndIndex();
+        let temp = [];
+        if(selectTrue){
+            temp = [...selectRating];
+        }else{
+            temp = [...ratingData];
+        }
+        setSelect(temp.sort((a,b) => a.ratingContent.length < b.ratingContent.length?1 : -1));
+        checkSelected();
+    }
+
+
     function sortFromBadToGood(){
         setSortBy("badToGood");
         resetListAndIndex();
-        let temp = [...ratingData];
+        let temp = [];
+        if(selectTrue){
+            temp = [...selectRating];
+        }else{
+            temp = [...ratingData];
+        }
         setSelect(temp.sort((a,b) => a.rating > b.rating? 1: -1))
         checkSelected();
     }
@@ -214,10 +250,42 @@ const RatingCard = ({userRating}) => {
     function sortFromGoodToBad(){
         setSortBy("goodToBad");
         resetListAndIndex();
-        let temp = [...ratingData];
+        let temp = [];
+        if(selectTrue){
+            temp = [...selectRating];
+        }else{
+            temp = [...ratingData];
+        }
         setSelect(temp.sort((a,b) => a.rating < b.rating? 1: -1))
         checkSelected();
     }
+
+    function findRatingWithContent(e){
+        e.stopPropagation()
+        var el = document.getElementById("searchContent");
+        if(el.value !== ""){
+            setChooseRating(-1);
+            setSortBy(-1);
+            resetListAndIndex();
+            let temp = [...ratingData];
+            setSelect(temp.filter(a => a.ratingContent.search(el.value) > -1));
+            checkSelected();
+        }
+    }
+
+    function findRatingWithUserName(e){
+        e.stopPropagation();
+        var el = document.getElementById("searchUser");
+        if(el.value !== ""){
+            setChooseRating(-1);
+            setSortBy(-1);
+            resetListAndIndex();
+            let temp = [...ratingData];
+            setSelect(temp.filter(a => a.user.search(el.value) > -1));
+            checkSelected();
+        }
+    }
+
 
     if(ratingList[0] == null){
         return(
@@ -239,26 +307,26 @@ const RatingCard = ({userRating}) => {
         <div>
             <HorizontalDiv>
                 Rating:
-                <RatingButton disabled={chooseRating == 1} onClick={() =>{
+                <RatingButton disabled={chooseRating === 1} onClick={() =>{
                     ratingSelect(1);
                 }}>1</RatingButton>
-                <RatingButton disabled={chooseRating == 2} onClick={()=>{
+                <RatingButton disabled={chooseRating === 2} onClick={()=>{
                     ratingSelect(2);
                 }}>2</RatingButton>
-                <RatingButton disabled={chooseRating == 3} onClick={() =>{
+                <RatingButton disabled={chooseRating === 3} onClick={() =>{
                     ratingSelect(3);
                 }}>3</RatingButton>
-                <RatingButton disabled={chooseRating == 4} onClick={() =>{
+                <RatingButton disabled={chooseRating === 4} onClick={() =>{
                     ratingSelect(4);
                 }}>4</RatingButton>
-                <RatingButton disabled={chooseRating == 5} onClick={() =>{
+                <RatingButton disabled={chooseRating === 5} onClick={() =>{
                     ratingSelect(5);
                 }}>5</RatingButton>
                 Order By:
-                <RatingButton disabled={sortBy == "byDate"} onClick={sortByDate}>Date</RatingButton>
-                <RatingButton style={{display:(chooseRating < 0? 'flex':'none')}} disabled={sortBy == "badToGood"} onClick={sortFromBadToGood}>1 to 5</RatingButton>
-                <RatingButton style={{display:(chooseRating < 0? 'flex':'none')}} disabled={sortBy == "goodToBad"} onClick={sortFromGoodToBad}>5 to 1</RatingButton>
-
+                <RatingButton disabled={sortBy === "byDate"} onClick={sortByDate}>Date</RatingButton>
+                <RatingButton style={{display:(chooseRating < 0? 'flex':'none')}} disabled={sortBy === "badToGood"} onClick={sortFromBadToGood}>1 to 5</RatingButton>
+                <RatingButton style={{display:(chooseRating < 0? 'flex':'none')}} disabled={sortBy === "goodToBad"} onClick={sortFromGoodToBad}>5 to 1</RatingButton>
+                <RatingButton disabled={sortBy === "contentLength"} onClick={sortByContent}>content</RatingButton>
                 <button style={{backgroundColor:'white', border:'none'}}
                     disabled={!selectTrue} onClick={()=>{
                         resetListAndIndex();
@@ -266,6 +334,9 @@ const RatingCard = ({userRating}) => {
                         setChooseRating(-1);
                         setSelectTrue(false);
                     }}>All Ratings</button>
+                Search For:
+                <SearchContent findContent={findRatingWithContent}/>
+                <SearchUser findContent={findRatingWithUserName}/>
             </HorizontalDiv>
             {ratingList}
             <MoreButton disabled={selectTrue? ratingIndex >= selectRating.length : ratingIndex >= ratingData.length} onClick={showMoreFunction}>Show More</MoreButton>
@@ -322,22 +393,22 @@ export default function Rating({restaurantRatings}) {
     },{
         user:"user2",
         rating:5,
-        ratingContent:"this is rating number 2",
+        ratingContent:"this is rating number 2, place holder",
         timeStamp:"03/01/2021"
     },{
         user:"user3",
         rating:2,
-        ratingContent:"this is rating number 3",
+        ratingContent:"this is rating number 3, number 3",
         timeStamp:"03/12/2021"
     },{
         user:"user4",
         rating:3,
-        ratingContent:"this is rating number 4",
+        ratingContent:"this is rating number 4 by user4",
         timeStamp:"03/24/2021"
     },{
         user:"user5",
         rating:3,
-        ratingContent:"this is rating number 5",
+        ratingContent:"this is rating number 5, some text to make this rating longer",
         timeStamp:"01/31/2021"
     },{
         user:"user6",
@@ -418,14 +489,8 @@ export default function Rating({restaurantRatings}) {
 
     const [theList, setList] = useState(temp_ratings);
     const ratingList = temp_ratings.map((a=> a.rating));
-    const [allOrder, setAll] = useState(true);
 
 
-
-    function ratingSelect(num){
-        setAll(false);
-        setList(temp_ratings.filter(a => a.rating === num));
-    }
 
     return (
         <div>
@@ -436,7 +501,7 @@ export default function Rating({restaurantRatings}) {
                         <AverageRating ratingList={ratingList}></AverageRating>
                     </div>
                 </VerticalDiv>
-                <h4 style={{display:'flex', marginLeft:'100px', alignItems:'center'}}>Your Ratings</h4>
+                <h4 style={{display:'flex', marginLeft:'100px', marginRight:"10px", alignItems:'center'}}>Total {<br></br>} Ratings</h4>
                 <VerticalDiv>
                     <text >5:{ratingList.filter(a => a === 5).length}</text>
                     <text >4:{ratingList.filter(a => a === 4).length}</text>
