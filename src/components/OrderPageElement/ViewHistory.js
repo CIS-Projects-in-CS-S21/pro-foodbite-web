@@ -12,8 +12,7 @@ const HistoryItem = styled.button`
     flex-direction: row; 
     width: 100%; 
     justify-content: center; 
-     
-
+    
     :hover{
         background-color:rgb(200,200,200);
     }
@@ -208,12 +207,12 @@ const HeaderContainer = styled.div`
     display: flex;
     flex-direction: row; 
     justify-content: space-between; 
-    align-items: center
+    align-items: center;
 `; 
 
 const Header = styled.h3`
     font-family: "Amatic SC", cursive;
-    font-size: 3.4rem; 
+    font-size: 3.8rem; 
     margin-left: 12%; 
 `;
 

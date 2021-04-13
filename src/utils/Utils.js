@@ -84,7 +84,7 @@ export function calc_amount(order){
 
     if(order.hasOwnProperty("menuItems")){
       // sum the price of each object in menuItems array
-      let amount = order.menuItems.reduce( (a, b) => ({price: a.price + b.price}));
+      let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
       return amount.price.toFixed(2); 
     }
   };

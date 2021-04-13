@@ -5,6 +5,8 @@ import { ReactComponent as CloseMark } from "../../assets/close.svg"
 
 export default function OrdersHeader( { history, accepting, status, count } ) {
 
+   
+
   const get_status = ( () => {
     // accepting orders either green w/ check 
     // or red w/ close

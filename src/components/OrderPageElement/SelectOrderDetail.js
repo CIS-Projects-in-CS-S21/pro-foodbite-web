@@ -8,11 +8,12 @@ const DetailLayout = styled.div`
     justify-items:left;
     width: 70%;
     margin: 0 auto;
-    background-color: #f0f3f5; 
+   // background-color: #f0f3f5; 
     margin-top: 2%; 
     font-weight: 700; 
     width: 85%; 
-    
+
+    border-top: 2px solid #f0f3f5; 
 `
 
 const ActionButton = styled.button`
@@ -49,6 +50,8 @@ const Value = styled.span`
 function OrderDetail({selectOrder}){ 
 
 
+
+
     useEffect(() => {
         returnOrderItem()
     }, [selectOrder,]);
@@ -61,6 +64,17 @@ function OrderDetail({selectOrder}){
         // return "Order# " + selectOrder.id + " " + selectOrder.name ;
         return "Order: " + selectOrder.id;
     }
+
+    const get_options = () => {
+
+        if(selectOrder.hasOwnProperty("options")){
+            return selectOrder.options; 
+        }
+
+        return "none"; 
+    }
+
+
     const returnOrderItem = () =>{
         setItems([]);
         //const orderList = selectOrder.orderItem;
@@ -70,11 +84,12 @@ function OrderDetail({selectOrder}){
             // const newItem = <label key={i} style={{textAlign:'left', fontWeight:"900"}}>#{element.itemNumber}.{element.name.toUpperCase()} (${element.price})</label>
 
             // TODO, amount? over displaying price?
+
             
             const newItem = 
                 <div>
-                    <div key={i} style={{textAlign:'left', fontWeight: 900, marginLeft: "1%"}}>{element.name.toUpperCase()} (${element.price.toFixed(2)})</div>
-                    <Options>{element.options}</Options>
+                    <div key={i} style={{textAlign:'left', fontWeight: 900, marginLeft: "1%"}}>{element.name.toUpperCase()} (${element.price})</div>
+                    <Options>{get_options()}</Options>
                 </div>
 
 
@@ -135,7 +150,7 @@ function OrderStatus({selectOrder}){
 }
 
 
-function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setArchived, setOneTheWay}){
+function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setReady, setOneTheWay}){
     
     const [show, setShow] = useState(false)
 
@@ -169,7 +184,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
                         setShow(!show);
                     }}>ON THE WAY</ActionButton>
                     <ActionButton onClick={()=>{
-                        setOneTheWay(selectOrder);
+                        setReady(selectOrder);
                         setShow(!show);
                     }}>READY FOR PICKUP</ActionButton>
                     <ActionButton onClick={()=>{
@@ -186,7 +201,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setA
 
 }
 
-export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgress, orderDeliver, orderArchived, orderOnTheWay}) {
+export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgress, orderDeliver, orderReady, orderOnTheWay}) {
 
     useEffect(() => {
         setOrder(orderInfo);
@@ -235,7 +250,7 @@ export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgr
                 <OrderStatus 
                      selectOrder={theOrder}></OrderStatus>
             </div>
-            <OrderAction setInProgress={orderInProgress} setDeliver={orderDeliver} setArchived={orderArchived}
+            <OrderAction setInProgress={orderInProgress} setDeliver={orderDeliver} setReady={orderReady}
                 selectOrder={theOrder} declineOrder={declineOrder} setOneTheWay={orderOnTheWay}></OrderAction>
         </DetailLayout>
     )

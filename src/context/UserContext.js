@@ -21,7 +21,6 @@ export const UserContextProvider = ({ children }) => {
     const unsubscribe = auth.onAuthStateChanged((current_user) => {
 
       if(current_user){
-        
         firestore
           .collection("restaurants")
           .where("ownerId", "==", current_user.uid)
@@ -47,7 +46,7 @@ export const UserContextProvider = ({ children }) => {
     // and add it to the user object
 
     if ((user !== undefined && user !== null) && (userDb === null || force)) {
-      console.log('getting user data forced:', force === undefined ? false : force);
+      //console.log('getting user data forced:', force === undefined ? false : force);
       set_loading(true);
       firestore
         .collection("users")
@@ -63,48 +62,35 @@ export const UserContextProvider = ({ children }) => {
           console.log("unable to get user table data", err);
         })
         .finally(() => {
-          console.log('done', userDb);
-        
-          if(user){
-            firestore
-            .collection("restaurants")
-            .where("ownerId", "==", user.uid)
-            .get()
-            .then( snapshot => {
-              if(snapshot.empty) set_restaurant(null);
-              else set_restaurant(snapshot.docs[0].data());
-            }); 
-         }
+          //console.log('done', userDb);
           
           set_loading(false); 
         });
     } else {
-      console.log('already got user data', userDb)
+      //console.log('already got user data', userDb)
     }
 
   }
 
   useEffect(getUserData, [user, userDb]);
 
-  // const get_restaurant = () => {
-  //   set_loading(true);
-  //   if (user !== undefined && user !== null) {
+  const get_restaurant = () => {
+    // will be called only once, in restaurant submit
 
-  //     firestore
-  //       .collection("restaurants")
-  //       .where("ownerId", "==", user.uid)
-  //       .get()
-  //       .then( snapshot => {
-  //         if(snapshot.empty) set_restaurant(null);
-  //         else set_restaurant(snapshot.docs[0].data());
-  //       }); 
-  //   }
+    if (user !== undefined && user !== null) {
 
-  //   set_loading(false);
-  //   console.log("set restaurant"); 
-  // }
+      firestore
+        .collection("restaurants")
+        .where("ownerId", "==", user.uid)
+        .get()
+        .then( snapshot => {
+          if(snapshot.empty) set_restaurant(null);
+          else set_restaurant(snapshot.docs[0].data());
+        }); 
+    }
 
-  // useEffect(get_restaurant, [user]); 
+  }
+
 
 
   const insertUserIntoDb = async (user) => {
@@ -208,7 +194,8 @@ export const UserContextProvider = ({ children }) => {
     restaurant,
     get_doc_snapshot,
     get_doc,
-    update_doc
+    update_doc,
+    get_restaurant
   }
 
   return (
