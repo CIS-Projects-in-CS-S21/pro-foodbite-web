@@ -97,3 +97,24 @@ export function calc_amount(order){
 export function average(nums){
     return nums.reduce((a, b) => (a + b)) / nums.length;
 }
+
+export function sort_today(orders){
+    // given orders with epoch timestamps, return only those from today's date
+
+    if(orders.length === 0) return; 
+
+    let today = new Date();
+    today = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`; 
+    today = "4/13/2021";
+
+    const filtered = orders.filter( order => {
+
+        const date = new Date(0);
+        date.setUTCSeconds(order.createdAt);
+        let formated = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`; 
+
+        return formated === today; 
+    });
+
+    return filtered; 
+}

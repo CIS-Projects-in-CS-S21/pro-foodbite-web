@@ -7,6 +7,7 @@ import SelectOrderDetail from "../components/OrderPageElement/SelectOrderDetail"
 import ViewHistory from "../components/OrderPageElement/ViewHistory"
 //import { mock_pending_orders, mock_archived_orders } from "../tempData"
 import styled from 'styled-components'
+import { sort_today } from "../utils/Utils";
 
 const TopPage = styled.div`
     display:${props => props.show ? 'flex': 'none'};
@@ -87,27 +88,18 @@ const OrdersPage = () => {
                         for (const id in orderz){
                             temp.push(orderz[id]); 
                         }
-
+                        
                         let both = orders; 
                         both = both.concat(temp);
+
+                        let filered = sort_today(both); 
                         
-                        set_history(both);
+                        set_history(filered); 
                         setShow(true);  
                     }
                     
                     else set_history([]); 
                 });
-
-
-        // TODO 
-        // PARSE ARCHIVED TO GET ONLY TODAY'S DATE
-
-        // MOCK
-        // let temp = mock_pending_orders; 
-        // temp = temp.concat(mock_archived_orders); 
-
-        // set_history(temp); 
-        // setShow(true);  
     }
 
     const view_selected_handler = (e, order) => {

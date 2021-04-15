@@ -32,29 +32,7 @@ const HistoryDetail = styled.div`
 
 export default function ViewHistory( {orders, history, closeShow } ) {
 
-
-    const tempOrderFormat2 = {
-        orderNumber: 2,
-        orderOwner: "Test Test2",
-        receivedAt : "3:00pm",
-        receivedDate : "3/25/2021",
-        totalPrice: "$10.00",
-        status:"Pending",
-        eta:"3:30pm",
-        orderItem : [{
-            itemNumber: 3,
-            itemName :"burger",
-            itemAmount: 4,
-        }, {
-            itemNumber: 10,
-            itemName:"Fries",
-            itemAmount: 2,
-        },{
-            itemNumber:15,
-            itemName:"Cheese steak",
-            itemAmount: 5
-        }]
-    };
+    const days = ["", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]; 
 
     const emptyOrder = {
         orderNumber:"",
@@ -77,7 +55,7 @@ export default function ViewHistory( {orders, history, closeShow } ) {
     const [orderDetail, setDetail] = useState();
     const [selectOrder, setOrder] = useState(emptyOrder);
     const [items, setItems] = useState([]);
-    const [sort, set_sort] = useState(""); 
+    const [day, set_day] = useState(""); 
 
     const [current, set_curret] = useState(orders); 
 
@@ -176,18 +154,38 @@ export default function ViewHistory( {orders, history, closeShow } ) {
         }
     }
 
+    const handle_day_week = (event) => {
+        // todo 
+        // also set day so header can display 
 
+        console.log(event.target.value)
+    }
+
+    const get_header = () => {
+        // replace TODAY'S with DAY'S or DAY'S with DAY'S
+        // todo
+        
+        return "Today's"; 
+    }
+
+    // backgroundColor: "#f0f3f5"
     return (
-        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", backgroundColor: "#f0f3f5"}}>
+        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", }}>
             <HeaderContainer>
-                <div></div>
-                <Header>Today's Order History: {get_count()}</Header>
-                <div style={{display: "flex"}}>
 
+                <Header>{get_header()} Order History: {get_count()}</Header>
+                <div style={{display: "flex", alignItems: "center"}}>
+
+                    <Label>Type</Label>
                     <Select onChange={(e) => handle_orders(e)}>
                         <Option>ALL</Option>
                         <Option>PENDING</Option>
                         <Option>ARCHIVED</Option>
+                    </Select>
+
+                    <Label>Day</Label>
+                    <Select onChange={(e) => handle_day_week(e)}>
+                        {days.map( day => <Option>{day}</Option>)}
                     </Select>
 
                 </div>
@@ -220,12 +218,15 @@ const HeaderContainer = styled.div`
     flex-direction: row; 
     justify-content: space-between; 
     align-items: center;
+    border-bottom: 2px solid #f0f3f5; 
+    margin-bottom: .8%; 
 `; 
 
 const Header = styled.h3`
     font-family: "Amatic SC", cursive;
     font-size: 3.8rem; 
-    margin-left: 12%; 
+    //margin-left: 12%; 
+    margin-left: 1%; 
 `;
 
 const ViewHistoryButton = styled.button`
@@ -260,8 +261,8 @@ const Select = styled.select`
   font-size: 2.0rem; 
   color: #fff; 
   padding: 10px; 
-  font-size: 1.9rem; 
-  width: 200px;
+  font-size: 2rem; 
+  width: 150px;
   margin-right: 1.2%; 
 
   &:hover{
@@ -271,11 +272,15 @@ const Select = styled.select`
   &:focus{
     outline: none; 
   }
-
-
 `;
 
 const Option = styled.option`
   background-color: #f0f3f5; 
   color: black;  
+`; 
+
+const Label = styled.div`
+    font-family: "Amatic SC", cursive;
+    font-size: 2.2rem; 
+    margin-right: 3%; 
 `; 
