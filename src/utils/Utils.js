@@ -78,7 +78,33 @@ export function checkMaxFileSize(file, maxSize) {
     return (file.size / 1000) > maxSize ? false : true;
 }
 
+export const get_updated_timestamp = ( (order) => {
+    // last order's status was updated (or initial createdAt if NEW)
+    console.log(order);
+  
+    if(order.hasOwnProperty("updated")) {
 
+      let time = new Date(0);
+      time.setUTCSeconds(order.updated);
+
+      //time = `${time.getHours()}:${time.getMinutes()}`; 
+
+      const hours = ("0" + time.getHours()).slice(-2); 
+      const minutes = ("0" + time.getMinutes()).slice(-2); 
+
+      return convertTime24to12(`${hours}:${minutes}`);
+    }
+    else if(order.hasOwnProperty("createdAt")){
+
+      let time = new Date(0);
+      time.setUTCSeconds(order.createdAt);
+
+      const hours = ("0" + time.getHours()).slice(-2); 
+      const minutes = ("0" + time.getMinutes()).slice(-2); 
+
+      return convertTime24to12(`${hours}:${minutes}`);
+    }
+  });
 
 export function calc_amount(order){
 
@@ -91,7 +117,6 @@ export function calc_amount(order){
         return amount; 
     }
   };
-
 
 export function average(nums){
     return nums.reduce((a, b) => (a + b)) / nums.length;

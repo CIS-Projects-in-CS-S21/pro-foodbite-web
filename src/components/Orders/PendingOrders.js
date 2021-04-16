@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { convertTime24to12 } from "../../utils/Utils"
+import { calc_amount, get_updated_timestamp } from "../../utils/Utils"
 
 export default function PendingOrders( {orders, view} ) {
 
@@ -27,41 +27,6 @@ export default function PendingOrders( {orders, view} ) {
     if(order.hasOwnProperty("menuItems")) return order.menuItems.length;
     else return 0; 
 
-  });
-
-  const get_timestamp = ( (order) => {
-    // when last updated 
-  
-    if(order.hasOwnProperty("updated")) {
-
-      let time = new Date(0);
-      time.setUTCSeconds(order.updated);
-
-      time = `0${time.getHours()}:${time.getMinutes()}`; 
-
-      return time; 
-    }
-    else if(order.hasOwnProperty("createdAt")){
-
-      let time = new Date(0);
-      time.setUTCSeconds(order.createdAt);
-
-      time = `0${time.getHours()}:${time.getMinutes()}`; 
-
-      return time; 
-    }
-  });
-
-  const calc_amount = ( (order) => {
-
-    if(order.hasOwnProperty("menuItems")){
-      // sum the price of each object in menuItems array
-
-      if(order.menuItems.length === 1) return parseFloat(order.menuItems[0].price); 
-
-      let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
-      return amount.price.toFixed(2);  
-    }
   });
 
   const get_status_color = ( (order) => {
@@ -95,7 +60,7 @@ export default function PendingOrders( {orders, view} ) {
               </Info>
       
               <Info>
-                {get_timestamp(order)}
+                {get_updated_timestamp(order)}
               </Info>
 
               {get_status_color(order)}
@@ -105,19 +70,16 @@ export default function PendingOrders( {orders, view} ) {
         })
       }
 
-
     </Container>
   )
 }
 
 const Container = styled.div`
-  //width: 70%;
   width: 85%; 
   margin: 0 auto;
   display: flex;
   flex-direction: row; 
   overflow-x: scroll; 
-  //background-color: #e9f7ff;  
   //background-color: #f0f3f5; 
 
   border-top: 2px solid #f0f3f5; 
