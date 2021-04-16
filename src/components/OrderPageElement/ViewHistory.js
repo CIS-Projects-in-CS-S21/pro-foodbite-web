@@ -30,7 +30,7 @@ const HistoryDetail = styled.div`
     font-size: 1.2rem;  
 `
 
-export default function ViewHistory( {orders, history, today, closeShow } ) {
+export default function ViewHistory( {orders, today, closeShow } ) {
 
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]; 
 
@@ -130,18 +130,19 @@ export default function ViewHistory( {orders, history, today, closeShow } ) {
 
         let option = event.target.value;
         let filtered = []; 
+        const select_day_orders = sort_day(orders, day); 
 
         if(option === "PENDING"){
-            filtered = orders.filter( order => order.status === "NEW" || order.status === "IN PROGRESS");
+            filtered = select_day_orders.filter( order => order.status === "NEW" || order.status === "IN PROGRESS");
             set_current(filtered); 
         }
         else if(option === "ARCHIVED"){
-            filtered = orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED");
+            filtered = select_day_orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED");
             set_current(filtered); 
         }
         else{
             // ALL 
-            set_current(orders);
+            set_current(select_day_orders);
         }
     }
 
@@ -151,6 +152,7 @@ export default function ViewHistory( {orders, history, today, closeShow } ) {
 
         set_current(filtered)
         set_day(event.target.value); 
+        document.getElementById("type").value = "ALL"; 
     }
 
 
@@ -162,7 +164,7 @@ export default function ViewHistory( {orders, history, today, closeShow } ) {
                 <div style={{display: "flex", alignItems: "center"}}>
 
                     <Label>Type</Label>
-                    <Select onChange={(e) => handle_orders(e)}>
+                    <Select onChange={(e) => handle_orders(e)} id="type">
                         <Option>ALL</Option>
                         <Option>PENDING</Option>
                         <Option>ARCHIVED</Option>

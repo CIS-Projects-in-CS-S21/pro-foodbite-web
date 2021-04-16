@@ -93,10 +93,10 @@ const OrdersPage = () => {
                         let both = orders; 
                         both = both.concat(temp);
 
-                        let filered = sort_today(both); 
+                        let filtered = sort_today(both); 
                         
                         set_history(both); 
-                        set_orders_today(filered);
+                        set_orders_today(filtered);
                         setShow(true);  
                     }
                     
