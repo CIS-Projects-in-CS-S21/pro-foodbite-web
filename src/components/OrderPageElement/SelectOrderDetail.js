@@ -8,7 +8,6 @@ const DetailLayout = styled.div`
     justify-items:left;
     width: 70%;
     margin: 0 auto;
-   // background-color: #f0f3f5; 
     margin-top: 2%; 
     font-weight: 700; 
     width: 85%; 
@@ -20,11 +19,10 @@ const ActionButton = styled.button`
     background-color:rgb(200,200,200);
     border:none;
     padding: 5px;
+    border: 1px solid transparent; 
    
-
     :hover{
-        background-color:rgb(150,150,150);
-         
+        border: 1px solid black; 
     }
 `
 

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-import { calc_amount } from "../../utils/Utils"
+import { calc_amount, get_date_full, sort_day } from "../../utils/Utils"
 
 const HistoryItem = styled.button`
     border:none;
@@ -30,9 +30,9 @@ const HistoryDetail = styled.div`
     font-size: 1.2rem;  
 `
 
-export default function ViewHistory( {orders, history, closeShow } ) {
+export default function ViewHistory( {orders, history, today, closeShow } ) {
 
-    const days = ["", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]; 
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]; 
 
     const emptyOrder = {
         orderNumber:"",
@@ -55,9 +55,9 @@ export default function ViewHistory( {orders, history, closeShow } ) {
     const [orderDetail, setDetail] = useState();
     const [selectOrder, setOrder] = useState(emptyOrder);
     const [items, setItems] = useState([]);
-    const [day, set_day] = useState(""); 
+    const [day, set_day] = useState(days[new Date().getDay()-1]); 
 
-    const [current, set_curret] = useState(orders); 
+    const [current, set_current] = useState(today); 
 
     useEffect(() => {
         menuLister(selectOrder.menuItems)
@@ -97,8 +97,6 @@ export default function ViewHistory( {orders, history, closeShow } ) {
     useEffect(() => {
         setDetail([]);
 
-
-        
         for (let i = 0; i < current.length; i++) {
             const element = current[i];
             
@@ -114,24 +112,17 @@ export default function ViewHistory( {orders, history, closeShow } ) {
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
-    }, [current, show])
-
+    }, [current, show]);
 
     function itemCounter(order){
-        
-        if(order.hasOwnProperty("menuItems")) return order.menuItems.length; 
 
-        // let temp = 0;
-        // for (let i = 0; i < order.length; i++) {
-        //     const element = order[i];
-        //     temp += element.itemAmount;
-        // }
-        // return temp;
+        if(order.hasOwnProperty("menuItems")) return order.menuItems.length;
+        else return 0; 
     }
 
     const get_count = () => {
 
-        if(orders !== null || orders !== undefined) return orders.length;
+        if(current !== null || current !== undefined) return current.length;
         else return 0; 
     }
 
@@ -142,38 +133,32 @@ export default function ViewHistory( {orders, history, closeShow } ) {
 
         if(option === "PENDING"){
             filtered = orders.filter( order => order.status === "NEW" || order.status === "IN PROGRESS");
-            set_curret(filtered); 
+            set_current(filtered); 
         }
         else if(option === "ARCHIVED"){
             filtered = orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED");
-            set_curret(filtered); 
+            set_current(filtered); 
         }
         else{
             // ALL 
-            set_curret(orders);
+            set_current(orders);
         }
     }
 
     const handle_day_week = (event) => {
-        // todo 
-        // also set day so header can display 
 
-        console.log(event.target.value)
+        const filtered = sort_day(orders, event.target.value); 
+
+        set_current(filtered)
+        set_day(event.target.value); 
     }
 
-    const get_header = () => {
-        // replace TODAY'S with DAY'S or DAY'S with DAY'S
-        // todo
-        
-        return "Today's"; 
-    }
 
-    // backgroundColor: "#f0f3f5"
     return (
         <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", }}>
             <HeaderContainer>
 
-                <Header>{get_header()} Order History: {get_count()}</Header>
+                <Header>{day}'S Order History: {get_count()}</Header>
                 <div style={{display: "flex", alignItems: "center"}}>
 
                     <Label>Type</Label>
@@ -184,8 +169,9 @@ export default function ViewHistory( {orders, history, closeShow } ) {
                     </Select>
 
                     <Label>Day</Label>
-                    <Select onChange={(e) => handle_day_week(e)}>
-                        {days.map( day => <Option>{day}</Option>)}
+                    <Select onChange={(e) => handle_day_week(e)} id="day-of-the-week">
+                        <Option disabled selected hidden>Today</Option>
+                        {days.map( day => <Option value={day} id={day}>{day}</Option>)}
                     </Select>
 
                 </div>

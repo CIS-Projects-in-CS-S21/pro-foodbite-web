@@ -34,6 +34,7 @@ const OrdersPage = () => {
     const [show, setShow] = useState(false);
     const [selectedOrder, setOrder] = useState(null);
     const [history, set_history] = useState([]); 
+    const [orders_today, set_orders_today] = useState([]); 
 
     const [orders, set_orders] = useState([]); // real-data
 
@@ -94,7 +95,8 @@ const OrdersPage = () => {
 
                         let filered = sort_today(both); 
                         
-                        set_history(filered); 
+                        set_history(both); 
+                        set_orders_today(filered);
                         setShow(true);  
                     }
                     
@@ -196,7 +198,7 @@ const OrdersPage = () => {
             / >
                 <TopPage show={show}>
             {
-                show ? <ViewHistory orders={history} closeShow={()=>{setShow(!show)}}  /> : null
+                show ? <ViewHistory orders={history} today={orders_today} closeShow={()=>{setShow(!show)}}  /> : null
             }
                 </TopPage>
         </div>

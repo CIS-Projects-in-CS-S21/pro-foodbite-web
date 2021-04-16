@@ -93,19 +93,40 @@ export function calc_amount(order){
   };
 
 
-
 export function average(nums){
     return nums.reduce((a, b) => (a + b)) / nums.length;
+}
+
+export const get_date_full = (epoch) => {
+    // ex. 4/14/21 13:56:01
+
+    if(epoch === undefined) return ""; 
+
+    let time = new Date(0);
+    time.setUTCSeconds(epoch);
+    
+    return time.toLocaleString();
+}
+
+export const get_date_short = (epoch) => {
+    // ex. 4/14/21 
+
+    if(epoch === undefined) return ""; 
+
+    let time = new Date(0);
+    time.setUTCSeconds(epoch);
+    
+    return time.toLocaleDateString();
 }
 
 export function sort_today(orders){
     // given orders with epoch timestamps, return only those from today's date
 
-    if(orders.length === 0) return; 
+    if(orders.length === 0) return []; 
 
     let today = new Date();
     today = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`; 
-    today = "4/13/2021";
+    //today = "4/13/2021";
 
     const filtered = orders.filter( order => {
 
@@ -118,3 +139,47 @@ export function sort_today(orders){
 
     return filtered; 
 }
+
+export function sort_day(orders, day_selected){
+    // given orders with epoch timestamps, return only those from day given (of the current week)
+
+    const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]; 
+    day_selected = days.indexOf(day_selected); 
+
+    let filtered = []; 
+
+    if(orders.length === 0) return []; 
+
+    let epoch_right = Math.round(Date.now() / 1000); // now
+    let epoch_left = epoch_right - 604800; // 6.048e+8 ms in a week, take current epoch, go back week 
+
+    // filter to get orders for the current week
+    filtered = orders.filter( order => {
+        return (epoch_left <= order.createdAt && order.createdAt <= epoch_right);
+    });
+
+    // filter to get orders for selected day
+    filtered = orders.filter( order => {
+
+        const date = new Date(0);
+        date.setUTCSeconds(order.createdAt);
+        let day = date.getDay(); 
+ 
+        return day_selected === day; 
+    });
+
+    return filtered; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
