@@ -5,13 +5,14 @@ import { calc_amount, get_date_full, sort_day } from "../../utils/Utils"
 const HistoryItem = styled.button`
     border:none;
     background-color:white;
-    border-bottom:1px solid;
+    border-bottom: 1px solid #181818;
     font-size: 1.2rem; 
     padding: 10px; 
     display: flex;
     flex-direction: row; 
     width: 100%; 
-    justify-content: center; 
+    justify-content: center;
+    align-items: center;   
     
     :hover{
         background-color:rgb(200,200,200);
@@ -82,7 +83,7 @@ export default function ViewHistory( {orders, today, closeShow } ) {
         let time = new Date(0);
         time.setUTCSeconds(timestamp);
         
-        return time.toLocaleDateString();
+        return `${time.getDay()}/${time.getMonth()}/${time.getFullYear().toString().substr(-2)}`;
     }
 
     const get_full_date = (timestamp) => {
@@ -106,9 +107,9 @@ export default function ViewHistory( {orders, today, closeShow } ) {
                 setShow(!show);
                 setOrder(element);
             }}
-            >Order Id: {element.orderId}  | Name: {element.name.toUpperCase()} | Number Of Items:
-             {itemCounter(element)} | Total Price: $
-             {calc_amount(element)} | Date: {get_date(element.createdAt)} | Status:<Status>{element.status}</Status>
+            >Order Id: {element.orderId.substr(0, 8)}  <Dot/> Name: {element.name.toUpperCase()}  <Dot/> Number of Items: 
+             {itemCounter(element)} <Dot/> Total: $
+             {calc_amount(element)} <Dot/> Received: {get_date(element.createdAt)} <Dot/> Status:<Status>{element.status}</Status>
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
@@ -155,6 +156,11 @@ export default function ViewHistory( {orders, today, closeShow } ) {
         document.getElementById("type").value = "ALL"; 
     }
 
+    const get_last_updated = (order) => {
+        if(order.hasOwnProperty("updated")) return get_full_date(order.updated); 
+        else return get_full_date(order.createdAt); 
+    };
+
 
     return (
         <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", }}>
@@ -184,10 +190,11 @@ export default function ViewHistory( {orders, today, closeShow } ) {
             </Selection>
 
             <HistoryDetail show={show}>
-                    <h4 style={{borderBottom:"1px solid", width:"100%", marginBottom: "1%"}}>Order#{selectOrder.id}) {selectOrder.name}</h4>
+                    <h4 style={{borderBottom:"1px solid", width:"100%", marginBottom: "1%"}}>Order#{selectOrder.orderId}) {selectOrder.name}</h4>
                     Price: ${calc_amount(selectOrder)}<br/>
                     Address: {selectOrder.address}<br/>
                     Received:  {get_full_date(selectOrder.createdAt)}<br/>
+                    Last Updated:  {get_last_updated(selectOrder)}<br/>
                     <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>Status: <span style={{fontWeight: "bold", marginLeft: "1%"}}>{selectOrder.status}</span></div> <br/>
                     <h4 style={{borderBottom:"1px solid", marginTop: "2%"}}>Order Items:</h4>
                     {items}
@@ -272,3 +279,12 @@ const Label = styled.div`
     font-size: 2.2rem; 
     margin-right: 3%; 
 `; 
+
+const Dot = styled.div`
+    height: 5px;
+    width: 5px;
+    display: inline-block;
+    background-color: #3f3f3f; 
+    border-radius: 50%;
+    margin: 0 .5%; 
+`;

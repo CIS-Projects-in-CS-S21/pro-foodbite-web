@@ -135,7 +135,7 @@ export default function SignInPage() {
 
           <div stlye={{marginTop: "2.5%"}}>
             {/* <h3>{new Date().toLocaleDateString()}</h3> */}
-            <h3 style={{opacity: ".8", marginTop: "2.5%"}}>HOURS TODAY{get_today()} </h3>
+            <h3 style={{opacity: ".8", marginTop: "2.5%"}}>HOURS TODAY</h3>{get_today()} 
           </div>
 
         </Container>
