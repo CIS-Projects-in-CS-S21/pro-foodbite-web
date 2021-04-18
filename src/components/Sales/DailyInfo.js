@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { mock_pending_orders } from '../../tempData'
+import { get_today_sales, get_delivered_sales, get_type_orders } from "../../utils/Utils"
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -45,32 +47,36 @@ function calcTotalPrice(orders){
 }
 
 
-export default function DailyInfo() {
+export default function DailyInfo( { data } ) {
+
+
+
     return(
         <VerticalDiv>
+            TODO: canceled orders
             <HorizontalDiv>
                 <DailyCard>
                     <DailyCardTitle>
                         Today's Orders:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        {dailyTempData.pickUp.length + dailyTempData.delivery.length}
+                    <DailyCardBody data-testid="orders-length">
+                        {data.length}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Pick-up Orders:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        {dailyTempData.pickUp.length}
+                    <DailyCardBody  data-testid="completed-length">
+                        {get_type_orders(data, "COMPLETED")}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Delivery Orders:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        {dailyTempData.delivery.length}
+                    <DailyCardBody data-testid="delivered-length">
+                        {get_type_orders(data, "DELIVERED")}
                     </DailyCardBody>
                 </DailyCard>
             </HorizontalDiv>
@@ -79,24 +85,24 @@ export default function DailyInfo() {
                     <DailyCardTitle>
                         Today's Sales:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        ${calcTotalPrice(dailyTempData.pickUp) + calcTotalPrice(dailyTempData.delivery)}
+                    <DailyCardBody data-testid="today-sales">
+                        ${get_today_sales(data)}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Pick-Up Sales:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        ${calcTotalPrice(dailyTempData.pickUp)}
+                    <DailyCardBody data-testid="picked-up-sales">
+                        ${get_delivered_sales(data, "COMPLETED")}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Delivery Sales:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        ${calcTotalPrice(dailyTempData.delivery)}
+                    <DailyCardBody data-testid="delivery-sales">
+                        ${get_delivered_sales(data, "DELIVERED")}
                     </DailyCardBody>
                 </DailyCard>
             </HorizontalDiv>

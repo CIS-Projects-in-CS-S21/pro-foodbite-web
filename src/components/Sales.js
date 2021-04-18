@@ -4,6 +4,8 @@ import DailyInfo from '../components/Sales/DailyInfo'
 import MonthlyReport from '../components/Sales/MonthlyReport'
 import DailySalesReport from '../components/Sales/DailySalesReport'
 import PopluarStatus from './Sales/PopularStatus'
+import { mock_pending_orders, mock_archived_orders } from "../tempData"
+import { get_today_sales } from "../utils/Utils"
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -16,6 +18,17 @@ const HorizontalDiv = styled.div`
     justify-content:center;
 `
 export default function Sales() {
+
+    useEffect( () => {
+        // TODO a lot of parsing (actual data ARCHIVED orders)
+        // arrays of order objects
+
+
+    }, []); 
+
+
+
+
     const monthlyTempData = {
         year:2020,
         data:{Jan:1000,
@@ -85,12 +98,12 @@ export default function Sales() {
 
     const dailyTempArray = [dailyTempData, dailyTempData2];
 
+
     return (
         <VerticalDiv>
-            <DailyInfo>
-            </DailyInfo>
+            <DailyInfo data={mock_archived_orders}></DailyInfo>
             <div>
-                <PopluarStatus/>
+                <PopluarStatus></PopluarStatus>
                 <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
                 <MonthlyReport theDataArray={monthlyTempArray}>
                 </MonthlyReport>

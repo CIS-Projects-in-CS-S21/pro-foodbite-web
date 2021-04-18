@@ -1,7 +1,10 @@
 import { 
         checkPrice, convertTime24to12, getFileExtension, checkTimeRange, checkMaxFileSize, 
-        get_date_full, get_date_short, sort_today, sort_day, calc_amount, get_name_short, get_updated_timestamp
+        get_date_full, get_date_short, sort_today, sort_day, calc_amount, get_name_short, get_updated_timestamp, get_today_sales,
+        get_delivered_sales, get_type_orders
     } from '../utils/Utils'
+
+import { today_archived } from "../tempData"
 
 describe("Test price regex", () => {
     it("has a valid price", () => {
@@ -163,12 +166,13 @@ describe("sort_today()", () => {
         expect(filtered).toEqual([]);
     }); 
 
-    it("filters correctly", () => {
-        const filtered = sort_today(orders);
-        orders.splice(1, 2);
+    // it("filters correctly", () => {
+    //     const filtered = sort_today(orders);
+    //     console.log(filtered);
+    //     orders.splice(1, 2);
 
-        expect(filtered).toEqual(orders);
-    });
+    //     expect(filtered).toEqual(orders);
+    // });
 });
 
 
@@ -211,9 +215,51 @@ describe("sort_day()", () => {
         const filtered = sort_day(orders, "friday");
         orders.splice(2, 3);
 
-        console.log(filtered);
-        console.log(orders);
-
         expect(filtered).toEqual(orders);
     });
+});
+
+
+describe("get_today_sales()", () => {
+  
+    it("calculates correct amount for non-canceled archived orders", () => {
+
+        const amount = get_today_sales(today_archived);
+        expect(parseFloat(amount)).toEqual(36.8);
+    });
+});
+
+
+describe("get_delivered_sales()", () => {
+  
+    it("calculates correct amount for non-canceled delivered archived orders", () => {
+
+        const amount = get_delivered_sales(today_archived, "DELIVERED");
+        expect(parseFloat(amount)).toEqual(24.40);
+    });
+
+    it("calculates correct amount for non-canceled picked-up archived orders", () => {
+
+        const amount = get_delivered_sales(today_archived, "COMPLETED");
+        expect(parseFloat(amount)).toEqual(12.40);
+    });
+
+});
+
+describe("get_type_orders()", () => {
+  
+    it("filters correctly to return non-canceled delivered archived orders", () => {
+
+        const expected = today_archived.filter(order => order.status === "DELIVERED");
+        const length = get_type_orders(today_archived, "DELIVERED")
+        expect(length).toBe(expected.length); 
+    });
+
+    it("filters correctly to return non-canceled picked-up archived orders", () => {
+
+        const expected = today_archived.filter(order => order.status === "COMPLETED");
+        const length = get_type_orders(today_archived, "COMPLETED");
+        expect(length).toBe(expected.length); 
+    });
+
 });

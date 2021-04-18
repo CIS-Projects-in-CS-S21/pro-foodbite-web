@@ -101,7 +101,7 @@ export const mock_pending_orders = [
         receivedDate : "3/29/2021",
         name: "Rustin Cohle",
         address: "4123 holder street",
-        id: "123",
+        orderId: "123",
         eta: "TBA",
         menuItems: [
             {
@@ -130,7 +130,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Joseph Cooper",
         address: "123 place holder street",
-        id: "456",
+        orderId: "456",
         menuItems: [
             {
                 itemNumber: 3,
@@ -154,7 +154,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "John Cassavetes",
         address: "123 place holder street",
-        id: "789",
+        orderId: "789",
         menuItems: [
             {
                 itemNumber: 4,
@@ -172,7 +172,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "John Doe",
         address: "123 place holder street",
-        id: "910",
+        orderId: "910",
         menuItems: [
             {
                 itemNumber: 10,
@@ -190,7 +190,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Jane Doe",
         address: "123 place holder street",
-        id: "111",
+        orderId: "111",
         menuItems: [
             {
                 itemNumber: 10,
@@ -208,7 +208,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Frank Reynolds",
         address: "123 place holder street",
-        id: "134",
+        orderId: "134",
         menuItems: [
             {
                 itemNumber: 10,
@@ -233,7 +233,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Dennis Reynolds",
         address: "123 place holder street",
-        id: "134",
+        orderId: "134",
         menuItems: [
             {
                 itemNumber: 1,
@@ -301,3 +301,51 @@ export const mock_archived_orders = [
         ]
     },
 ]
+
+// testing
+export const today_archived =  [
+    {
+      status: "DELIVERED",
+      menuItems: [
+        {
+          price: 6.50,
+        },
+        {
+          price: 5.70
+        },
+      ]
+    },
+    {
+      status: "CANCELED",
+      menuItems: [
+        {
+          price: 2.10,
+        }
+      ]
+    },
+    {
+      status: "DELIVERED",
+      menuItems: [
+        {
+          price: 6.50,
+        },
+        {
+          price: 5.70
+        },
+      ]
+    },
+    {
+      status: "COMPLETED",
+      menuItems: [
+        {
+          price: 6.50,
+        },
+        {
+          price: 3.20,
+        },
+        {
+          price: 2.70
+        },
+      ]
+    }
+    ]
