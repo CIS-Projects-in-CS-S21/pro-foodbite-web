@@ -2,7 +2,7 @@
 
 ### Project Overview
 
-Foodbite is a full-stack application with a customer and business dedicated applications designed to give small restaurants the digital tools they need while remaining independent. This repository is for the business application. Features include business sign-in/sign-up, profile, menu management (add, remove, edit menu items), order management (receive pending order, manage pending orders) and business analytics (ratings, order history, various sorting methods). The application communicates to a REST API that leverages services on Firebase for seamless integration, real-time updates, and a great experience.
+Foodbite is a full-stack application with a customer and business dedicated application designed to give small restaurants the digital tools they need while remaining independent. Business users can register, update their restaurant, receive and manage orders, and view analytics, trends in relation to their restaurant. Mobile users can browse, place orders, track their order progress, and rate their overall experience. The two main applications both communicate to a REST API that leverages services on Firebase to allow for seamless integration, real-time updates, and a great experience. 
 
 ### Project Link
 
