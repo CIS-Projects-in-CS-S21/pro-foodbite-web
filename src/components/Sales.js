@@ -4,8 +4,8 @@ import DailyInfo from '../components/Sales/DailyInfo'
 import MonthlyReport from '../components/Sales/MonthlyReport'
 import DailySalesReport from '../components/Sales/DailySalesReport'
 import PopluarStatus from './Sales/PopularStatus'
-import { mock_pending_orders, mock_archived_orders } from "../tempData"
-import { get_today_sales } from "../utils/Utils"
+import { mock_archived_orders, today_archived } from "../tempData"
+import { get_today_sales, sort_this_week } from "../utils/Utils"
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -23,6 +23,8 @@ export default function Sales() {
         // TODO a lot of parsing (actual data ARCHIVED orders)
         // arrays of order objects
 
+
+        // ex. parse archived orders for day (for daily sales) (USE your util function to get orders from current week)
 
     }, []); 
 
@@ -103,7 +105,7 @@ export default function Sales() {
         <VerticalDiv>
             <DailyInfo data={mock_archived_orders}></DailyInfo>
             <div>
-                <PopluarStatus></PopluarStatus>
+                <PopluarStatus data={today_archived}></PopluarStatus>
                 <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
                 <MonthlyReport theDataArray={monthlyTempArray}>
                 </MonthlyReport>

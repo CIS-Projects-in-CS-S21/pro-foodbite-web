@@ -1,7 +1,7 @@
 import { 
         checkPrice, convertTime24to12, getFileExtension, checkTimeRange, checkMaxFileSize, 
         get_date_full, get_date_short, sort_today, sort_day, calc_amount, get_name_short, get_updated_timestamp, get_today_sales,
-        get_delivered_sales, get_type_orders
+        get_type_sales, get_type_orders, sort_this_week
     } from '../utils/Utils'
 
 import { today_archived } from "../tempData"
@@ -230,17 +230,17 @@ describe("get_today_sales()", () => {
 });
 
 
-describe("get_delivered_sales()", () => {
+describe("get_type_sales()", () => {
   
     it("calculates correct amount for non-canceled delivered archived orders", () => {
 
-        const amount = get_delivered_sales(today_archived, "DELIVERED");
+        const amount = get_type_sales(today_archived, "DELIVERED");
         expect(parseFloat(amount)).toEqual(24.40);
     });
 
     it("calculates correct amount for non-canceled picked-up archived orders", () => {
 
-        const amount = get_delivered_sales(today_archived, "COMPLETED");
+        const amount = get_type_sales(today_archived, "COMPLETED");
         expect(parseFloat(amount)).toEqual(12.40);
     });
 
@@ -260,6 +260,44 @@ describe("get_type_orders()", () => {
         const expected = today_archived.filter(order => order.status === "COMPLETED");
         const length = get_type_orders(today_archived, "COMPLETED");
         expect(length).toBe(expected.length); 
+    });
+
+});
+
+describe("sort_this_week()", () => {
+
+    let orders = [
+        {
+            orderId: 1,
+            createdAt: 1618612376 
+        },
+        {
+            orderId: 2,
+            createdAt: 1618612370 
+        },
+        {
+            orderId: 3,
+            createdAt: 1618353176
+        },
+        {
+            orderId: 4,
+            createdAt: 1617326418 // weeks ago
+        },
+        {
+            orderId: 5,
+            createdAt: 1617499218 // weeks ago
+        },
+        {
+            orderId: 6,
+            createdAt: 1618598084 
+        },
+    ]
+
+    it("filters correctly", () => {
+        const filtered = sort_this_week(orders);
+        orders.splice(3, 2);
+
+        expect(filtered).toEqual(orders);
     });
 
 });

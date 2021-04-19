@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { mock_pending_orders } from '../../tempData'
-import { get_today_sales, get_delivered_sales, get_type_orders } from "../../utils/Utils"
+import { get_today_sales, get_type_sales, get_type_orders } from "../../utils/Utils"
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -94,7 +94,7 @@ export default function DailyInfo( { data } ) {
                         Pick-Up Sales:
                     </DailyCardTitle>
                     <DailyCardBody data-testid="picked-up-sales">
-                        ${get_delivered_sales(data, "COMPLETED")}
+                        ${get_type_sales(data, "COMPLETED")}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
@@ -102,7 +102,7 @@ export default function DailyInfo( { data } ) {
                         Delivery Sales:
                     </DailyCardTitle>
                     <DailyCardBody data-testid="delivery-sales">
-                        ${get_delivered_sales(data, "DELIVERED")}
+                        ${get_type_sales(data, "DELIVERED")}
                     </DailyCardBody>
                 </DailyCard>
             </HorizontalDiv>

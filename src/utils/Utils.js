@@ -80,7 +80,6 @@ export function checkMaxFileSize(file, maxSize) {
 
 export const get_updated_timestamp = ( (order) => {
     // last order's status was updated (or initial createdAt if NEW)
-    console.log(order);
   
     if(order.hasOwnProperty("updated")) {
 
@@ -196,15 +195,61 @@ export function sort_day(orders, day_selected){
     return filtered; 
 }
 
+export function get_today_sales(today_orders){
+
+    if(today_orders.length === 0) return "0.00";
+
+    let total = 0.00;
+
+    today_orders = today_orders.filter( order => {
+        return order.status === "DELIVERED" || order.status === "COMPLETED"; // might change status to picked-up instead of completed
+    });
+
+    today_orders.forEach( order => {
+        let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
+        total += amount.price;   
+    });
+
+    return total.toFixed(2);  
+}
 
 
+export function get_type_sales(today_orders, status){
 
+    if(today_orders.length === 0) return "0.00"; 
 
+    today_orders = today_orders.filter( order => {
+        return order.status === status;
+    });
 
+    return get_today_sales(today_orders);
+}
 
+export function get_type_orders(today_orders, status){
 
+    if(today_orders.length === 0) return 0; 
 
+    today_orders = today_orders.filter( order => {
+        return order.status === status;
+    });
 
+    return today_orders.length; 
+}
 
+export function sort_this_week(orders){
+    // given orders with epoch timestamps, return only those from this week
 
+    let filtered = []; 
 
+    if(orders.length === 0) return []; 
+
+    let epoch_right = Math.round(Date.now() / 1000); // now
+    let epoch_left = epoch_right - 604800; // 6.048e+8 ms in a week, take current epoch, go back week 
+
+    // filter to get orders for the current week
+    filtered = orders.filter( order => {
+        return (epoch_left <= order.createdAt && order.createdAt <= epoch_right);
+    });
+
+    return filtered; 
+}

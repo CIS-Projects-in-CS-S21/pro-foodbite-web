@@ -32,7 +32,10 @@ const OptionButton = styled.button`
     }
 `
 
-export default function DailySalesReport({theDataArray}) {
+export default function DailySalesReport({ theDataArray }) {
+
+    // TODO, WEEK NOT MONTH? 
+
     const [theData, setData] = useState(theDataArray[0]);
     const [theIndex, setIndex] = useState(0);
 
@@ -41,6 +44,7 @@ export default function DailySalesReport({theDataArray}) {
 
     const [theChart, setChart] = useState();
     const [chartType, setType] = useState(1);
+
     useEffect(() => {
         data.labels=[];
         
@@ -95,6 +99,8 @@ export default function DailySalesReport({theDataArray}) {
                 data.datasets[0].data.push(average(filterArray));
                 data.datasets[0].data.push(Math.max(...filterArray));
                 temp = <Line id="dailyLineChart" data={data} options={option}></Line>
+                break;
+            default:
                 break;
         }
         setChart(temp);
@@ -154,8 +160,8 @@ export default function DailySalesReport({theDataArray}) {
                 <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}>→</ChartButton>
             </HorizontalDiv>
             <HorizontalDiv>
-                    <OptionButton onClick={()=>{setType(1)}}>Sales</OptionButton>
-                    <OptionButton onClick={()=>{setType(2)}}>Status</OptionButton>
+                    <OptionButton onClick={()=>{setType(1)}}  data-testid="sales-btn">Sales</OptionButton>
+                    <OptionButton onClick={()=>{setType(2)}} data-testid="status-btn">Status</OptionButton>
             </HorizontalDiv>
             {theChart}
         </ChartSize>

@@ -309,9 +309,11 @@ export const today_archived =  [
       menuItems: [
         {
           price: 6.50,
+          name: "Big Kahuna Burger"
         },
         {
-          price: 5.70
+          price: 5.70,
+          name: "Chicken Sandwhich"
         },
       ]
     },
@@ -320,6 +322,7 @@ export const today_archived =  [
       menuItems: [
         {
           price: 2.10,
+          name: "tea"
         }
       ]
     },
@@ -328,9 +331,11 @@ export const today_archived =  [
       menuItems: [
         {
           price: 6.50,
+          name: "Big Kahuna Burger"
         },
         {
-          price: 5.70
+          price: 5.70,
+          name: "Chicken Sandwhich"
         },
       ]
     },
@@ -339,12 +344,15 @@ export const today_archived =  [
       menuItems: [
         {
           price: 6.50,
+          name: "Big Kahuna Burger"
         },
         {
           price: 3.20,
+          name: "fries"
         },
         {
-          price: 2.70
+          price: 2.70,
+          name: "sprite"
         },
       ]
     }
