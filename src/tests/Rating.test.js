@@ -131,37 +131,3 @@ describe("search function", () => {
         })
 })
 
-
-describe("sorting function", ()=>{
-        let tempRating = [{
-            user:"user2",
-            rating:2,
-            ratingContent:"this is rating number 2, place holder",
-            timeStamp:"03/01/1998"
-        },{
-            user:"user5",
-            rating:5,
-            ratingContent:"rating number 5",
-            timeStamp:"02/12/2021"
-        }];
-
-        let container; 
-        beforeEach( async () => {
-            await act( async () => {
-            render(
-                <div>
-                    <RatingCard userRating={tempRating} />
-                </div>
-            , container)
-            }); 
-        });
-
-        it("should orderby date", ()=>{
-            const dateButton = screen.getByText("Date");
-            fireEvent.click(dateButton);
-            const user2 = screen.getByText("user2");
-            console.log(user2);
-            
-        })
-
-})
