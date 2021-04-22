@@ -1,26 +1,8 @@
 import React from "react"
 import styled from "styled-components"
-import { calc_amount, get_updated_timestamp } from "../../utils/Utils"
+import { calc_amount, get_updated_timestamp, get_short_name } from "../../utils/Utils"
 
 export default function PendingOrders( {orders, view} ) {
-
-  const get_short_name = ( (order) => {
-    // if name too long, "..."
-
-    if(order.hasOwnProperty("name")){
-
-      let name = order.name.toUpperCase();  
-
-      if(name.length > 10) {
-        name = name.substr(0, 9);
-        name += "..."; 
-      }
-
-      return <div style={{fontSize: "1.3rem"}}>{name}</div>
-    }
-
-    return <div style={{fontSize: "1.3rem"}}>NO NAME</div>
-  }); 
 
   const get_items_count = ( (order) => {
 
@@ -46,7 +28,7 @@ export default function PendingOrders( {orders, view} ) {
             <OrderContainer onClick={(e) => view(e, order)} key={order.orderId}>
               <OrderHeader>
                 <div style={{marginRight: "4%"}}>{index+1}</div>
-                {get_short_name(order)}
+                <div style={{fontSize: "1.3rem"}}>{get_short_name(order)}</div>
               </OrderHeader>
       
               <Info>{order.id}</Info>
