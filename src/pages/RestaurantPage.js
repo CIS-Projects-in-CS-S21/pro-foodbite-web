@@ -245,7 +245,7 @@ function getNavigation(){
 
  if(form.screen !== 8){
     return (
-        <Container>
+      <Container>
         <Field onClick={() => handle_navigate(screens.WELCOME_BACK)} id="1">OVERVIEW</Field>
         <Field onClick={() => handle_navigate(screens.EDIT_NAME)} id="2">NAME</Field>
         <Field onClick={() => handle_navigate(screens.EDIT_IMAGE)} id="3">IMAGE</Field>
@@ -253,7 +253,7 @@ function getNavigation(){
         <Field onClick={() => handle_navigate(screens.EDIT_HOURS)} id="5">HOURS</Field>
         <Field onClick={() => handle_navigate(screens.EDIT_MENU)} id="6">MENU</Field>
         <Field onClick={() => handle_navigate(screens.PREVIEW)} id="7">PREVIEW</Field>
-    </Container>
+     </Container>
     )
  }
 }

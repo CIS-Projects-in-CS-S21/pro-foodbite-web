@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
 import styled from 'styled-components'
 import DailyInfo from '../components/Sales/DailyInfo'
 import MonthlyReport from '../components/Sales/MonthlyReport'
@@ -98,18 +98,95 @@ export default function Sales() {
         }
     }
 
-    const dailyTempArray = [dailyTempData, dailyTempData2];
+    const type = {
+        DAILY_INFO: 1,
+        POPULAR_ITEMS: 2,
+        TYPE_3: 3,
+        TYPE_4: 4
+      };
 
+    useEffect(() => {
+
+        document.getElementById("type-1").style.color = "#e9eaeb";
+    }, []);
+
+    const dailyTempArray = [dailyTempData, dailyTempData2];
+    const [active, set_active] = useState(1);
+
+    const render_screen = () => {
+
+        switch (active){
+
+            case type.DAILY_INFO:
+                return <DailyInfo data={mock_archived_orders}></DailyInfo>
+
+            case type.POPULAR_ITEMS:
+                return <PopluarStatus data={today_archived}></PopluarStatus>
+
+            case type.TYPE_3:
+                return <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
+
+            case type.TYPE_4:
+                return <MonthlyReport theDataArray={monthlyTempArray}></MonthlyReport>
+
+            default:
+                return <h1>Default</h1>
+        }
+    }
+
+    const handle_navigate = (number) => {
+
+        document.getElementById(`type-${active}`).removeAttribute("style"); 
+        document.getElementById(`type-${number}`).style.color = "#e9eaeb";
+        set_active(number); 
+      }
 
     return (
-        <VerticalDiv>
-            <DailyInfo data={mock_archived_orders}></DailyInfo>
-            <div>
-                <PopluarStatus data={today_archived}></PopluarStatus>
-                <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
-                <MonthlyReport theDataArray={monthlyTempArray}>
-                </MonthlyReport>
-            </div>
-        </VerticalDiv>
+        <Fragment>
+            
+            <Navigation>
+                <Field id="type-1" onClick={() => handle_navigate(type.DAILY_INFO)}>Today</Field>
+                <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Popular Items</Field>
+                <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Something</Field>
+                <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Something</Field>
+            </Navigation>
+
+            {render_screen()}
+
+
+            {/* <VerticalDiv>
+                <DailyInfo data={mock_archived_orders}></DailyInfo>
+                <div>
+                    <PopluarStatus data={today_archived}></PopluarStatus>
+                    <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
+                    <MonthlyReport theDataArray={monthlyTempArray}>
+                    </MonthlyReport>
+                </div>
+            </VerticalDiv> */}
+        </Fragment>
     )
 }
+
+
+const Navigation = styled.div`
+  //border: 1px solid black; 
+  position: absolute;
+  margin-left: 1%; 
+  margin-top: 2em;
+  //background-color: #f0f3f5; 
+  background-color: #333a40; 
+  padding: 2px; 
+`; 
+
+const Field = styled.div`
+  padding: 10px; 
+  font-size: 1.5rem; 
+
+  color: #868e95;
+  
+  &:hover{
+    cursor: pointer; 
+    color: #e9eaeb; 
+  }
+
+`;
