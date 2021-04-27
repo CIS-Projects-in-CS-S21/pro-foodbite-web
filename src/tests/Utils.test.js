@@ -1,7 +1,7 @@
 import { 
         checkPrice, convertTime24to12, getFileExtension, checkTimeRange, checkMaxFileSize, 
         get_date_full, get_date_short, sort_today, sort_day, calc_amount, get_name_short, get_updated_timestamp, get_today_sales,
-        get_type_sales, get_type_orders, sort_this_week
+        get_type_sales, get_type_orders, sort_this_week, get_short_name
     } from '../utils/Utils'
 
 import { today_archived } from "../tempData"
@@ -140,7 +140,7 @@ describe("sort_today()", () => {
     let orders = [
         {
             orderId: 1,
-            createdAt: 1618610413 // today
+            createdAt: 1619017837 // today
         },
         {
             orderId: 2,
@@ -152,11 +152,11 @@ describe("sort_today()", () => {
         },
         {
             orderId: 4,
-            createdAt: 1618606813 // today
+            createdAt: 1619010637 // today
         },
         {
             orderId: 5,
-            createdAt: 1618585213 // today
+            createdAt: 1619010940 // today
         },
     ]
 
@@ -166,13 +166,12 @@ describe("sort_today()", () => {
         expect(filtered).toEqual([]);
     }); 
 
-    // it("filters correctly", () => {
-    //     const filtered = sort_today(orders);
-    //     console.log(filtered);
-    //     orders.splice(1, 2);
+    it("filters correctly", () => {
+        const filtered = sort_today(orders);
+        orders.splice(1, 2);
 
-    //     expect(filtered).toEqual(orders);
-    // });
+        expect(filtered).toEqual(orders);
+    });
 });
 
 
@@ -269,15 +268,15 @@ describe("sort_this_week()", () => {
     let orders = [
         {
             orderId: 1,
-            createdAt: 1618612376 
+            createdAt: 1619011389
         },
         {
             orderId: 2,
-            createdAt: 1618612370 
+            createdAt: 1619011089
         },
         {
             orderId: 3,
-            createdAt: 1618353176
+            createdAt: 1618353176 // weeks ago
         },
         {
             orderId: 4,
@@ -295,9 +294,32 @@ describe("sort_this_week()", () => {
 
     it("filters correctly", () => {
         const filtered = sort_this_week(orders);
-        orders.splice(3, 2);
+        orders.splice(2, 3);
 
         expect(filtered).toEqual(orders);
     });
 
+});
+
+
+describe("get_short_name()", () => {
+
+    it("returns correct format with no name present", () => {
+
+        const order = {
+        }
+
+        const day = get_short_name(order); 
+        expect(day).toBe("NO NAME"); 
+    });
+
+    it("returns correct format with name present", () => {
+
+        const order = {
+            name: "john cassavetes"
+        }
+
+        const day = get_short_name(order); 
+        expect(day).toBe("JOHN CASS..."); 
+    });
 });

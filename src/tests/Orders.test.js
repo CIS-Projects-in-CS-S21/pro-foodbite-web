@@ -93,6 +93,7 @@ describe("<ViewHistory/>", () => {
 
   let pending = [
     {
+      orderId: "123",
       name: "John Doe",
       status: "NEW",
       menuItems: [
@@ -107,6 +108,7 @@ describe("<ViewHistory/>", () => {
 
   let archived = [
     {
+      orderId: "456",
       name: "Jane Doe",
       status: "DELIVERED",
       menuItems: [
@@ -127,7 +129,7 @@ describe("<ViewHistory/>", () => {
     await act( async () => {
       render(
         <UserContextProvider>
-          <ViewHistory  orders={orders}  closeShow={closeShow} />
+          <ViewHistory  orders={orders}  today={orders} closeShow={closeShow} />
         </UserContextProvider>
       , container)
     }); 
@@ -162,6 +164,7 @@ describe("<SelectOrderDetail/>", () => {
 
   let pending = [
     {
+      orderId: "123", 
       name: "John Doe",
       status: "NEW",
       menuItems: [
@@ -170,12 +173,14 @@ describe("<SelectOrderDetail/>", () => {
           price: 5.5,
           options: "no mustard"
         }
-      ]
+      ], 
+      total: 5.5
     }
   ]
 
   let archived = [
     {
+      orderId: "123", 
       name: "Jane Doe",
       status: "DELIVERED",
       menuItems: [
@@ -184,7 +189,8 @@ describe("<SelectOrderDetail/>", () => {
           price: 6.5,
           options: "no sauce"
         }
-      ]
+      ], 
+      total: 6.5
     }
   ]
 
@@ -197,11 +203,11 @@ describe("<SelectOrderDetail/>", () => {
       render(
         <UserContextProvider>
           <SelectOrderDetail  
-          orders={orders} 
-          orderInProgress={handler} 
-          orderInfo={pending[0]} 
-          declineOrder={handler} 
-          orderOnTheWay={handler}
+            orders={orders} 
+            orderInProgress={handler} 
+            orderInfo={pending[0]} 
+            declineOrder={handler} 
+            orderOnTheWay={handler}
           />
         </UserContextProvider>
       , container)

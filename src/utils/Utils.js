@@ -253,3 +253,21 @@ export function sort_this_week(orders){
 
     return filtered; 
 }
+
+export function get_short_name(order){
+    //if name too long, "..."
+
+    if(order.hasOwnProperty("name")){
+
+      let name = order.name.toUpperCase();  
+
+      if(name.length > 10) {
+        name = name.substr(0, 9);
+        name += "..."; 
+      }
+
+      return name; 
+    }
+
+    return "NO NAME";
+}
