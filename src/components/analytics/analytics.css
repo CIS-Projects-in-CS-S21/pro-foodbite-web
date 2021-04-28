@@ -20,7 +20,7 @@
     border-radius: 4px;
     box-shadow: 1px 1px 4px rgb(168, 168, 168);
     width: 350px;
-    height: 90px; 
+    height: 100px; 
     /* min-height: 90px;
     max-width: 250px; */
     padding: 0.5em;
@@ -29,6 +29,8 @@
     /* color: #9a9da0; */
     cursor: pointer;
     transition: all 0.2s ease;
+    font-family: "Amatic SC", cursive;   
+    font-size: 1.9rem; 
 }
 
 .analytics.status-card:hover {
@@ -40,8 +42,9 @@
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
+
     /* padding-top: 12px; */
-    margin-top: .5em; 
+    /* margin-top: .5em;  */
 }
 
 .status-card.status-card-title {

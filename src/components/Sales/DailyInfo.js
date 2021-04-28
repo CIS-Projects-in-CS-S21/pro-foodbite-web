@@ -8,6 +8,9 @@ const VerticalDiv = styled.div`
     flex-direction:column;
     justify-content:center;
     align-items:center;
+    margin-top: 1%;
+    width: 60%; 
+    margin: 1% auto;
 `
 
 const HorizontalDiv = styled.div`
@@ -16,19 +19,20 @@ const HorizontalDiv = styled.div`
 `
 
 const DailyCard = styled.div`
-    margin:10px;
+    margin: 10px;
     background-color:#e8f4f8;
-    width:200px;
-    text-align:left;
-    padding:10px;
+    width: 220px;
+    padding: 22px;
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
 `
 
 const DailyCardTitle = styled.h5`
-
 `
 
 const DailyCardBody = styled.h6`
-
+    font-size: 1.4rem; 
 `
 
 const dailyTempData = {
@@ -49,11 +53,9 @@ function calcTotalPrice(orders){
 
 export default function DailyInfo( { data } ) {
 
-
-
     return(
         <VerticalDiv>
-            TODO: canceled orders
+            Data: completed and archived orders for today
             <HorizontalDiv>
                 <DailyCard>
                     <DailyCardTitle>

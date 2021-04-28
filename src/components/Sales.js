@@ -6,6 +6,8 @@ import DailySalesReport from '../components/Sales/DailySalesReport'
 import PopluarStatus from './Sales/PopularStatus'
 import { mock_archived_orders, today_archived } from "../tempData"
 import { get_today_sales, sort_this_week } from "../utils/Utils"
+import { useUserContext } from "../context/UserContext"
+import { sort_today } from "../utils/Utils"
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -17,16 +19,42 @@ const HorizontalDiv = styled.div`
     display:flex;
     justify-content:center;
 `
+
 export default function Sales() {
 
-    useEffect( () => {
-        // TODO a lot of parsing (actual data ARCHIVED orders)
-        // arrays of order objects
+    const { restaurant, userDb, get_doc } = useUserContext(); 
+    const [today, set_today] = useState([]); 
 
+    useEffect( () => {
+
+        // get archived orders, parse to include those from today
+        const get_today = async () => {
+
+            await get_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`)
+            .then( doc => {
+                if(doc.exists){
+                    let orders = doc.data().orders; 
+                    let archived = [];
+        
+                    for (const id in orders){
+                        archived.push(orders[id]); 
+                    }
+
+                    let filtered = sort_today(archived); 
+
+                    // filter out those canceled too?
+
+                    set_today(filtered);
+                }
+            });
+        }
+
+        get_today(); 
 
         // ex. parse archived orders for day (for daily sales) (USE your util function to get orders from current week)
 
-    }, []); 
+    }, [get_doc, userDb.ownedRestaurants]); 
+
 
 
 
@@ -118,7 +146,7 @@ export default function Sales() {
         switch (active){
 
             case type.DAILY_INFO:
-                return <DailyInfo data={mock_archived_orders}></DailyInfo>
+                return <DailyInfo data={today}></DailyInfo>
 
             case type.POPULAR_ITEMS:
                 return <PopluarStatus data={today_archived}></PopluarStatus>
@@ -143,9 +171,10 @@ export default function Sales() {
 
     return (
         <Fragment>
-            
+
+            <Header>{restaurant.name}'S SALES</Header>
             <Navigation>
-                <Field id="type-1" onClick={() => handle_navigate(type.DAILY_INFO)}>Today</Field>
+                <Field id="type-1" onClick={() => handle_navigate(type.DAILY_INFO)}>Sales Today</Field>
                 <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Popular Items</Field>
                 <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Something</Field>
                 <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Something</Field>
@@ -153,40 +182,43 @@ export default function Sales() {
 
             {render_screen()}
 
-
-            {/* <VerticalDiv>
-                <DailyInfo data={mock_archived_orders}></DailyInfo>
-                <div>
-                    <PopluarStatus data={today_archived}></PopluarStatus>
-                    <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
-                    <MonthlyReport theDataArray={monthlyTempArray}>
-                    </MonthlyReport>
-                </div>
-            </VerticalDiv> */}
+                {/* <VerticalDiv>
+                    <DailyInfo data={mock_archived_orders}></DailyInfo>
+                    <div>
+                        <PopluarStatus data={today_archived}></PopluarStatus>
+                        <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
+                        <MonthlyReport theDataArray={monthlyTempArray}>
+                        </MonthlyReport>
+                    </div>
+                </VerticalDiv> */}
         </Fragment>
     )
 }
 
-
 const Navigation = styled.div`
-  //border: 1px solid black; 
-  position: absolute;
-  margin-left: 1%; 
-  margin-top: 2em;
-  //background-color: #f0f3f5; 
-  background-color: #333a40; 
-  padding: 2px; 
+    position: absolute; 
+    // margin-top: 2%; 
+    background-color: #333a40; 
+    padding: 4px; 
+    left: 4%; 
+`; 
+
+const Header = styled.div`
+    font-family: "Amatic SC", cursive;
+    font-size: 3.5rem; 
+    border-bottom: 2px solid #f0f3f5; 
+    width: 50%;
+    margin: 0 auto;
 `; 
 
 const Field = styled.div`
-  padding: 10px; 
-  font-size: 1.5rem; 
+    padding: 10px; 
+    font-size: 1.5rem; 
 
-  color: #868e95;
-  
-  &:hover{
+    color: #868e95;
+
+    &:hover{
     cursor: pointer; 
     color: #e9eaeb; 
-  }
-
+    }
 `;

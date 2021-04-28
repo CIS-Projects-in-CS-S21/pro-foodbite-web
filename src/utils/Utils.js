@@ -149,8 +149,7 @@ export function sort_today(orders){
     if(orders.length === 0) return []; 
 
     let today = new Date();
-    today = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`; 
-    //today = "4/13/2021";
+    today = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
 
     const filtered = orders.filter( order => {
 
@@ -207,10 +206,10 @@ export function get_today_sales(today_orders){
 
     today_orders.forEach( order => {
         let amount = order.menuItems.reduce( (a, b) => ({price: parseFloat(a.price) + parseFloat(b.price)}));
-        total += amount.price;   
+        total += parseFloat(amount.price);   
     });
 
-    return total.toFixed(2);  
+    return total;  
 }
 
 
