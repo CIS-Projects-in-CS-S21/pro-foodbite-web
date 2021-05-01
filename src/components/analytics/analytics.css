@@ -55,3 +55,54 @@
 .status-card.status-card-value {
     font-weight: bold;
 }
+
+
+.toggle-mock-input{
+    visibility: hidden;
+	height: 0;
+	width: 0;
+    margin-left: 2%; 
+}
+
+.toggle-mock-label{
+    cursor: pointer;
+    width: 100px;
+    height: 50px; 
+    border-radius: 100px; 
+    background-color: #333a40;    
+    display: block; 	
+    position: relative;
+    color: transparent; 
+}
+
+.toggle-mock-label:after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 90px;
+    background-color: #e9eaeb;
+
+    transition: 0.3s; 
+}
+
+
+.toggle-mock-input:checked + .toggle-mock-label{
+	background: #5bb55f;
+}
+
+
+.toggle-mock-input:checked + .toggle-mock-label:after {
+	left: calc(100% - 5px);
+	transform: translateX(-100%);
+}
+
+
+
+
+
+
+
+

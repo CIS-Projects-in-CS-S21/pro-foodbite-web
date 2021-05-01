@@ -7,7 +7,8 @@ import PopluarStatus from './Sales/PopularStatus'
 import { mock_archived_orders, today_archived } from "../tempData"
 import { get_today_sales, sort_this_week } from "../utils/Utils"
 import { useUserContext } from "../context/UserContext"
-import { sort_today } from "../utils/Utils"
+import { sort_today, get_sales_month } from "../utils/Utils"
+import "./analytics/analytics.css"
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -22,29 +23,58 @@ const HorizontalDiv = styled.div`
 
 export default function Sales() {
 
+    const type = {
+        DAILY_INFO: 1,
+        POPULAR_ITEMS: 2,
+        TYPE_3: 3,
+        TYPE_4: 4
+      };
+
+
     const { restaurant, userDb, get_doc } = useUserContext(); 
+    
+    // const [loading, set_loading] = useState(false);
+    const [active, set_active] = useState(1);
+    const [mock, set_mock] = useState(false);
+    const [actual, set_actual] = useState([]);
+
+    const [archived, set_archived] = useState([]); 
     const [today, set_today] = useState([]); 
+    const [monthly, set_monthly] = useState([]); 
+
+    
+
+    useEffect(() => {
+        document.getElementById("type-1").style.color = "#e9eaeb";
+    }, []);
 
     useEffect( () => {
 
-        // get archived orders, parse to include those from today
+        // get archived orders, parse ... 
         const get_today = async () => {
 
             await get_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`)
             .then( doc => {
                 if(doc.exists){
                     let orders = doc.data().orders; 
-                    let archived = [];
+                    let archived_orders = [];
         
                     for (const id in orders){
-                        archived.push(orders[id]); 
+                        archived_orders.push(orders[id]); 
                     }
 
-                    let filtered = sort_today(archived); 
+                    set_archived(archived_orders); 
+
+                    // todays archived orders
+                    let filtered = sort_today(archived_orders); 
 
                     // filter out those canceled too?
-
                     set_today(filtered);
+
+                    // get daily sales for current month
+                    filtered = get_sales_month(archived_orders); 
+
+
                 }
             });
         }
@@ -56,90 +86,53 @@ export default function Sales() {
     }, [get_doc, userDb.ownedRestaurants]); 
 
 
+    const handle_use_mock_data = (e) => {
+        //  use mock data for ACTIVE, for demoing purposes
 
-
-
-    const monthlyTempData = {
-        year:2020,
-        data:{Jan:1000,
-            Feb:800,
-            Mar:500,
-            Apr:950,
-            May:2000,
-            Jun:2500,
-            Jul:2300,
-            Aug:0,
-            Sep:0,
-            Oct:0,
-            Nov:0,
-            Dec:0}
-    }
-
-    const monthlyTempData2 = {
-        year:2021,
-        data:{Jan:3123,
-            Feb:123,
-            Mar:3213,
-            Apr:432,
-            May:3123,
-            Jun:432,
-            Jul:4325,
-            Aug:2341,
-            Sep:3213,
-            Oct:1231,
-            Nov:0,
-            Dec:0}
-        
-    }
-
-    const monthlyTempArray = [monthlyTempData, monthlyTempData2];
-
-    const dailyTempData = {
-        month:3,
-        data:{
-            1:100,
-            2:400,
-            3:400,
-            5:344,
-            6:340,
-            7:0,
-            8:123,
-            9:412,
-            10:541,
-            11:123,
+        if(mock === false){
+            switch(active){
+                case 1:
+                    set_actual(today); 
+                    set_today(today_archived);
+                    break; 
+                case 2:
+                    set_actual(archived);
+                    set_archived(mock_archived_orders); 
+                    break;
+                case 3:
+                    set_actual(monthly);
+                    set_monthly([]);
+                    break;
+                case 4:
+                    // set_actual(monthly);
+                    // set_monthly([]);
+                    break; 
+                default:
+                    break; 
+            }
         }
-    }
-
-    const dailyTempData2 = {
-        month:4,
-        data:{
-            1:100,
-            2:321,
-            3:543,
-            5:123,
-            6:340,
-            7:124,
-            8:123,
-            9:321,
-            10:432,
-            11:412,
+        else{
+            switch(active){
+                case 1:
+                    set_today(actual);
+                    break; 
+                case 2:
+                    set_archived(actual);
+                    break;
+                case 3:
+                    set_monthly(actual);
+                    break;
+                case 4:
+                    
+                    // TODO
+                    break; 
+                default:
+                    break; 
+            }
         }
+
+        set_mock(!mock);
     }
-
-    const type = {
-        DAILY_INFO: 1,
-        POPULAR_ITEMS: 2,
-        TYPE_3: 3,
-        TYPE_4: 4
-      };
-
-    useEffect(() => {
-
-        document.getElementById("type-1").style.color = "#e9eaeb";
-    }, []);
-
-    const dailyTempArray = [dailyTempData, dailyTempData2];
-    const [active, set_active] = useState(1);
 
     const render_screen = () => {
 
@@ -149,13 +142,13 @@ export default function Sales() {
                 return <DailyInfo data={today}></DailyInfo>
 
             case type.POPULAR_ITEMS:
-                return <PopluarStatus data={today_archived}></PopluarStatus>
+                return <PopluarStatus data={archived}></PopluarStatus>
 
             case type.TYPE_3:
-                return <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
+                return <DailySalesReport theDataArray={""}></DailySalesReport>
 
             case type.TYPE_4:
-                return <MonthlyReport theDataArray={monthlyTempArray}></MonthlyReport>
+                return <MonthlyReport theDataArray={""}></MonthlyReport>
 
             default:
                 return <h1>Default</h1>
@@ -166,7 +159,9 @@ export default function Sales() {
 
         document.getElementById(`type-${active}`).removeAttribute("style"); 
         document.getElementById(`type-${number}`).style.color = "#e9eaeb";
+        document.getElementById("toggle").checked = false;
         set_active(number); 
+        set_mock(false);
       }
 
     return (
@@ -179,6 +174,14 @@ export default function Sales() {
                 <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Something</Field>
                 <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Something</Field>
             </Navigation>
+
+
+
+            <Mock>
+                MOCK DATA
+                <input class="toggle-mock-input" type="checkbox" id="toggle" onChange={(e) => handle_use_mock_data(e)}/>
+                <label class="toggle-mock-label" for="toggle"/>
+            </Mock>
 
             {render_screen()}
 
@@ -197,7 +200,6 @@ export default function Sales() {
 
 const Navigation = styled.div`
     position: absolute; 
-    // margin-top: 2%; 
     background-color: #333a40; 
     padding: 4px; 
     left: 4%; 
@@ -222,3 +224,45 @@ const Field = styled.div`
     color: #e9eaeb; 
     }
 `;
+
+const Mock = styled.div`
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    width: 50%;
+    margin: 1% auto;
+`; 
+
+// const MockInput = styled.input`
+//     visibility: hidden;
+//     height: 0;
+//     width: 0
+
+// `; 
+
+// const MockLabel = styled.label`
+//     cursor: pointer;
+//     width: 100px;
+//     height: 50px; 
+//     border-radius: 100px; 
+//     background-color: #333a40;    
+//     display: block;
+// 	position: relative;
+
+//     &:after{
+//         content: "";
+//         position: absolute;
+//         top: 5px;
+//         left: 5px;
+//         width: 40px;
+//         height: 40px;
+//         border-radius: 90px;
+//         background-color: #e9eaeb;
+
+//         transition: 0.3s; 
+//     }
+
+
+
+
+// `; 
