@@ -275,7 +275,7 @@ export function get_sales_this_month(orders){
     // each day up to current day will have value
     
     let month_current = new Date().getMonth();
-    month_current = 3; 
+    // month_current = 3; 
 
     let filtered = [];
 
@@ -314,4 +314,45 @@ export function get_sales_this_month(orders){
     }
 
     return month_obj;
+}
+
+export function get_sales_this_year(orders){
+    // each month's sales of the current year
+
+    let date = new Date();
+    let year_current = date.getFullYear();
+    
+    let filtered = [];
+
+    orders.forEach(order => {
+
+        const time = parseFloat(order.createdAt) * 1000; 
+        const date = new Date(time);
+        
+        if(date.getFullYear() === year_current) filtered.push(order);
+    });
+
+    let sales = {}
+
+    for(let i = 1; i <= 12; ++i) sales[i] = 0;
+
+    filtered.forEach(order => {
+
+        const time = parseFloat(order.createdAt) * 1000; 
+        let month = new Date(time).getMonth() + 1;
+
+        const amount = parseFloat(calc_amount(order)); 
+         
+        let temp = sales[month];
+        temp += amount;
+
+        sales[month] = temp; 
+    });
+
+    let year_obj = {
+        year: year_current,
+        data: sales
+    }
+
+    return year_obj;
 }

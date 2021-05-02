@@ -4,10 +4,9 @@ import DailyInfo from '../components/Sales/DailyInfo'
 import MonthlyReport from '../components/Sales/MonthlyReport'
 import DailySalesReport from '../components/Sales/DailySalesReport'
 import PopluarStatus from './Sales/PopularStatus'
-import { mock_archived_orders, today_archived, mock_daily_sales } from "../tempData"
-import { get_today_sales, sort_this_week } from "../utils/Utils"
+import { mock_archived_orders, today_archived, mock_daily_sales, mock_monthly_sales } from "../tempData"
 import { useUserContext } from "../context/UserContext"
-import { sort_today, get_sales_this_month } from "../utils/Utils"
+import { sort_today, get_sales_this_month, get_sales_this_year } from "../utils/Utils"
 import "./analytics/analytics.css"
 
 const VerticalDiv = styled.div`
@@ -42,7 +41,7 @@ export default function Sales() {
     const [archived, set_archived] = useState([]); 
     const [today, set_today] = useState([]); 
     const [month, set_month] = useState([]); 
-    const [monthly, set_monthly] = useState([]); 
+    const [year, set_year] = useState([]); 
 
 
     useEffect(() => {
@@ -74,6 +73,10 @@ export default function Sales() {
                     // get daily sales for current month
                     filtered = get_sales_this_month(archived_orders); 
                     set_month(filtered);
+
+                    // get monthly sales for current year
+                    filtered = get_sales_this_year(archived_orders);
+                    set_year(filtered);
                 }
             });
         }
@@ -100,11 +103,11 @@ export default function Sales() {
                     break;
                 case 3:
                     set_actual(month);
-                    set_month(mock_daily_sales());
+                    set_month(mock_daily_sales()[1]);
                     break;
                 case 4:
-                    // set_actual(monthly);
-                    // set_monthly([]);
+                    set_actual(year);
+                    set_year(mock_monthly_sales());
                     break; 
                 default:
                     break; 
@@ -122,7 +125,7 @@ export default function Sales() {
                     set_month(actual);
                     break;
                 case 4:
-                    // TODO
+                    set_year(actual); 
                     break; 
                 default:
                     break; 
@@ -143,10 +146,10 @@ export default function Sales() {
                 return <PopluarStatus data={archived}></PopluarStatus>
 
             case type.TYPE_3:
-                return <DailySalesReport theDataArray={[month]}></DailySalesReport>
+                return <DailySalesReport theData={month}></DailySalesReport>
 
             case type.TYPE_4:
-                return <MonthlyReport theDataArray={""}></MonthlyReport>
+                return <MonthlyReport theData={year}></MonthlyReport>
 
             default:
                 return <h1>Default</h1>
@@ -167,10 +170,10 @@ export default function Sales() {
 
             <Header>{restaurant.name}'S SALES</Header>
             <Navigation>
-                <Field id="type-1" onClick={() => handle_navigate(type.DAILY_INFO)}>Sales Today</Field>
-                <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Top Items</Field>
-                <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Daily Sales</Field>
-                <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Something</Field>
+                <Field id="type-1" onClick={() => handle_navigate(type.DAILY_INFO)}>Today</Field>
+                <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Daily</Field>
+                <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Monthly</Field>
+                <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Items</Field>
             </Navigation>
 
 
@@ -212,14 +215,14 @@ const Header = styled.div`
 
 const Field = styled.div`
     padding: 10px; 
-    font-size: 1.6rem; 
+    font-size: 1.8rem;
 
     color: #868e95;
 
     &:hover{
     cursor: pointer; 
     color: #e9eaeb; 
-    }
+    } 
 `;
 
 const Mock = styled.div`

@@ -375,22 +375,6 @@ export const today_archived =  [
 export const mock_daily_sales = () => {
     
     const dailyTempData = {
-        month:3,
-        data:{
-            1:100,
-            2:400,
-            3:400,
-            5:344,
-            6:340,
-            7:0,
-            8:123,
-            9:412,
-            10:541,
-            11:123,
-        }
-    }
-
-    const dailyTempData2 = {
         month:4,
         data:{
             1:100,
@@ -403,6 +387,32 @@ export const mock_daily_sales = () => {
             9:321,
             10:432,
             11:412,
+        }
+    }
+
+    const dailyTempData2 = {
+        month:5,
+        data:{
+            1:100,
+            2:400,
+            3:400,
+            5:344,
+            6:340,
+            7:200,
+            8:123,
+            9:412,
+            10:541,
+            11:123,
+            12:110,
+            13:310,
+            14:300,
+            15:210,
+            16:200,
+            17:210,
+            18:190,
+            19:200,
+            20:250,
+            21:190
         }
     }
 
@@ -446,7 +456,7 @@ export const mock_monthly_sales = () => {
         
     }
 
-    const monthlyTempArray = [monthlyTempData, monthlyTempData2];
+    // const monthlyTempArray = [monthlyTempData, monthlyTempData2];
 
-    return monthlyTempArray;
+    return monthlyTempData2;
 }
