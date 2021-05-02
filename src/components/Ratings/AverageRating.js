@@ -1,26 +1,28 @@
-import React, {useState, useEffect} from 'react'
-import {RatingStar} from './RatingStar'
-import {average} from '../../utils/Utils'
+import React, { useState, useEffect } from 'react'
+import { RatingStar } from './RatingStar'
+import { average } from '../../utils/Utils'
 
-export const AverageRating = ({ratingList}) =>{
+export const AverageRating = ({ ratingList }) => {
 
     useEffect(() => {
-        setAverage([]);
+        // setAverage([]);
         getAverage();
     }, [ratingList])
 
     const [averageRating, setAverage] = useState([]);
 
-    function getAverage(){
+    function getAverage() {
+        if (ratingList.length === 0)
+            return;
         for (let i = 0; i < Math.round(average(ratingList)); i++) {
-            let temp = <RatingStar fill="yellow"/>
+            let temp = <RatingStar key={i} fill="yellow" />
             setAverage(averageRating => [...averageRating, temp]);
         }
     }
-    return(
+    return (
         <div>
             {averageRating}
-            <br/><br/>
+            <br /><br />
         </div>
     )
 }
