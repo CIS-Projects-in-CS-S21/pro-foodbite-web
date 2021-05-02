@@ -258,19 +258,28 @@ export const mock_archived_orders = [
         eta: "TBA",
         menuItems: [
             {
-                itemNumber: 1,
                 name: "Big Kahuna Burger",
                 price: 5.50,
                 options: "no tomato"
                 
             },
             {
-                itemNumber: 6,
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: "no tomato"
+                
+            },
+            {
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: "no tomato"
+                
+            },
+            {
                 name: "fries",
                 price: 2.70
             },
             {
-                itemNumber: 10,
                 name: "sprite",
                 price: 1.59
             }
@@ -286,21 +295,18 @@ export const mock_archived_orders = [
         id: "456",
         menuItems: [
             {
-                itemNumber: 3,
                 name: "Big Kahuna Chicken Sandwhich",
                 price: 6.50,
                 options: null
                 
             },
             {
-                itemNumber: 6,
                 name: "Big Kahuna Chicken Sandwhich",
                 price: 6.50,
                 options: null
                 
             },
             {
-                itemNumber: 9,
                 name: "Big Kahuna Chicken Fingers",
                 price: 5.70
             },

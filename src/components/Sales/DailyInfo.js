@@ -8,9 +8,8 @@ const VerticalDiv = styled.div`
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    margin-top: 1%;
     width: 60%; 
-    margin: 1% auto;
+    margin: 0 auto 1% auto;
 `
 
 const HorizontalDiv = styled.div`
@@ -35,6 +34,13 @@ const DailyCardBody = styled.h6`
     font-size: 1.4rem; 
 `
 
+const Header = styled.div`
+    font-family: "Amatic SC", cursive;
+    font-size: 2.4rem; 
+    font-weight: 800;
+    margin-bottom: 1.5%; 
+`;
+
 const dailyTempData = {
     pickUp:[{orderPrice:100}, {orderPrice:50}, {orderPrice:200},{orderPrice:50}],
     delivery:[{orderPrice:50}, {orderPrice:25},{orderPrice:75},{orderPrice:250},
@@ -55,7 +61,9 @@ export default function DailyInfo( { data } ) {
 
     return(
         <VerticalDiv>
-            Data: completed and archived orders for today
+            <Header>
+                Sales from Today's Archived Orders
+            </Header>
             <HorizontalDiv>
                 <DailyCard>
                     <DailyCardTitle>

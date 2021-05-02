@@ -4,10 +4,10 @@ import DailyInfo from '../components/Sales/DailyInfo'
 import MonthlyReport from '../components/Sales/MonthlyReport'
 import DailySalesReport from '../components/Sales/DailySalesReport'
 import PopluarStatus from './Sales/PopularStatus'
-import { mock_archived_orders, today_archived } from "../tempData"
+import { mock_archived_orders, today_archived, mock_daily_sales } from "../tempData"
 import { get_today_sales, sort_this_week } from "../utils/Utils"
 import { useUserContext } from "../context/UserContext"
-import { sort_today, get_sales_month } from "../utils/Utils"
+import { sort_today, get_sales_this_month } from "../utils/Utils"
 import "./analytics/analytics.css"
 
 const VerticalDiv = styled.div`
@@ -38,18 +38,18 @@ export default function Sales() {
     const [mock, set_mock] = useState(false);
     const [actual, set_actual] = useState([]);
 
+
     const [archived, set_archived] = useState([]); 
     const [today, set_today] = useState([]); 
+    const [month, set_month] = useState([]); 
     const [monthly, set_monthly] = useState([]); 
 
-    
 
     useEffect(() => {
         document.getElementById("type-1").style.color = "#e9eaeb";
     }, []);
 
     useEffect( () => {
-
         // get archived orders, parse ... 
         const get_today = async () => {
 
@@ -72,9 +72,8 @@ export default function Sales() {
                     set_today(filtered);
 
                     // get daily sales for current month
-                    filtered = get_sales_month(archived_orders); 
-
-
+                    filtered = get_sales_this_month(archived_orders); 
+                    set_month(filtered);
                 }
             });
         }
@@ -100,8 +99,8 @@ export default function Sales() {
                     set_archived(mock_archived_orders); 
                     break;
                 case 3:
-                    set_actual(monthly);
-                    set_monthly([]);
+                    set_actual(month);
+                    set_month(mock_daily_sales());
                     break;
                 case 4:
                     // set_actual(monthly);
@@ -120,10 +119,9 @@ export default function Sales() {
                     set_archived(actual);
                     break;
                 case 3:
-                    set_monthly(actual);
+                    set_month(actual);
                     break;
                 case 4:
-                    
                     // TODO
                     break; 
                 default:
@@ -145,7 +143,7 @@ export default function Sales() {
                 return <PopluarStatus data={archived}></PopluarStatus>
 
             case type.TYPE_3:
-                return <DailySalesReport theDataArray={""}></DailySalesReport>
+                return <DailySalesReport theDataArray={[month]}></DailySalesReport>
 
             case type.TYPE_4:
                 return <MonthlyReport theDataArray={""}></MonthlyReport>
@@ -170,17 +168,16 @@ export default function Sales() {
             <Header>{restaurant.name}'S SALES</Header>
             <Navigation>
                 <Field id="type-1" onClick={() => handle_navigate(type.DAILY_INFO)}>Sales Today</Field>
-                <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Popular Items</Field>
-                <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Something</Field>
+                <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Top Items</Field>
+                <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Daily Sales</Field>
                 <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Something</Field>
             </Navigation>
 
 
-
             <Mock>
-                MOCK DATA
+                MOCK
                 <input class="toggle-mock-input" type="checkbox" id="toggle" onChange={(e) => handle_use_mock_data(e)}/>
-                <label class="toggle-mock-label" for="toggle"/>
+                <label class="toggle-mock-label" for="toggle"></label>
             </Mock>
 
             {render_screen()}
@@ -201,7 +198,7 @@ export default function Sales() {
 const Navigation = styled.div`
     position: absolute; 
     background-color: #333a40; 
-    padding: 4px; 
+    padding: 10px; 
     left: 4%; 
 `; 
 
@@ -215,7 +212,7 @@ const Header = styled.div`
 
 const Field = styled.div`
     padding: 10px; 
-    font-size: 1.5rem; 
+    font-size: 1.6rem; 
 
     color: #868e95;
 
@@ -226,43 +223,12 @@ const Field = styled.div`
 `;
 
 const Mock = styled.div`
+    font-family: "Amatic SC", cursive;
+    font-size: 1.4rem;
+    font-weight: 600;  
     display: flex;
-    justify-content: center; 
+    justify-content: flex-end; 
     align-items: center; 
     width: 50%;
-    margin: 1% auto;
+    margin: 1% auto 0 auto; 
 `; 
-
-// const MockInput = styled.input`
-//     visibility: hidden;
-//     height: 0;
-//     width: 0
-
-// `; 
-
-// const MockLabel = styled.label`
-//     cursor: pointer;
-//     width: 100px;
-//     height: 50px; 
-//     border-radius: 100px; 
-//     background-color: #333a40;    
-//     display: block;
-// 	position: relative;
-
-//     &:after{
-//         content: "";
-//         position: absolute;
-//         top: 5px;
-//         left: 5px;
-//         width: 40px;
-//         height: 40px;
-//         border-radius: 90px;
-//         background-color: #e9eaeb;
-
-//         transition: 0.3s; 
-//     }
-
-
-
-
-// `; 

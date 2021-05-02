@@ -12,12 +12,16 @@ const HorizontalDiv = styled.div`
 
 
 const ChartSize = styled.div`
-    width:500px;
+    width: 50%;
+    margin: 0 auto; 
+
+    // border: 1px solid blue; 
 `
 
 const ChartButton = styled.button`
     background-color:white;
     border:none;
+
     :hover{
         background-color:rgba(125,125,125,0.5);
     }
@@ -27,14 +31,14 @@ const OptionButton = styled.button`
     border: none;
     border-right: 1px solid;
     background-color:white;
+
     :hover{
         background-color:rgba(125,125,125,0.5);
     }
 `
 
 export default function DailySalesReport({ theDataArray }) {
-
-    // TODO, WEEK NOT MONTH? 
+    // SUPPORT FOR ONLY CURRENT MONTH SO FAR ...
 
     const [theData, setData] = useState(theDataArray[0]);
     const [theIndex, setIndex] = useState(0);
@@ -45,7 +49,10 @@ export default function DailySalesReport({ theDataArray }) {
     const [theChart, setChart] = useState();
     const [chartType, setType] = useState(1);
 
+
     useEffect(() => {
+
+
         data.labels=[];
         
         data.datasets[0].data=[];
@@ -156,7 +163,8 @@ export default function DailySalesReport({ theDataArray }) {
         <ChartSize>
             <HorizontalDiv>
                 <ChartButton onClick={()=>{setIndex(theIndex-1)}} disabled={!leftClick}>←</ChartButton>
-                <h5>Daily Sales of Month {theData.month}</h5>
+                {/* <h5>Daily Sales of Month {theData.month}</h5> */}
+                <h5>Daily Sales from This Month: {new Date().getMonth()+1}</h5>
                 <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}>→</ChartButton>
             </HorizontalDiv>
             <HorizontalDiv>
