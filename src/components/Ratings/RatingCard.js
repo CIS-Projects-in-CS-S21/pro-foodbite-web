@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import {RatingStar} from './RatingStar'
-import {SearchContent, SearchUser} from './Search'
+import { RatingStar } from './RatingStar'
+import { SearchContent, SearchUser } from './Search'
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -31,7 +31,7 @@ const RatingInternal = styled.div`
     display:flex;
     flex-direction:column;
     width:100%;
-    text-align:left;
+    p-align:left;
     border-bottom:1px dashed;
 `
 
@@ -73,14 +73,13 @@ const MoreButton = styled.button`
 `
 
 
-export const RatingCard = ({userRating}) => {
+export const RatingCard = ({ userRating }) => {
 
     const [ratingList, setList] = useState([]);
-    const [ratingData, setData] = useState(userRating);
     const [ratingIndex, setIndex] = useState(0);
 
     const [selectRating, setSelect] = useState([]);
-    
+
     const [selectTrue, setSelectTrue] = useState(false);
 
     const [chooseRating, setChooseRating] = useState(-1);
@@ -89,93 +88,96 @@ export const RatingCard = ({userRating}) => {
     const indexStep = 50;
 
 
-    useEffect(()=>{
+    useEffect(() => {
         getFromDifferentData();
-    }, [ratingIndex, selectTrue, selectRating]);
+    }, [ratingIndex, selectTrue, selectRating, userRating]);
 
 
-    function resetListAndIndex(){
+    function resetListAndIndex() {
         setList([]);
         setIndex(0);
     }
 
-    function getFromDifferentData(){
-        if(selectTrue){
+    function getFromDifferentData() {
+        if (selectTrue) {
             getInfoFromData(selectRating);
-            if(ratingIndex + indexStep >= selectRating.length-1){
+            if (ratingIndex + indexStep >= selectRating.length - 1) {
                 setIndex(selectRating.length);
             }
-        }else{
-            getInfoFromData(ratingData);
-            if(ratingIndex + indexStep >= ratingData.length -1){
-                setIndex(ratingData.length);
+        } else {
+            getInfoFromData(userRating);
+            if (ratingIndex + indexStep >= userRating.length - 1) {
+                setIndex(userRating.length);
             }
         }
     }
 
-    function getInfoFromData(displayData){
-        for(let i = ratingIndex; i < Math.min(ratingIndex + indexStep,displayData.length); i++){
-            const element =displayData[i];
+    function getInfoFromData(displayData) {
+        const elements = [];
+        for (let i = ratingIndex; i < Math.min(ratingIndex + indexStep, displayData.length); i++) {
+            const element = displayData[i];
             let starList = [];
             for (let x = 0; x < element.rating; x++) {
-                starList.push(<RatingStar fill="yellow"/>)
+                starList.push(<RatingStar key={x} fill="yellow" />)
             }
-            let temp = 
-            <RatingLayout>
-                <VerticalDiv>
-                    <RatingImg src="/assets/profile.png"></RatingImg>
-                    <text>{element.timeStamp}</text>
-                </VerticalDiv>
-                <RatingInternal>
-                    <NameAndStar>
-                        <RatingName>{element.user}</RatingName>
-                        {starList}
-                    </NameAndStar>
-                    <text>
-                        {element.ratingContent}
-                    </text>
-                </RatingInternal>
-            </RatingLayout>
-            setList(ratingList => [...ratingList, temp]);
+            let temp =
+                <RatingLayout key={i}>
+                    <VerticalDiv>
+                        <RatingImg src="/assets/profile.png"></RatingImg>
+                        <p>{element.timeStamp}</p>
+                    </VerticalDiv>
+                    <RatingInternal>
+                        <NameAndStar>
+                            <RatingName>{element.user}</RatingName>
+                            {starList}
+                        </NameAndStar>
+                        <p>
+                            {element.ratingContent}
+                        </p>
+                    </RatingInternal>
+                </RatingLayout>
+            elements.push(temp);
+
         }
+        setList(ratingList => [...ratingList, elements]);
     }
 
-    function showMoreFunction(){
-        if(selectTrue){
-            if(ratingIndex < selectRating.length){
+    function showMoreFunction() {
+        if (selectTrue) {
+            if (ratingIndex < selectRating.length) {
                 setIndex(Math.min(ratingIndex + indexStep, selectRating.length));
             }
         }
-        else{
-            if(ratingIndex < ratingData.length){
-                setIndex(Math.min(ratingIndex + indexStep, ratingData.length));
+        else {
+            if (ratingIndex < userRating.length) {
+                setIndex(Math.min(ratingIndex + indexStep, userRating.length));
             }
         }
     }
 
-    function checkSelected(){
-        if(!selectTrue)
+    function checkSelected() {
+        if (!selectTrue)
             setSelectTrue(true);
     }
 
-    function ratingSelect(num){
+    function ratingSelect(num) {
         setSortBy();
         setChooseRating(num);
         resetListAndIndex();
-        setSelect(ratingData.filter(a => a.rating === num));
+        setSelect(userRating.filter(a => a.rating === num));
         checkSelected();
     }
 
-    function sortByDate(){
+    function sortByDate() {
         setSortBy("byDate");
         resetListAndIndex();
         let temp = [];
-        if(selectTrue){
+        if (selectTrue) {
             temp = [...selectRating];
-        }else{
-            temp = [...ratingData];
+        } else {
+            temp = [...userRating];
         }
-        temp.sort((a,b) => {
+        temp.sort((a, b) => {
             let tempA = a.timeStamp.split("/");
             let reA = tempA[2] + tempA[0] + tempA[1];
             let tempB = b.timeStamp.split("/");
@@ -186,126 +188,126 @@ export const RatingCard = ({userRating}) => {
         checkSelected();
     }
 
-    function sortByContent(){
+    function sortByContent() {
         setSortBy("contentLength")
         resetListAndIndex();
         let temp = [];
-        if(selectTrue){
+        if (selectTrue) {
             temp = [...selectRating];
-        }else{
-            temp = [...ratingData];
+        } else {
+            temp = [...userRating];
         }
-        setSelect(temp.sort((a,b) => a.ratingContent.length < b.ratingContent.length?1 : -1));
+        setSelect(temp.sort((a, b) => a.ratingContent.length < b.ratingContent.length ? 1 : -1));
         checkSelected();
     }
 
 
-    function sortFromBadToGood(){
+    function sortFromBadToGood() {
         setSortBy("badToGood");
         resetListAndIndex();
         let temp = [];
-        if(selectTrue){
+        if (selectTrue) {
             temp = [...selectRating];
-        }else{
-            temp = [...ratingData];
+        } else {
+            temp = [...userRating];
         }
-        setSelect(temp.sort((a,b) => a.rating > b.rating? 1: -1))
+        setSelect(temp.sort((a, b) => a.rating > b.rating ? 1 : -1))
         checkSelected();
     }
 
-    function sortFromGoodToBad(){
+    function sortFromGoodToBad() {
         setSortBy("goodToBad");
         resetListAndIndex();
         let temp = [];
-        if(selectTrue){
+        if (selectTrue) {
             temp = [...selectRating];
-        }else{
-            temp = [...ratingData];
+        } else {
+            temp = [...userRating];
         }
-        setSelect(temp.sort((a,b) => a.rating < b.rating? 1: -1))
+        setSelect(temp.sort((a, b) => a.rating < b.rating ? 1 : -1))
         checkSelected();
     }
 
-    function findRatingWithContent(e){
+    function findRatingWithContent(e) {
         e.stopPropagation()
         var el = document.getElementById("searchContent");
-        if(el.value !== ""){
+        if (el.value !== "") {
             setChooseRating(-1);
             setSortBy(-1);
             resetListAndIndex();
-            let temp = [...ratingData];
+            let temp = [...userRating];
             setSelect(temp.filter(a => a.ratingContent.search(el.value) > -1));
             checkSelected();
         }
     }
 
-    function findRatingWithUserName(e){
+    function findRatingWithUserName(e) {
         e.stopPropagation();
         var el = document.getElementById("searchUser");
-        if(el.value !== ""){
+        if (el.value !== "") {
             setChooseRating(-1);
             setSortBy(-1);
             resetListAndIndex();
-            let temp = [...ratingData];
+            let temp = [...userRating];
             setSelect(temp.filter(a => a.user.search(el.value) > -1));
             checkSelected();
         }
     }
 
 
-    if(ratingList[0] == null){
-        return(
-            <div>
-                <button style={{backgroundColor:'white', border:'none'}}
-                onClick={()=>{
-                    resetListAndIndex();
-                    setSelectTrue(false);
-                    setSortBy("all");
-                    setChooseRating(-1);
-                }}>All Ratings</button>
-                <h2>There is no Ratings</h2>
-            </div>
-        )
-    }
- 
+    return (
+        <>
+            {userRating.length === 0 ? (
+                <div>
+                    <button style={{ backgroundColor: 'white', border: 'none' }}
+                        onClick={() => {
+                            resetListAndIndex();
+                            setSelectTrue(false);
+                            setSortBy("all");
+                            setChooseRating(-1);
+                        }}>All Ratings</button>
+                    <h2>There is no Ratings</h2>
+                </div>
+            ) : (
 
-    return(
-        <div>
-            <HorizontalDiv>
-                Rating:
-                <RatingButton disabled={chooseRating === 1} onClick={() =>{
-                    ratingSelect(1);
-                }}>1</RatingButton>
-                <RatingButton disabled={chooseRating === 2} onClick={()=>{
-                    ratingSelect(2);
-                }}>2</RatingButton>
-                <RatingButton disabled={chooseRating === 3} onClick={() =>{
-                    ratingSelect(3);
-                }}>3</RatingButton>
-                <RatingButton disabled={chooseRating === 4} onClick={() =>{
-                    ratingSelect(4);
-                }}>4</RatingButton>
-                <RatingButton disabled={chooseRating === 5} onClick={() =>{
-                    ratingSelect(5);
-                }}>5</RatingButton>
+                <div>
+                    <HorizontalDiv>
+                        Rating:
+                <RatingButton disabled={chooseRating === 1} onClick={() => {
+                            ratingSelect(1);
+                        }}>1</RatingButton>
+                        <RatingButton disabled={chooseRating === 2} onClick={() => {
+                            ratingSelect(2);
+                        }}>2</RatingButton>
+                        <RatingButton disabled={chooseRating === 3} onClick={() => {
+                            ratingSelect(3);
+                        }}>3</RatingButton>
+                        <RatingButton disabled={chooseRating === 4} onClick={() => {
+                            ratingSelect(4);
+                        }}>4</RatingButton>
+                        <RatingButton disabled={chooseRating === 5} onClick={() => {
+                            ratingSelect(5);
+                        }}>5</RatingButton>
                 Order By:
                 <RatingButton disabled={sortBy === "byDate"} onClick={sortByDate}>Date</RatingButton>
-                <RatingButton style={{display:(chooseRating < 0? 'flex':'none')}} disabled={sortBy === "badToGood"} onClick={sortFromBadToGood}>1 to 5</RatingButton>
-                <RatingButton style={{display:(chooseRating < 0? 'flex':'none')}} disabled={sortBy === "goodToBad"} onClick={sortFromGoodToBad}>5 to 1</RatingButton>
-                <RatingButton disabled={sortBy === "contentLength"} onClick={sortByContent}>content</RatingButton>
-                <button style={{backgroundColor:'white', border:'none'}}
-                    disabled={!selectTrue} onClick={()=>{
-                        resetListAndIndex();
-                        setSortBy("all");
-                        setChooseRating(-1);
-                        setSelectTrue(false);
-                    }}>All Ratings</button>
+                        <RatingButton style={{ display: (chooseRating < 0 ? 'flex' : 'none') }} disabled={sortBy === "badToGood"} onClick={sortFromBadToGood}>1 to 5</RatingButton>
+                        <RatingButton style={{ display: (chooseRating < 0 ? 'flex' : 'none') }} disabled={sortBy === "goodToBad"} onClick={sortFromGoodToBad}>5 to 1</RatingButton>
+                        <RatingButton disabled={sortBy === "contentLength"} onClick={sortByContent}>content</RatingButton>
+                        <button style={{ backgroundColor: 'white', border: 'none' }}
+                            disabled={!selectTrue} onClick={() => {
+                                resetListAndIndex();
+                                setSortBy("all");
+                                setChooseRating(-1);
+                                setSelectTrue(false);
+                            }}>All Ratings</button>
                 Search For:
-                <SearchContent findContent={findRatingWithContent}/>
-                <SearchUser findContent={findRatingWithUserName}/>
-            </HorizontalDiv>
-            {ratingList}
-            <MoreButton disabled={selectTrue? ratingIndex >= selectRating.length : ratingIndex >= ratingData.length} onClick={showMoreFunction}>Show More</MoreButton>
-        </div>  
+                <SearchContent findContent={findRatingWithContent} />
+                        <SearchUser findContent={findRatingWithUserName} />
+                    </HorizontalDiv>
+                    {ratingList}
+                    <MoreButton disabled={selectTrue ? ratingIndex >= selectRating.length : ratingIndex >= userRating.length} onClick={showMoreFunction}>Show More</MoreButton>
+                </div>
+            )}
+        </>
     )
 }
