@@ -27,10 +27,14 @@ export default function Sales() {
     const [actual, set_actual] = useState([]);
 
 
-    const [archived, set_archived] = useState([]); 
+    const [archived, set_archived] = useState([]);
+    const [actual_archived, set_actual_archived] = useState([]);  
     const [today, set_today] = useState([]); 
+    const [actual_today, set_actual_today] = useState([]); 
     const [month, set_month] = useState([]); 
+    const [actual_month, set_actual_month] = useState([]); 
     const [year, set_year] = useState([]); 
+    const [actual_year, set_actual_year] = useState([]); 
 
 
     useEffect(() => {
@@ -52,20 +56,24 @@ export default function Sales() {
                     }
 
                     set_archived(archived_orders); 
+                    set_actual_archived(archived_orders);
 
                     // todays archived orders
                     let filtered = sort_today(archived_orders); 
 
                     // filter out those canceled too?
                     set_today(filtered);
+                    set_actual_today(filtered);
 
                     // get daily sales for current month
                     filtered = get_sales_this_month(archived_orders); 
                     set_month(filtered);
+                    set_actual_month(filtered);
 
                     // get monthly sales for current year
                     filtered = get_sales_this_year(archived_orders);
                     set_year(filtered);
+                    set_actual_year(filtered);
                 }
             });
         }
@@ -81,19 +89,19 @@ export default function Sales() {
         if(mock === false){
             switch(active){
                 case 1:
-                    set_actual(today); 
+                    set_actual_today(today); 
                     set_today(today_archived);
                     break; 
                 case 2:
-                    set_actual(archived);
+                    set_actual_archived(archived);
                     set_archived(mock_archived_orders); 
                     break;
                 case 3:
-                    set_actual(month);
+                    set_actual_month(month);
                     set_month(mock_daily_sales()[1]);
                     break;
                 case 4:
-                    set_actual(year);
+                    set_actual_year(year);
                     set_year(mock_monthly_sales());
                     break; 
                 default:
@@ -103,16 +111,16 @@ export default function Sales() {
         else{
             switch(active){
                 case 1:
-                    set_today(actual);
+                    set_today(actual_today);
                     break; 
                 case 2:
-                    set_archived(actual);
+                    set_archived(actual_archived);
                     break;
                 case 3:
-                    set_month(actual);
+                    set_month(actual_month);
                     break;
                 case 4:
-                    set_year(actual); 
+                    set_year(actual_year); 
                     break; 
                 default:
                     break; 
@@ -148,7 +156,13 @@ export default function Sales() {
         document.getElementById(`type-${active}`).removeAttribute("style"); 
         document.getElementById(`type-${number}`).style.color = "#e9eaeb";
         document.getElementById("toggle").checked = false;
-        set_active(number); 
+
+        set_today(actual_today);
+        set_month(actual_month);
+        set_year(actual_year);
+        set_archived(actual_archived);
+
+        set_active(number);
         set_mock(false);
       }
 

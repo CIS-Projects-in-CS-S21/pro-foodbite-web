@@ -83,7 +83,7 @@ export default function ViewHistory( {orders, today, closeShow } ) {
         let time = new Date(0);
         time.setUTCSeconds(timestamp);
         
-        return `${time.getDay()}/${time.getMonth()}/${time.getFullYear().toString().substr(-2)}`;
+        return `${time.getMonth()+1}/${time.getDate()}/${time.getFullYear().toString().substr(-2)}`;
     }
 
     const get_full_date = (timestamp) => {

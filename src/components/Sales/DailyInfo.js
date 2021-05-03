@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { mock_pending_orders } from '../../tempData'
 import { get_today_sales, get_type_sales, get_type_orders } from "../../utils/Utils"
 
 const VerticalDiv = styled.div`
@@ -59,6 +58,8 @@ function calcTotalPrice(orders){
 
 export default function DailyInfo( { data } ) {
 
+    console.log(data);
+
     return(
         <VerticalDiv>
             <Header>
@@ -78,7 +79,7 @@ export default function DailyInfo( { data } ) {
                         Pick-up Orders:
                     </DailyCardTitle>
                     <DailyCardBody  data-testid="completed-length">
-                        {get_type_orders(data, "COMPLETED")}
+                        {get_type_orders(data, "PICKED-UP")}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
@@ -104,7 +105,7 @@ export default function DailyInfo( { data } ) {
                         Pick-Up Sales:
                     </DailyCardTitle>
                     <DailyCardBody data-testid="picked-up-sales">
-                        ${get_type_sales(data, "COMPLETED")}
+                        ${get_type_sales(data, "PICKED-UP")}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>

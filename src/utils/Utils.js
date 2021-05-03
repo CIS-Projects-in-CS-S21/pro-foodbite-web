@@ -197,6 +197,7 @@ export function sort_day(orders, day_selected){
 
 export function get_today_sales(today_orders){
 
+
     if(today_orders.length === 0) return "0.00";
 
     let total = 0.00;
@@ -215,6 +216,8 @@ export function get_today_sales(today_orders){
 
 
 export function get_type_sales(today_orders, status){
+
+    // console.log(status);
 
     if(today_orders.length === 0) return "0.00"; 
 

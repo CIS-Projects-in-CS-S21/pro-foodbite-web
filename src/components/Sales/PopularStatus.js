@@ -79,7 +79,6 @@ export default function PopluarStatus({ data }) {
             hoursArray.forEach(b => counts[b] = counts[b] ? counts[b] + 1: 1);   
 
             let keys_sorted = Object.keys(counts).sort( (a,b) => counts[a]-counts[b]).reverse();
-            console.log(keys_sorted);
 
             let i = 0;
 
