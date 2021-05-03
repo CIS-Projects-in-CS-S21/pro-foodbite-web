@@ -176,13 +176,14 @@ export function sort_day(orders, day_selected){
     let epoch_right = Math.round(Date.now() / 1000); // now
     let epoch_left = epoch_right - 604800; // 6.048e+8 ms in a week, take current epoch, go back week 
 
+
     // filter to get orders for the current week
     filtered = orders.filter( order => {
         return (epoch_left <= order.createdAt && order.createdAt <= epoch_right);
     });
 
     // filter to get orders for selected day
-    filtered = orders.filter( order => {
+    filtered = filtered.filter( order => {
 
         const date = new Date(0);
         date.setUTCSeconds(order.createdAt);
@@ -201,7 +202,7 @@ export function get_today_sales(today_orders){
     let total = 0.00;
 
     today_orders = today_orders.filter( order => {
-        return order.status === "DELIVERED" || order.status === "COMPLETED"; // might change status to picked-up instead of completed
+        return order.status === "DELIVERED" || order.status === "PICKED-UP"; // might change status to picked-up instead of completed
     });
 
     today_orders.forEach( order => {

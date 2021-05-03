@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-import { calc_amount, get_date_full, sort_day } from "../../utils/Utils"
+import { calc_amount, sort_day } from "../../utils/Utils"
 
 const HistoryItem = styled.button`
     border:none;
@@ -177,9 +177,9 @@ export default function ViewHistory( {orders, today, closeShow } ) {
                     </Select>
 
                     <Label>Day</Label>
-                    <Select onChange={(e) => handle_day_week(e)} id="day-of-the-week">
-                        <Option disabled selected hidden>Today</Option>
-                        {days.map( day => <Option value={day} id={day}>{day}</Option>)}
+                    <Select onChange={(e) => handle_day_week(e)} id="day-of-the-week" defaultValue={"DEFAULT"}>
+                        <Option disabled value="DEFAULT" hidden>Today</Option>
+                        {days.map( day => <Option value={day} id={day} key={day}>{day}</Option>)}
                     </Select>
 
                 </div>

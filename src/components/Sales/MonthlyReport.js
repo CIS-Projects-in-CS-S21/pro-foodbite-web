@@ -12,7 +12,8 @@ const HorizontalDiv = styled.div`
 `
 
 const ChartSize = styled.div`
-    width:500px;
+    // width:500px;
+    width: 50%;
 `
 
 const ChartButton = styled.button`

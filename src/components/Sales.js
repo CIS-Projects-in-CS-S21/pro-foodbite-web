@@ -9,16 +9,6 @@ import { useUserContext } from "../context/UserContext"
 import { sort_today, get_sales_this_month, get_sales_this_year } from "../utils/Utils"
 import "./analytics/analytics.css"
 
-const VerticalDiv = styled.div`
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-`
-const HorizontalDiv = styled.div`
-    display:flex;
-    justify-content:center;
-`
 
 export default function Sales() {
 
@@ -32,7 +22,6 @@ export default function Sales() {
 
     const { restaurant, userDb, get_doc } = useUserContext(); 
     
-    // const [loading, set_loading] = useState(false);
     const [active, set_active] = useState(1);
     const [mock, set_mock] = useState(false);
     const [actual, set_actual] = useState([]);
@@ -50,7 +39,7 @@ export default function Sales() {
 
     useEffect( () => {
         // get archived orders, parse ... 
-        const get_today = async () => {
+        const get_data = async () => {
 
             await get_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`)
             .then( doc => {
@@ -81,9 +70,7 @@ export default function Sales() {
             });
         }
 
-        get_today(); 
-
-        // ex. parse archived orders for day (for daily sales) (USE your util function to get orders from current week)
+        get_data(); 
 
     }, [get_doc, userDb.ownedRestaurants]); 
 
@@ -184,16 +171,6 @@ export default function Sales() {
             </Mock>
 
             {render_screen()}
-
-                {/* <VerticalDiv>
-                    <DailyInfo data={mock_archived_orders}></DailyInfo>
-                    <div>
-                        <PopluarStatus data={today_archived}></PopluarStatus>
-                        <DailySalesReport theDataArray={dailyTempArray}></DailySalesReport>
-                        <MonthlyReport theDataArray={monthlyTempArray}>
-                        </MonthlyReport>
-                    </div>
-                </VerticalDiv> */}
         </Fragment>
     )
 }

@@ -133,8 +133,8 @@ function OrderStatus({selectOrder}){
             width:"50%", textAlign:'left',
             }}>
             <br/>
-            <StatusLi>Name: <Value>{selectOrder.name}</Value></StatusLi>
-            <StatusLi>Address: <Value>{selectOrder.address}</Value></StatusLi>
+            <StatusLi key={selectOrder.name}>Name: <Value>{selectOrder.name}</Value></StatusLi>
+            <StatusLi key={selectOrder.address}>Address: <Value>{selectOrder.address}</Value></StatusLi>
             <br/>
             <br/>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "1.5%"}}>
@@ -175,11 +175,6 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setR
                 <ActionButton data-testid="update-status" style={{width:'50%', height:'100%', backgroundColor: "#5bdebb", fontWeight: 500, borderLeft: "1px solid #5a5a5a"}} onClick={() => setShow(!show)}>
                     UPDATE STATUS</ActionButton>
                 <StateUpdate show={show} style={{width:'21.3%'}}>
-                    {/* <ActionButton onClick={()=>{
-                            setArchived(selectOrder);
-                            setShow(!show);
-                        }
-                    }>Archived</ActionButton> */}
                     <ActionButton onClick={()=>{
                         setInProgress(selectOrder);
                         setShow(!show);
