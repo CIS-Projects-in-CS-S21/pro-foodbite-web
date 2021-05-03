@@ -173,7 +173,7 @@ export default function Sales() {
                 <Field id="type-1" onClick={() => handle_navigate(type.DAILY_INFO)}>Today</Field>
                 <Field id="type-3" onClick={() => handle_navigate(type.TYPE_3)}>Daily</Field>
                 <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Monthly</Field>
-                <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Items</Field>
+                <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Popular</Field>
             </Navigation>
 
 

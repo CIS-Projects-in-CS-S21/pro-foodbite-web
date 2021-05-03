@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { Fragment } from 'react'
 import styled from 'styled-components'
+import { convertTime24to12 } from "../../utils/Utils"
 
 const VerticalDiv = styled.div`
     display:flex;
@@ -12,6 +13,7 @@ const VerticalDiv = styled.div`
 const HorizontalDiv = styled.div`
     display:flex;
     justify-content:center;
+    flex-direction: column; 
 `
 
 const PopluarLi = styled.li`
@@ -64,7 +66,35 @@ export default function PopluarStatus({ data }) {
 
         }
 
+        function popularHours(){
+
+            let hoursArray = data.map( order => {
+                const time = parseFloat(order.createdAt) * 1000; 
+                const date = new Date(time);
+
+                return date.getHours(); 
+            });
+
+            let counts = {};
+            hoursArray.forEach(b => counts[b] = counts[b] ? counts[b] + 1: 1);   
+
+            let keys_sorted = Object.keys(counts).sort( (a,b) => counts[a]-counts[b]).reverse();
+            console.log(keys_sorted);
+
+            let i = 0;
+
+            keys_sorted.forEach(key => {
+                
+                let temp = key.toUpperCase();
+                setHour(popluarHour => [...popluarHour, temp]);
+
+                ++i;
+                if(i === 12) return; 
+            });
+        }
+
         topItems();
+        popularHours();
 
     }, [data]); 
 
@@ -77,10 +107,32 @@ export default function PopluarStatus({ data }) {
 
         return (
             <div>
-                <Header>Top Items</Header>
+                <Header>Top Items - All Time</Header>
                 <ol>
                     {items.map( item => {
                         return <PopluarLi key={item}>{item}</PopluarLi>
+                    })}
+                </ol>
+            </div>
+        );
+    }
+
+    const get_top_hours = () => {
+
+        if(popluarHour.length === 0) return; 
+
+        let hours = popluarHour; 
+
+        return (
+            <div>
+                <Header>Busiest Hours - All Time</Header>
+                <ol>
+                    {hours.map( hour => {
+
+                        if(hour.length === 1 || hour === "12") hour = `${hour} AM`
+                        else hour = convertTime24to12(hour); 
+
+                        return <PopluarLi key={hour}>{hour}</PopluarLi>
                     })}
                 </ol>
             </div>
@@ -114,10 +166,9 @@ export default function PopluarStatus({ data }) {
             <VerticalDiv>
                 {get_top_items()}
             </VerticalDiv>
-            {/* <VerticalDiv>  
-                <h4 style={{marginLeft:'30px'}}>Top Hours</h4>
-                {popluarHour}
-            </VerticalDiv> */}
+            <VerticalDiv>
+                {get_top_hours()}   
+            </VerticalDiv> 
         </HorizontalDiv>    
     )
 }

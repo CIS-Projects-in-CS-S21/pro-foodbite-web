@@ -251,7 +251,7 @@ export const mock_archived_orders = [
     {
         timestamp: "4/4/2021, 2:25:41 PM", 
         status: "DELIVERED",
-        receivedDate : "3/29/2021",
+        createdAt: 1620003084,
         name: "Ben Simmons",
         address: "4123 holder street",
         id: "123",
@@ -288,7 +288,7 @@ export const mock_archived_orders = [
     {
         timestamp: "4/4/2021, 2:28:41 PM", 
         eta: "TBA",
-        receivedDate : "3/29/2021",
+        createdAt: 1620003084,
         status: "CANCELED",
         name: "TOBIAS HARRIS",
         address: "123 place holder street",
