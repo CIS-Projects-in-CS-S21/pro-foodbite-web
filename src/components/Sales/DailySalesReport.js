@@ -33,10 +33,10 @@ const OptionButton = styled.button`
     }
 `
 
-export default function DailySalesReport({ theData }) {
+export default function DailySalesReport({ theDataArray}) {
     // SUPPORT FOR CURRENT MONTH SO FAR ...
 
-    // const [theData, setData] = useState(theDataArray[0]);
+    const [theData, setData] = useState(theDataArray[0]);
     const [theIndex, setIndex] = useState(0);
 
     const [leftClick, setLeft] = useState(false);
@@ -44,7 +44,6 @@ export default function DailySalesReport({ theData }) {
 
     const [theChart, setChart] = useState();
     const [chartType, setType] = useState(1);
-
 
     useEffect(() => {
 
@@ -137,36 +136,40 @@ export default function DailySalesReport({ theData }) {
 
 
 
-    // useEffect(() => {
-    //     checkClickable();
-    //     setData(theDataArray[theIndex]);
-    // }, [theIndex])
+    useEffect(() => {
+        checkClickable();
+        setData(theDataArray[theIndex]);
+    }, [theIndex])
     
-    // if(theDataArray === null){
-    //     return null;
-    // }
+    if(theDataArray === null){
+        return null;
+    }
 
+    function checkClickable(){
+        if(theIndex === 0){
+            setLeft(false);
+        }else{
+            setLeft(true);
+        }
+        if(theIndex >= theDataArray.length-1){
+            setRight(false);
+        }else{
+            setRight(true);
+        }
+    }
 
+    function get_month_header(){
 
-    // function checkClickable(){
-    //     if(theIndex === 0){
-    //         setLeft(false);
-    //     }else{
-    //         setLeft(true);
-    //     }
-    //     if(theIndex >= theDataArray.length-1){
-    //         setRight(false);
-    //     }else{
-    //         setRight(true);
-    //     }
-    // }
+        if(theIndex === new Date().getMonth()) return <Header>Daily Sales from This Month: {new Date().getMonth()+1}</Header>
+        else return <Header>Daily Sales from Month: {theIndex + 1}</Header>
+    }
 
     return(
         <ChartSize>
             <HorizontalDiv>
                 <ChartButton onClick={()=>{setIndex(theIndex-1)}} disabled={!leftClick}>←</ChartButton>
                 {/* <h5>Daily Sales of Month {theData.month}</h5> */}
-                <Header>Daily Sales from This Month: {new Date().getMonth()+1}</Header>
+                {get_month_header()}
                 <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}>→</ChartButton>
             </HorizontalDiv>
             <HorizontalDiv style={{margin: "1% 0 .5% 0"}}>

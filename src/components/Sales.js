@@ -4,9 +4,9 @@ import DailyInfo from '../components/Sales/DailyInfo'
 import MonthlyReport from '../components/Sales/MonthlyReport'
 import DailySalesReport from '../components/Sales/DailySalesReport'
 import PopluarStatus from './Sales/PopularStatus'
-import { mock_archived_orders, today_archived, mock_daily_sales, mock_monthly_sales } from "../tempData"
+import { mock_archived_orders, today_archived, mock_monthly_sales } from "../tempData"
 import { useUserContext } from "../context/UserContext"
-import { sort_today, get_sales_this_month, get_sales_this_year } from "../utils/Utils"
+import { sort_today, get_sales_this_month, get_sales_this_year, get_sales_by_month } from "../utils/Utils"
 import "./analytics/analytics.css"
 
 
@@ -24,8 +24,6 @@ export default function Sales() {
     
     const [active, set_active] = useState(1);
     const [mock, set_mock] = useState(false);
-    const [actual, set_actual] = useState([]);
-
 
     const [archived, set_archived] = useState([]);
     const [actual_archived, set_actual_archived] = useState([]);  
@@ -35,6 +33,10 @@ export default function Sales() {
     const [actual_month, set_actual_month] = useState([]); 
     const [year, set_year] = useState([]); 
     const [actual_year, set_actual_year] = useState([]); 
+
+
+    const [months, set_months] = useState([]); 
+    const [actual_months, set_actual_months] = useState([]); 
 
 
     useEffect(() => {
@@ -74,6 +76,22 @@ export default function Sales() {
                     filtered = get_sales_this_year(archived_orders);
                     set_year(filtered);
                     set_actual_year(filtered);
+
+                    const current_month = new Date().getMonth();
+                    let months_arr = [];
+
+                    for(let i = current_month; i !== -1; --i) months_arr.push(i);
+
+                    let monthlyArray = []; 
+
+                    months_arr.forEach( month => {
+                        filtered = get_sales_by_month(archived_orders, month); 
+                        monthlyArray.push(filtered);
+                    });
+
+                    monthlyArray = monthlyArray.reverse();
+                    set_months(monthlyArray); 
+                    set_actual_months(monthlyArray); 
                 }
             });
         }
@@ -97,9 +115,11 @@ export default function Sales() {
                     set_archived(mock_archived_orders); 
                     break;
                 case 3:
-                    set_actual_month(month);
-                    set_month(mock_daily_sales()[1]);
-                    break;
+                    set_actual_months(months);
+                    alert("Sorry, no data to mock :(");
+                    return; 
+                    // set_month(mock_daily_sales());
+                    // break;
                 case 4:
                     set_actual_year(year);
                     set_year(mock_monthly_sales());
@@ -117,7 +137,7 @@ export default function Sales() {
                     set_archived(actual_archived);
                     break;
                 case 3:
-                    set_month(actual_month);
+                    set_months(actual_months);
                     break;
                 case 4:
                     set_year(actual_year); 
@@ -141,7 +161,7 @@ export default function Sales() {
                 return <PopluarStatus data={archived}></PopluarStatus>
 
             case type.TYPE_3:
-                return <DailySalesReport theData={month}></DailySalesReport>
+                return <DailySalesReport theDataArray={months}></DailySalesReport>
 
             case type.TYPE_4:
                 return <MonthlyReport theData={year}></MonthlyReport>
@@ -158,7 +178,7 @@ export default function Sales() {
         document.getElementById("toggle").checked = false;
 
         set_today(actual_today);
-        set_month(actual_month);
+        set_months(actual_months);
         set_year(actual_year);
         set_archived(actual_archived);
 
@@ -176,7 +196,6 @@ export default function Sales() {
                 <Field id="type-4" onClick={() => handle_navigate(type.TYPE_4)}>Monthly</Field>
                 <Field id="type-2" onClick={() => handle_navigate(type.POPULAR_ITEMS)}>Popular</Field>
             </Navigation>
-
 
             <Mock>
                 MOCK

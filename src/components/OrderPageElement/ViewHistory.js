@@ -138,7 +138,7 @@ export default function ViewHistory( {orders, today, closeShow } ) {
             set_current(filtered); 
         }
         else if(option === "ARCHIVED"){
-            filtered = select_day_orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED");
+            filtered = select_day_orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED" || order.status === "PICKED-UP");
             set_current(filtered); 
         }
         else{

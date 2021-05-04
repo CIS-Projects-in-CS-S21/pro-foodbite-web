@@ -58,7 +58,11 @@ function calcTotalPrice(orders){
 
 export default function DailyInfo( { data } ) {
 
-    console.log(data);
+    function get_today_count(){
+    
+        const filtered = data.filter(order => order.status !== "CANCELED");
+        return filtered.length; 
+    }
 
     return(
         <VerticalDiv>
@@ -71,7 +75,7 @@ export default function DailyInfo( { data } ) {
                         Today's Orders:
                     </DailyCardTitle>
                     <DailyCardBody data-testid="orders-length">
-                        {data.length}
+                        {get_today_count()}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>

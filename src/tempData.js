@@ -319,6 +319,7 @@ export const mock_archived_orders = [
 export const today_archived =  [
     {
       status: "DELIVERED",
+      createdAt: 1620118568,
       menuItems: [
         {
           price: 6.50,
@@ -332,6 +333,7 @@ export const today_archived =  [
     },
     {
       status: "CANCELED",
+      createdAt: 1620118568,
       menuItems: [
         {
           price: 2.10,
@@ -341,6 +343,7 @@ export const today_archived =  [
     },
     {
       status: "DELIVERED",
+      createdAt: 1620111368,
       menuItems: [
         {
           price: 6.50,
@@ -353,7 +356,8 @@ export const today_archived =  [
       ]
     },
     {
-      status: "COMPLETED",
+      status: "PICKED-UP",
+      createdAt:  1620107768,
       menuItems: [
         {
           price: 6.50,
@@ -373,9 +377,27 @@ export const today_archived =  [
 
 
 export const mock_daily_sales = () => {
+
+    const dailyTempData0 = {
+        month:0,
+        data:{
+            1:100,
+            2:321,
+            3:543,
+            5:123,
+            6:340,
+            7:124,
+            8:123,
+            9:321,
+            10:432,
+            11:412,
+        }
+    }
+
+    
     
     const dailyTempData = {
-        month:4,
+        month:3,
         data:{
             1:100,
             2:321,
@@ -391,7 +413,7 @@ export const mock_daily_sales = () => {
     }
 
     const dailyTempData2 = {
-        month:5,
+        month:4,
         data:{
             1:100,
             2:400,
@@ -416,7 +438,7 @@ export const mock_daily_sales = () => {
         }
     }
 
-    const dailyTempArray = [dailyTempData, dailyTempData2];
+    const dailyTempArray = [ dailyTempData0, dailyTempData, dailyTempData2 ];
 
     return dailyTempArray; 
 }

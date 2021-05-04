@@ -51,19 +51,32 @@ export default function PopluarStatus({ data }) {
                 const item = items[i];
                 counts[item] = counts[item] ? counts[item] + 1 : 1; 
             }
-    
+
+            let keys_sorted = Object.keys(counts).sort( (a,b) => counts[a]-counts[b]).reverse();
+
             let i = 0;
-            
-            for (const [key, ] of Object.entries(counts)) {
+
+            keys_sorted.forEach(key => {
                 
-                // let temp = <PopluarLi>{key}</PopluarLi>
                 let temp = key.toUpperCase();
                 setList(popluarList => [...popluarList, temp]);
-    
-                ++i;
-                if(i === MAX) break; 
-              }
 
+                ++i;
+                if(i === MAX) return; 
+            });
+    
+            // let i = 0;
+            // for (const [key, ] of Object.entries(counts)) {
+
+            //     console.log(key);
+                
+            //     // let temp = <PopluarLi>{key}</PopluarLi>
+            //     let temp = key.toUpperCase();
+            //     setList(popluarList => [...popluarList, temp]);
+    
+            //     ++i;
+            //     if(i === MAX) break; 
+            //   }
         }
 
         function popularHours(){
@@ -99,7 +112,7 @@ export default function PopluarStatus({ data }) {
 
     const get_top_items = () => {
 
-        if(popluarList.length === 0) return;
+        if(popluarList.length === 0) return <Header>Top Items - All Time</Header> 
 
         let items = popluarList; 
         if(items.length >= 20) items = items.slice(0, 19); 
@@ -118,7 +131,7 @@ export default function PopluarStatus({ data }) {
 
     const get_top_hours = () => {
 
-        if(popluarHour.length === 0) return; 
+        if(popluarHour.length === 0) return <Header>Busiest Hours - All Time</Header>
 
         let hours = popluarHour; 
 

@@ -360,3 +360,46 @@ export function get_sales_this_year(orders){
 
     return year_obj;
 }
+
+export function get_sales_by_month(orders, month){
+
+    let month_current = month; 
+
+    let filtered = [];
+
+    orders.forEach(order => {
+
+        const time = parseFloat(order.createdAt) * 1000; 
+        const date = new Date(time);
+        
+        if(date.getMonth() === month_current) filtered.push(order);
+    });
+
+
+    const date = new Date();
+    const days_this_month = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
+    let sales = {}; 
+
+    for(let i = 1; i <= days_this_month; ++i) sales[i] = 0;
+
+    filtered.forEach(order => {
+
+        const time = parseFloat(order.createdAt) * 1000; 
+        const day = new Date(time).getDate();
+
+        const amount = parseFloat(calc_amount(order)); 
+         
+        let temp = sales[day];
+        temp += amount;
+
+        sales[day] = temp; 
+    });
+
+    let month_obj = {
+        month: month_current,
+        data: sales
+    }
+
+    return month_obj;
+}
