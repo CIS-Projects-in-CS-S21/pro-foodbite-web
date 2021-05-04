@@ -4,20 +4,20 @@ import {Line} from 'react-chartjs-2'
 import {average} from '../../utils/Utils'
 
 
-
 const HorizontalDiv = styled.div`
     display:flex;
     justify-content:center;
 `
 
-
 const ChartSize = styled.div`
-    width:500px;
+    width: 50%;
+    margin: 0 auto; 
 `
 
 const ChartButton = styled.button`
     background-color:white;
     border:none;
+
     :hover{
         background-color:rgba(125,125,125,0.5);
     }
@@ -27,12 +27,15 @@ const OptionButton = styled.button`
     border: none;
     border-right: 1px solid;
     background-color:white;
+
     :hover{
         background-color:rgba(125,125,125,0.5);
     }
 `
 
-export default function DailySalesReport({theDataArray}) {
+export default function DailySalesReport({ theDataArray}) {
+    // SUPPORT FOR CURRENT MONTH SO FAR ...
+
     const [theData, setData] = useState(theDataArray[0]);
     const [theIndex, setIndex] = useState(0);
 
@@ -41,7 +44,33 @@ export default function DailySalesReport({theDataArray}) {
 
     const [theChart, setChart] = useState();
     const [chartType, setType] = useState(1);
+
     useEffect(() => {
+
+        const data = {
+            labels: [],
+            datasets:[{
+                label:theData.month,
+                fill:false,
+                data:[],
+    
+            }],
+            
+        };
+    
+        const option = {
+            legend:{
+                display:false
+            },
+            scales:{
+                yAxes:[{
+                    ticks:{
+                        beginAtZero: true,
+                    }
+                }]
+            }
+        }
+
         data.labels=[];
         
         data.datasets[0].data=[];
@@ -88,6 +117,9 @@ export default function DailySalesReport({theDataArray}) {
                 let filterArray = tempArray.filter((value) => {
                     return value > 0;
                 });
+                
+                if(filterArray.length === 0) filterArray = [0]; 
+
                 data.labels.push('lowest sales');
                 data.labels.push('average sales');
                 data.labels.push('highest sales');
@@ -96,9 +128,13 @@ export default function DailySalesReport({theDataArray}) {
                 data.datasets[0].data.push(Math.max(...filterArray));
                 temp = <Line id="dailyLineChart" data={data} options={option}></Line>
                 break;
+            default:
+                break;
         }
         setChart(temp);
-    }, [theData, chartType])
+    }, [theData, chartType]);
+
+
 
     useEffect(() => {
         checkClickable();
@@ -107,30 +143,6 @@ export default function DailySalesReport({theDataArray}) {
     
     if(theDataArray === null){
         return null;
-    }
-
-    const data = {
-        labels: [],
-        datasets:[{
-            label:theData.month,
-            fill:false,
-            data:[],
-
-        }],
-        
-    };
-
-    const option = {
-        legend:{
-            display:false
-        },
-        scales:{
-            yAxes:[{
-                ticks:{
-                    beginAtZero: true,
-                }
-            }]
-        }
     }
 
     function checkClickable(){
@@ -146,18 +158,31 @@ export default function DailySalesReport({theDataArray}) {
         }
     }
 
+    function get_month_header(){
+
+        if(theIndex === new Date().getMonth()) return <Header>Daily Sales from This Month: {new Date().getMonth()+1}</Header>
+        else return <Header>Daily Sales from Month: {theIndex + 1}</Header>
+    }
+
     return(
         <ChartSize>
             <HorizontalDiv>
                 <ChartButton onClick={()=>{setIndex(theIndex-1)}} disabled={!leftClick}>←</ChartButton>
-                <h5>Daily Sales of Month {theData.month}</h5>
+                {/* <h5>Daily Sales of Month {theData.month}</h5> */}
+                {get_month_header()}
                 <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}>→</ChartButton>
             </HorizontalDiv>
-            <HorizontalDiv>
-                    <OptionButton onClick={()=>{setType(1)}}>Sales</OptionButton>
-                    <OptionButton onClick={()=>{setType(2)}}>Status</OptionButton>
+            <HorizontalDiv style={{margin: "1% 0 .5% 0"}}>
+                    <OptionButton onClick={()=>{setType(1)}}  data-testid="sales-btn">Line</OptionButton>
+                    <OptionButton onClick={()=>{setType(2)}} data-testid="status-btn">Boxplot</OptionButton>
             </HorizontalDiv>
             {theChart}
         </ChartSize>
     )
 }
+
+export const Header = styled.div`
+    font-family: "Amatic SC", cursive;
+    font-size: 2.4rem; 
+    font-weight: 800;
+`;

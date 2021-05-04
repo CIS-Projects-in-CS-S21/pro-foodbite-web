@@ -8,7 +8,6 @@ const DetailLayout = styled.div`
     justify-items:left;
     width: 70%;
     margin: 0 auto;
-   // background-color: #f0f3f5; 
     margin-top: 2%; 
     font-weight: 700; 
     width: 85%; 
@@ -20,11 +19,10 @@ const ActionButton = styled.button`
     background-color:rgb(200,200,200);
     border:none;
     padding: 5px;
+    border: 1px solid transparent; 
    
-
     :hover{
-        background-color:rgb(150,150,150);
-         
+        border: 1px solid black; 
     }
 `
 
@@ -49,17 +47,12 @@ const Value = styled.span`
 
 function OrderDetail({selectOrder}){ 
 
-
-
-
     useEffect(() => {
         returnOrderItem()
     }, [selectOrder,]);
 
     const [items,setItems] = useState([]);
     const returnBasicOrderInfo = () =>{
-
-        // todo check not undefined
 
         // return "Order# " + selectOrder.id + " " + selectOrder.name ;
         return "Order: " + selectOrder.orderId;
@@ -135,8 +128,8 @@ function OrderStatus({selectOrder}){
             width:"50%", textAlign:'left',
             }}>
             <br/>
-            <StatusLi>Name: <Value>{selectOrder.name}</Value></StatusLi>
-            <StatusLi>Address: <Value>{selectOrder.address}</Value></StatusLi>
+            <StatusLi key={selectOrder.name}>Name: <Value>{selectOrder.name}</Value></StatusLi>
+            <StatusLi key={selectOrder.address}>Address: <Value>{selectOrder.address}</Value></StatusLi>
             <br/>
             <br/>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "1.5%"}}>
@@ -150,7 +143,7 @@ function OrderStatus({selectOrder}){
 }
 
 
-function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setReady, setOneTheWay}){
+function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setReady, setOneTheWay, setPickedUp}){
     
     const [show, setShow] = useState(false)
 
@@ -177,11 +170,6 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setR
                 <ActionButton data-testid="update-status" style={{width:'50%', height:'100%', backgroundColor: "#5bdebb", fontWeight: 500, borderLeft: "1px solid #5a5a5a"}} onClick={() => setShow(!show)}>
                     UPDATE STATUS</ActionButton>
                 <StateUpdate show={show} style={{width:'21.3%'}}>
-                    {/* <ActionButton onClick={()=>{
-                            setArchived(selectOrder);
-                            setShow(!show);
-                        }
-                    }>Archived</ActionButton> */}
                     <ActionButton onClick={()=>{
                         setInProgress(selectOrder);
                         setShow(!show);
@@ -191,13 +179,17 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setR
                         setShow(!show);
                     }}>ON THE WAY</ActionButton>
                     <ActionButton onClick={()=>{
+                        setDeliver(selectOrder);
+                        setShow(!show);
+                    }}>DELIVERED</ActionButton>
+                    <ActionButton onClick={()=>{
                         setReady(selectOrder);
                         setShow(!show);
                     }}>READY FOR PICKUP</ActionButton>
                     <ActionButton onClick={()=>{
-                        setDeliver(selectOrder);
+                        setPickedUp(selectOrder)
                         setShow(!show);
-                    }}>DELIVERED</ActionButton>
+                    }}>PICKED-UP</ActionButton>
                 </StateUpdate>
                 <ActionButton style={{width:'50%', height:'100%', backgroundColor: "#de795b", fontWeight: 500, borderLeft: "1px solid #5a5a5a"}} onClick={() =>{
                     declineOrder(selectOrder);
@@ -208,7 +200,7 @@ function OrderAction({selectOrder, declineOrder, setInProgress, setDeliver, setR
 
 }
 
-export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgress, orderDeliver, orderReady, orderOnTheWay}) {
+export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgress, orderDeliver, orderReady, orderOnTheWay, orderPickedUp}) {
 
     useEffect(() => {
         setOrder(orderInfo);
@@ -258,7 +250,7 @@ export default function SelectOrderDetail({orderInfo, declineOrder, orderInProgr
                      selectOrder={theOrder}></OrderStatus>
             </div>
             <OrderAction setInProgress={orderInProgress} setDeliver={orderDeliver} setReady={orderReady}
-                selectOrder={theOrder} declineOrder={declineOrder} setOneTheWay={orderOnTheWay}></OrderAction>
+                selectOrder={theOrder} declineOrder={declineOrder} setOneTheWay={orderOnTheWay} setPickedUp={orderPickedUp}></OrderAction>
         </DetailLayout>
     )
 }

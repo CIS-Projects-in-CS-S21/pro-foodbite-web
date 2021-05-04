@@ -1,11 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
+import { get_today_sales, get_type_sales, get_type_orders } from "../../utils/Utils"
 
 const VerticalDiv = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
+    width: 60%; 
+    margin: 0 auto 1% auto;
 `
 
 const HorizontalDiv = styled.div`
@@ -14,20 +17,28 @@ const HorizontalDiv = styled.div`
 `
 
 const DailyCard = styled.div`
-    margin:10px;
+    margin: 10px;
     background-color:#e8f4f8;
-    width:200px;
-    text-align:left;
-    padding:10px;
+    width: 220px;
+    padding: 22px;
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
 `
 
 const DailyCardTitle = styled.h5`
-
 `
 
 const DailyCardBody = styled.h6`
-
+    font-size: 1.4rem; 
 `
+
+const Header = styled.div`
+    font-family: "Amatic SC", cursive;
+    font-size: 2.4rem; 
+    font-weight: 800;
+    margin-bottom: 1.5%; 
+`;
 
 const dailyTempData = {
     pickUp:[{orderPrice:100}, {orderPrice:50}, {orderPrice:200},{orderPrice:50}],
@@ -45,32 +56,42 @@ function calcTotalPrice(orders){
 }
 
 
-export default function DailyInfo() {
+export default function DailyInfo( { data } ) {
+
+    function get_today_count(){
+    
+        const filtered = data.filter(order => order.status !== "CANCELED");
+        return filtered.length; 
+    }
+
     return(
         <VerticalDiv>
+            <Header>
+                Sales from Today's Archived Orders
+            </Header>
             <HorizontalDiv>
                 <DailyCard>
                     <DailyCardTitle>
                         Today's Orders:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        {dailyTempData.pickUp.length + dailyTempData.delivery.length}
+                    <DailyCardBody data-testid="orders-length">
+                        {get_today_count()}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Pick-up Orders:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        {dailyTempData.pickUp.length}
+                    <DailyCardBody  data-testid="completed-length">
+                        {get_type_orders(data, "PICKED-UP")}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Delivery Orders:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        {dailyTempData.delivery.length}
+                    <DailyCardBody data-testid="delivered-length">
+                        {get_type_orders(data, "DELIVERED")}
                     </DailyCardBody>
                 </DailyCard>
             </HorizontalDiv>
@@ -79,24 +100,24 @@ export default function DailyInfo() {
                     <DailyCardTitle>
                         Today's Sales:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        ${calcTotalPrice(dailyTempData.pickUp) + calcTotalPrice(dailyTempData.delivery)}
+                    <DailyCardBody data-testid="today-sales">
+                        ${get_today_sales(data)}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Pick-Up Sales:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        ${calcTotalPrice(dailyTempData.pickUp)}
+                    <DailyCardBody data-testid="picked-up-sales">
+                        ${get_type_sales(data, "PICKED-UP")}
                     </DailyCardBody>
                 </DailyCard>
                 <DailyCard>
                     <DailyCardTitle>
                         Delivery Sales:
                     </DailyCardTitle>
-                    <DailyCardBody>
-                        ${calcTotalPrice(dailyTempData.delivery)}
+                    <DailyCardBody data-testid="delivery-sales">
+                        ${get_type_sales(data, "DELIVERED")}
                     </DailyCardBody>
                 </DailyCard>
             </HorizontalDiv>

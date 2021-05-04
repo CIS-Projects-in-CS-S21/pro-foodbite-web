@@ -141,6 +141,7 @@ export const UserContextProvider = ({ children }) => {
 
   const sign_out = () => {
     setUserDb(null);
+    set_restaurant(null); 
     return auth.signOut();
   }
 

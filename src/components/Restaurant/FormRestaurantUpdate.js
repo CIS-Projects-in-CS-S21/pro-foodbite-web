@@ -12,6 +12,8 @@ export default function FormRestaurantUpdate( { prevScreen, form, setForm } ) {
     const [redirect, setRedirect] = useState(false);
     const { user, userDb } = useUserContext();
 
+    console.log(form);
+
 
     const submitRestaurantData = () => {
         setForm({ ...form, submitting: true });

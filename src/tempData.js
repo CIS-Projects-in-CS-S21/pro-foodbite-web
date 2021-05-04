@@ -101,7 +101,7 @@ export const mock_pending_orders = [
         receivedDate : "3/29/2021",
         name: "Rustin Cohle",
         address: "4123 holder street",
-        id: "123",
+        orderId: "123",
         eta: "TBA",
         menuItems: [
             {
@@ -130,7 +130,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Joseph Cooper",
         address: "123 place holder street",
-        id: "456",
+        orderId: "456",
         menuItems: [
             {
                 itemNumber: 3,
@@ -154,7 +154,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "John Cassavetes",
         address: "123 place holder street",
-        id: "789",
+        orderId: "789",
         menuItems: [
             {
                 itemNumber: 4,
@@ -172,7 +172,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "John Doe",
         address: "123 place holder street",
-        id: "910",
+        orderId: "910",
         menuItems: [
             {
                 itemNumber: 10,
@@ -190,7 +190,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Jane Doe",
         address: "123 place holder street",
-        id: "111",
+        orderId: "111",
         menuItems: [
             {
                 itemNumber: 10,
@@ -208,7 +208,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Frank Reynolds",
         address: "123 place holder street",
-        id: "134",
+        orderId: "134",
         menuItems: [
             {
                 itemNumber: 10,
@@ -233,7 +233,7 @@ export const mock_pending_orders = [
         status: "NEW",
         name: "Dennis Reynolds",
         address: "123 place holder street",
-        id: "134",
+        orderId: "134",
         menuItems: [
             {
                 itemNumber: 1,
@@ -251,26 +251,35 @@ export const mock_archived_orders = [
     {
         timestamp: "4/4/2021, 2:25:41 PM", 
         status: "DELIVERED",
-        receivedDate : "3/29/2021",
+        createdAt: 1620003084,
         name: "Ben Simmons",
         address: "4123 holder street",
         id: "123",
         eta: "TBA",
         menuItems: [
             {
-                itemNumber: 1,
                 name: "Big Kahuna Burger",
                 price: 5.50,
                 options: "no tomato"
                 
             },
             {
-                itemNumber: 6,
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: "no tomato"
+                
+            },
+            {
+                name: "Big Kahuna Burger",
+                price: 5.50,
+                options: "no tomato"
+                
+            },
+            {
                 name: "fries",
                 price: 2.70
             },
             {
-                itemNumber: 10,
                 name: "sprite",
                 price: 1.59
             }
@@ -279,21 +288,25 @@ export const mock_archived_orders = [
     {
         timestamp: "4/4/2021, 2:28:41 PM", 
         eta: "TBA",
-        receivedDate : "3/29/2021",
+        createdAt: 1620003084,
         status: "CANCELED",
         name: "TOBIAS HARRIS",
         address: "123 place holder street",
         id: "456",
         menuItems: [
             {
-                itemNumber: 3,
                 name: "Big Kahuna Chicken Sandwhich",
                 price: 6.50,
                 options: null
                 
             },
             {
-                itemNumber: 9,
+                name: "Big Kahuna Chicken Sandwhich",
+                price: 6.50,
+                options: null
+                
+            },
+            {
                 name: "Big Kahuna Chicken Fingers",
                 price: 5.70
             },
@@ -301,3 +314,171 @@ export const mock_archived_orders = [
         ]
     },
 ]
+
+// testing
+export const today_archived =  [
+    {
+      status: "DELIVERED",
+      createdAt: 1620118568,
+      menuItems: [
+        {
+          price: 6.50,
+          name: "Big Kahuna Burger"
+        },
+        {
+          price: 5.70,
+          name: "Chicken Sandwhich"
+        },
+      ]
+    },
+    {
+      status: "CANCELED",
+      createdAt: 1620118568,
+      menuItems: [
+        {
+          price: 2.10,
+          name: "tea"
+        }
+      ]
+    },
+    {
+      status: "DELIVERED",
+      createdAt: 1620111368,
+      menuItems: [
+        {
+          price: 6.50,
+          name: "Big Kahuna Burger"
+        },
+        {
+          price: 5.70,
+          name: "Chicken Sandwhich"
+        },
+      ]
+    },
+    {
+      status: "PICKED-UP",
+      createdAt:  1620107768,
+      menuItems: [
+        {
+          price: 6.50,
+          name: "Big Kahuna Burger"
+        },
+        {
+          price: 3.20,
+          name: "fries"
+        },
+        {
+          price: 2.70,
+          name: "sprite"
+        },
+      ]
+    }
+]
+
+
+export const mock_daily_sales = () => {
+
+    const dailyTempData0 = {
+        month:0,
+        data:{
+            1:100,
+            2:321,
+            3:543,
+            5:123,
+            6:340,
+            7:124,
+            8:123,
+            9:321,
+            10:432,
+            11:412,
+        }
+    }
+
+    
+    
+    const dailyTempData = {
+        month:3,
+        data:{
+            1:100,
+            2:321,
+            3:543,
+            5:123,
+            6:340,
+            7:124,
+            8:123,
+            9:321,
+            10:432,
+            11:412,
+        }
+    }
+
+    const dailyTempData2 = {
+        month:4,
+        data:{
+            1:100,
+            2:400,
+            3:400,
+            5:344,
+            6:340,
+            7:200,
+            8:123,
+            9:412,
+            10:541,
+            11:123,
+            12:110,
+            13:310,
+            14:300,
+            15:210,
+            16:200,
+            17:210,
+            18:190,
+            19:200,
+            20:250,
+            21:190
+        }
+    }
+
+    const dailyTempArray = [ dailyTempData0, dailyTempData, dailyTempData2 ];
+
+    return dailyTempArray; 
+}
+
+export const mock_monthly_sales = () => {
+
+    const monthlyTempData = {
+        year:2020,
+        data:{Jan:1000,
+            Feb:800,
+            Mar:500,
+            Apr:950,
+            May:2000,
+            Jun:2500,
+            Jul:2300,
+            Aug:0,
+            Sep:0,
+            Oct:0,
+            Nov:0,
+            Dec:0}
+    }
+
+    const monthlyTempData2 = {
+        year:2021,
+        data:{Jan:3123,
+            Feb:123,
+            Mar:3213,
+            Apr:432,
+            May:3123,
+            Jun:432,
+            Jul:4325,
+            Aug:2341,
+            Sep:3213,
+            Oct:1231,
+            Nov:0,
+            Dec:0}
+        
+    }
+
+    // const monthlyTempArray = [monthlyTempData, monthlyTempData2];
+
+    return monthlyTempData2;
+}

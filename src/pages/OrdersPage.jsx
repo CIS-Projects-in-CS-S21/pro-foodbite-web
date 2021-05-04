@@ -7,6 +7,7 @@ import SelectOrderDetail from "../components/OrderPageElement/SelectOrderDetail"
 import ViewHistory from "../components/OrderPageElement/ViewHistory"
 //import { mock_pending_orders, mock_archived_orders } from "../tempData"
 import styled from 'styled-components'
+import { sort_today } from "../utils/Utils";
 
 const TopPage = styled.div`
     display:${props => props.show ? 'flex': 'none'};
@@ -33,6 +34,7 @@ const OrdersPage = () => {
     const [show, setShow] = useState(false);
     const [selectedOrder, setOrder] = useState(null);
     const [history, set_history] = useState([]); 
+    const [orders_today, set_orders_today] = useState([]); 
 
     const [orders, set_orders] = useState([]); // real-data
 
@@ -87,27 +89,19 @@ const OrdersPage = () => {
                         for (const id in orderz){
                             temp.push(orderz[id]); 
                         }
-
+                        
                         let both = orders; 
                         both = both.concat(temp);
+
+                        let filtered = sort_today(both); 
                         
-                        set_history(both);
+                        set_history(both); 
+                        set_orders_today(filtered);
                         setShow(true);  
                     }
                     
                     else set_history([]); 
                 });
-
-
-        // TODO 
-        // PARSE ARCHIVED TO GET ONLY TODAY'S DATE
-
-        // MOCK
-        // let temp = mock_pending_orders; 
-        // temp = temp.concat(mock_archived_orders); 
-
-        // set_history(temp); 
-        // setShow(true);  
     }
 
     const view_selected_handler = (e, order) => {
@@ -177,8 +171,6 @@ const OrdersPage = () => {
         setOrder(null);
     }
 
-
-
     const setOrderReady = async (theOrder) =>{
         // for now, wont be sent to archives (manually set delivered to do so)
 
@@ -186,6 +178,20 @@ const OrdersPage = () => {
         theOrder.updated = get_timestamp(); 
         
         await update_doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`, theOrder);
+    }
+
+    
+    const setOrderPickedUp = async (theOrder) =>{
+
+        theOrder.status = "PICKED-UP";
+        theOrder.updated = get_timestamp();
+        await firestore.doc(`pendingOrders/${userDb.ownedRestaurants[0]}/orders/${theOrder.orderId}`).delete();  
+        
+        let updated = {}
+        updated[`orders.${theOrder.orderId}`] = theOrder; 
+        await update_doc(`archivedOrders/${userDb.ownedRestaurants[0]}`, updated);
+
+        setOrder(null);
     }
 
     const get_count = () => {
@@ -201,10 +207,11 @@ const OrdersPage = () => {
             
             <SelectOrderDetail orderInProgress={setOrderInProgress} orderDeliver={setOrderDelivered}
                     orderReady={setOrderReady} orderInfo={selectedOrder} declineOrder ={declineOrder} orderOnTheWay={setOrderOnTheWay}
-            / >
+                    orderPickedUp={setOrderPickedUp}
+            />
                 <TopPage show={show}>
             {
-                show ? <ViewHistory orders={history} closeShow={()=>{setShow(!show)}}  /> : null
+                show ? <ViewHistory orders={history} today={orders_today} closeShow={()=>{setShow(!show)}}  /> : null
             }
                 </TopPage>
         </div>

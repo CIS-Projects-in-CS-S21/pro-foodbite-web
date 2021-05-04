@@ -1,17 +1,18 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-import { calc_amount } from "../../utils/Utils"
+import { calc_amount, sort_day } from "../../utils/Utils"
 
 const HistoryItem = styled.button`
     border:none;
     background-color:white;
-    border-bottom:1px solid;
+    border-bottom: 1px solid #181818;
     font-size: 1.2rem; 
     padding: 10px; 
     display: flex;
     flex-direction: row; 
     width: 100%; 
-    justify-content: center; 
+    justify-content: center;
+    align-items: center;   
     
     :hover{
         background-color:rgb(200,200,200);
@@ -30,31 +31,9 @@ const HistoryDetail = styled.div`
     font-size: 1.2rem;  
 `
 
-export default function ViewHistory( {orders, history, closeShow } ) {
+export default function ViewHistory( {orders, today, closeShow } ) {
 
-
-    const tempOrderFormat2 = {
-        orderNumber: 2,
-        orderOwner: "Test Test2",
-        receivedAt : "3:00pm",
-        receivedDate : "3/25/2021",
-        totalPrice: "$10.00",
-        status:"Pending",
-        eta:"3:30pm",
-        orderItem : [{
-            itemNumber: 3,
-            itemName :"burger",
-            itemAmount: 4,
-        }, {
-            itemNumber: 10,
-            itemName:"Fries",
-            itemAmount: 2,
-        },{
-            itemNumber:15,
-            itemName:"Cheese steak",
-            itemAmount: 5
-        }]
-    };
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]; 
 
     const emptyOrder = {
         orderNumber:"",
@@ -77,9 +56,9 @@ export default function ViewHistory( {orders, history, closeShow } ) {
     const [orderDetail, setDetail] = useState();
     const [selectOrder, setOrder] = useState(emptyOrder);
     const [items, setItems] = useState([]);
-    const [sort, set_sort] = useState(""); 
+    const [day, set_day] = useState(days[new Date().getDay()-1]); 
 
-    const [current, set_curret] = useState(orders); 
+    const [current, set_current] = useState(today); 
 
     useEffect(() => {
         menuLister(selectOrder.menuItems)
@@ -104,7 +83,7 @@ export default function ViewHistory( {orders, history, closeShow } ) {
         let time = new Date(0);
         time.setUTCSeconds(timestamp);
         
-        return time.toLocaleDateString();
+        return `${time.getMonth()+1}/${time.getDate()}/${time.getFullYear().toString().substr(-2)}`;
     }
 
     const get_full_date = (timestamp) => {
@@ -119,8 +98,6 @@ export default function ViewHistory( {orders, history, closeShow } ) {
     useEffect(() => {
         setDetail([]);
 
-
-        
         for (let i = 0; i < current.length; i++) {
             const element = current[i];
             
@@ -130,30 +107,23 @@ export default function ViewHistory( {orders, history, closeShow } ) {
                 setShow(!show);
                 setOrder(element);
             }}
-            >Order Id: {element.orderId}  | Name: {element.name.toUpperCase()} | Number Of Items:
-             {itemCounter(element)} | Total Price: $
-             {calc_amount(element)} | Date: {get_date(element.createdAt)} | Status:<Status>{element.status}</Status>
+            >Order Id: {element.orderId.substr(0, 8)}  <Dot/> Name: {element.name.toUpperCase()}  <Dot/> Number of Items: 
+             {itemCounter(element)} <Dot/> Total: $
+             {calc_amount(element)} <Dot/> Received: {get_date(element.createdAt)} <Dot/> Status:<Status>{element.status}</Status>
                 </HistoryItem>
             setDetail(orderDetail => [...orderDetail, temp]);
         }
-    }, [current, show])
-
+    }, [current, show]);
 
     function itemCounter(order){
-        
-        if(order.hasOwnProperty("menuItems")) return order.menuItems.length; 
 
-        // let temp = 0;
-        // for (let i = 0; i < order.length; i++) {
-        //     const element = order[i];
-        //     temp += element.itemAmount;
-        // }
-        // return temp;
+        if(order.hasOwnProperty("menuItems")) return order.menuItems.length;
+        else return 0; 
     }
 
     const get_count = () => {
 
-        if(orders !== null || orders !== undefined) return orders.length;
+        if(current !== null || current !== undefined) return current.length;
         else return 0; 
     }
 
@@ -161,33 +131,55 @@ export default function ViewHistory( {orders, history, closeShow } ) {
 
         let option = event.target.value;
         let filtered = []; 
+        const select_day_orders = sort_day(orders, day); 
 
         if(option === "PENDING"){
-            filtered = orders.filter( order => order.status === "NEW" || order.status === "IN PROGRESS");
-            set_curret(filtered); 
+            filtered = select_day_orders.filter( order => order.status === "NEW" || order.status === "IN PROGRESS");
+            set_current(filtered); 
         }
         else if(option === "ARCHIVED"){
-            filtered = orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED");
-            set_curret(filtered); 
+            filtered = select_day_orders.filter( order => order.status === "CANCELED" || order.status === "DELIVERED" || order.status === "PICKED-UP");
+            set_current(filtered); 
         }
         else{
             // ALL 
-            set_curret(orders);
+            set_current(select_day_orders);
         }
     }
 
+    const handle_day_week = (event) => {
+
+        const filtered = sort_day(orders, event.target.value); 
+
+        set_current(filtered)
+        set_day(event.target.value); 
+        document.getElementById("type").value = "ALL"; 
+    }
+
+    const get_last_updated = (order) => {
+        if(order.hasOwnProperty("updated")) return get_full_date(order.updated); 
+        else return get_full_date(order.createdAt); 
+    };
+
 
     return (
-        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", backgroundColor: "#f0f3f5"}}>
+        <div style={{display:'flex', flexDirection:'column', alignContent:'center', width:'85%', margin: "2% auto", }}>
             <HeaderContainer>
-                <div></div>
-                <Header>Today's Order History: {get_count()}</Header>
-                <div style={{display: "flex"}}>
 
-                    <Select onChange={(e) => handle_orders(e)}>
+                <Header>{day}'S Order History: {get_count()}</Header>
+                <div style={{display: "flex", alignItems: "center"}}>
+
+                    <Label>Type</Label>
+                    <Select onChange={(e) => handle_orders(e)} id="type">
                         <Option>ALL</Option>
                         <Option>PENDING</Option>
                         <Option>ARCHIVED</Option>
+                    </Select>
+
+                    <Label>Day</Label>
+                    <Select onChange={(e) => handle_day_week(e)} id="day-of-the-week" defaultValue={"DEFAULT"}>
+                        <Option disabled value="DEFAULT" hidden>Today</Option>
+                        {days.map( day => <Option value={day} id={day} key={day}>{day}</Option>)}
                     </Select>
 
                 </div>
@@ -198,10 +190,11 @@ export default function ViewHistory( {orders, history, closeShow } ) {
             </Selection>
 
             <HistoryDetail show={show}>
-                    <h4 style={{borderBottom:"1px solid", width:"100%", marginBottom: "1%"}}>Order#{selectOrder.id}) {selectOrder.name}</h4>
+                    <h4 style={{borderBottom:"1px solid", width:"100%", marginBottom: "1%"}}>Order#{selectOrder.orderId}) {selectOrder.name}</h4>
                     Price: ${calc_amount(selectOrder)}<br/>
                     Address: {selectOrder.address}<br/>
                     Received:  {get_full_date(selectOrder.createdAt)}<br/>
+                    Last Updated:  {get_last_updated(selectOrder)}<br/>
                     <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>Status: <span style={{fontWeight: "bold", marginLeft: "1%"}}>{selectOrder.status}</span></div> <br/>
                     <h4 style={{borderBottom:"1px solid", marginTop: "2%"}}>Order Items:</h4>
                     {items}
@@ -220,12 +213,15 @@ const HeaderContainer = styled.div`
     flex-direction: row; 
     justify-content: space-between; 
     align-items: center;
+    border-bottom: 2px solid #f0f3f5; 
+    margin-bottom: .8%; 
 `; 
 
 const Header = styled.h3`
     font-family: "Amatic SC", cursive;
     font-size: 3.8rem; 
-    margin-left: 12%; 
+    //margin-left: 12%; 
+    margin-left: 1%; 
 `;
 
 const ViewHistoryButton = styled.button`
@@ -260,8 +256,8 @@ const Select = styled.select`
   font-size: 2.0rem; 
   color: #fff; 
   padding: 10px; 
-  font-size: 1.9rem; 
-  width: 200px;
+  font-size: 2rem; 
+  width: 150px;
   margin-right: 1.2%; 
 
   &:hover{
@@ -271,11 +267,24 @@ const Select = styled.select`
   &:focus{
     outline: none; 
   }
-
-
 `;
 
 const Option = styled.option`
   background-color: #f0f3f5; 
   color: black;  
 `; 
+
+const Label = styled.div`
+    font-family: "Amatic SC", cursive;
+    font-size: 2.2rem; 
+    margin-right: 3%; 
+`; 
+
+const Dot = styled.div`
+    height: 5px;
+    width: 5px;
+    display: inline-block;
+    background-color: #3f3f3f; 
+    border-radius: 50%;
+    margin: 0 .5%; 
+`;

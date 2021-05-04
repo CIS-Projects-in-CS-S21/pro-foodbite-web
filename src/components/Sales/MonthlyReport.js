@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { chartColors } from './colors'
 import {Pie, Line} from 'react-chartjs-2'
 import {average} from '../../utils/Utils'
+import { Header } from "./DailySalesReport"
 
 
 const HorizontalDiv = styled.div`
@@ -10,9 +11,9 @@ const HorizontalDiv = styled.div`
     justify-content:center;
 `
 
-
 const ChartSize = styled.div`
-    width:500px;
+    // width:500px;
+    width: 50%;
 `
 
 const ChartButton = styled.button`
@@ -32,44 +33,45 @@ const OptionButton = styled.button`
     }
 `
 
-export default function MonthlyReport({theDataArray}) {
+export default function MonthlyReport({ theData }) {
+
     const [theChart, setChart] = useState();
     const [chartType, setType] = useState(1);
 
-    const [theData, setData] = useState(theDataArray[0]);
+    // const [theData, setData] = useState(theDataArray[0]);
     const [theIndex, setIndex] = useState(0);
 
 
     const [leftClick, setLeft] = useState(true);
     const [rightClick, setRight] = useState(true);
 
-    
-
-    const option = {
-        legend:{
-            position:'right',
-            onClick: (e) => e.stopPropagation()
-        }
-    }
-
-    const data = {
-        maintainAspectRatio: false,
-        responsive: false,
-        labels: [],
-        datasets:[
-            {
-            data:[],
-            backgroundColor: chartColors,
-            hoverBackgroundColor: chartColors
-        }],
-    };
-
 
     useEffect(() => {
+
+        const option = {
+            legend:{
+                position:'right',
+                onClick: (e) => e.stopPropagation()
+            }
+        }
+
+        const data = {
+            maintainAspectRatio: false,
+            responsive: false,
+            labels: [],
+            datasets:[
+                {
+                data:[],
+                backgroundColor: chartColors,
+                hoverBackgroundColor: chartColors
+            }],
+        }
+
         data.datasets[0].data=[]; 
         let temp = null;
         data.labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
                 "Aug", "Sep", "Oct", "Nov", 'Dec']
+
         for(const property in theData.data){
             data.datasets[0].data.push(theData.data[property]);
         }
@@ -101,27 +103,30 @@ export default function MonthlyReport({theDataArray}) {
                 data.datasets[0].data.push(Math.max(...filterArray));
                 temp = <Line id="dailyLineChart" data={data} options={{legend:{display:false}}}></Line>
                 break;
+            default:
+                break; 
         }
         setChart(temp);
-    }, [theData,chartType])
+    }, [theData,chartType]);
 
-    useEffect(() => {
-        checkClickable();
-        setData(theDataArray[theIndex]);
-    }, [theIndex])
 
-    function checkClickable(){
-        if(theIndex === 0){
-            setLeft(false);
-        }else{
-            setLeft(true);
-        }
-        if(theIndex >= theDataArray.length-1){
-            setRight(false);
-        }else{
-            setRight(true);
-        }
-    }
+    // useEffect(() => {
+    //     checkClickable();
+    //     setData(theDataArray[theIndex]);
+    // }, [theIndex])
+
+    // function checkClickable(){
+    //     if(theIndex === 0){
+    //         setLeft(false);
+    //     }else{
+    //         setLeft(true);
+    //     }
+    //     if(theIndex >= theDataArray.length-1){
+    //         setRight(false);
+    //     }else{
+    //         setRight(true);
+    //     }
+    // }
 
     
     return(
@@ -129,14 +134,14 @@ export default function MonthlyReport({theDataArray}) {
             <ChartSize>
                 
                 <HorizontalDiv>
-                    <ChartButton onClick={()=>{setIndex(theIndex-1)}} disabled={!leftClick}> ← </ChartButton>
-                    <h5>Monthly Sales of {theData.year}</h5>
-                    <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}> → </ChartButton>
+                    <ChartButton onClick={()=>{setIndex(theIndex-1)}} disabled={!leftClick}>  </ChartButton>
+                    <Header>Monthly Sales From This Year</Header>
+                    <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}>  </ChartButton>
                 </HorizontalDiv>
-                <HorizontalDiv>
+                <HorizontalDiv style={{margin: "1% 0 .5% 0"}}>
                     <OptionButton onClick={()=>{setType(1)}}>Pie</OptionButton>
                     <OptionButton onClick={()=>{setType(2)}}>Line</OptionButton>
-                    <OptionButton onClick={()=>{setType(3)}}>Status</OptionButton>
+                    <OptionButton onClick={()=>{setType(3)}}>Boxplot</OptionButton>
                 </HorizontalDiv>
                 {theChart}
             </ChartSize>
