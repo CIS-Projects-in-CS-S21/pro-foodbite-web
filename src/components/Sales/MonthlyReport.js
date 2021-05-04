@@ -134,9 +134,9 @@ export default function MonthlyReport({ theData }) {
             <ChartSize>
                 
                 <HorizontalDiv>
-                    <ChartButton onClick={()=>{setIndex(theIndex-1)}} disabled={!leftClick}> ← </ChartButton>
+                    <ChartButton onClick={()=>{setIndex(theIndex-1)}} disabled={!leftClick}>  </ChartButton>
                     <Header>Monthly Sales From This Year</Header>
-                    <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}> → </ChartButton>
+                    <ChartButton onClick={()=>{setIndex(theIndex+1)}} disabled={!rightClick}>  </ChartButton>
                 </HorizontalDiv>
                 <HorizontalDiv style={{margin: "1% 0 .5% 0"}}>
                     <OptionButton onClick={()=>{setType(1)}}>Pie</OptionButton>
